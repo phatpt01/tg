@@ -2,11 +2,8 @@ package transform.CodeGeneration;
 
 import java.util.ArrayList;
 
-import org.antlr.runtime.Token;
-
 import system.Parameter;
 import system.Variable;
-import transform.AST.AST;
 import transform.AST.BinExprAST;
 import transform.AST.CompilationException;
 import transform.AST.DeclarationListAST;
@@ -14,7 +11,6 @@ import transform.AST.DeclarationStmtAST;
 import transform.AST.EmptyDeclarationListAST;
 import transform.AST.ExprStmtAST;
 import transform.AST.IntLiteralAST;
-import transform.AST.LiteralAST;
 import transform.AST.TernaryExprAST;
 import transform.AST.VarDeclAST;
 import transform.AST.VarExprAST;

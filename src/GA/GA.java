@@ -1,7 +1,7 @@
 package GA;
 
 import java.util.ArrayList;
-import java.util.Random;
+
 
 import CodeAnalyzer.CodeAnalyzer;
 
@@ -99,7 +99,7 @@ public class GA implements Cons {
 				for (int i = 0; i < k_iPOPULATION_SIZE; i++) {
 					Testcase t = m_Population.get(i);
 					if (t != bestTestCase) {
-						Random r = new Random();
+//						Random r = new Random();
 						Testcase child = bestTestCase.Clone();
 						int res = child.Hybid(t);
 						if (res != 0) {

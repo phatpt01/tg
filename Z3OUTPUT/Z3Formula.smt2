@@ -1,7 +1,4 @@
 (declare-const n Int)
-(declare-const x Int)
-(declare-const i Int)
-(assert (< 0 n))
-(assert (not 0))
+(assert (not (> n 0)))
 (check-sat)
 (model)
