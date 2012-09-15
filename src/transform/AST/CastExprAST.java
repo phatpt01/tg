@@ -13,7 +13,6 @@ public class CastExprAST extends ExprAST {
 	}
 	@Override
 	public Object visit(Visitor v, Object o) throws CompilationException {
-		// TODO Auto-generated method stub
 		return v.visitCastExprAST(this, o);
 	}
 

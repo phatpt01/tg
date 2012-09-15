@@ -2,7 +2,6 @@ package GA;
 
 import java.util.ArrayList;
 
-
 import CodeAnalyzer.CodeAnalyzer;
 
 public class GA implements Cons {
@@ -14,18 +13,47 @@ public class GA implements Cons {
 
 	public Testcase m_AllTimeBestTestcase;
 
-	public void reset() {
-		if (m_Population != null) {
-			m_Population.clear();
-			m_ChildPopulation.clear();
-		}
-	}
-
 	private void GenerateRandomPopulation(CodeAnalyzer codeAnalyzer) {
 		m_Population = new ArrayList<Testcase>();
 		for (int i = 0; i < k_iPOPULATION_SIZE; i++) {
 			m_Population.add(new Testcase(codeAnalyzer));
 		}
+	}
+
+	private Testcase GetBestTestCase() {
+		Testcase bestTestCase = m_Population.get(0);
+		int maxAccessedBranchNum = bestTestCase.GetAcessedBranchNum();
+		for (Testcase t : m_Population) {
+			if (t.GetAcessedBranchNum() > maxAccessedBranchNum) {
+				bestTestCase = t;
+				maxAccessedBranchNum = bestTestCase.GetAcessedBranchNum();
+			}
+		}
+		// if (bestTestCase.m_CanAcessBranch[3] == 0)
+		// System.out.println("Here" + bestTestCase.m_aiParams[3][0] + " "
+		// + bestTestCase.m_aiParams[3][1] + " "
+		// + bestTestCase.m_aiParams[3][2]);
+
+		return bestTestCase;
+	}
+
+	public int[][] getRes() {
+		if (m_AllTimeBestTestcase != null) {
+			int[][] res = new int[m_AllTimeBestTestcase.m_iBranchNum][m_AllTimeBestTestcase.m_iParamNum + 1];
+			for (int i = 0; i < m_AllTimeBestTestcase.m_iBranchNum; i++) {
+				int j;
+				for (j = 0; j < m_AllTimeBestTestcase.m_iParamNum; j++) {
+					res[i][j] = m_AllTimeBestTestcase.m_aiParams[i][j];
+				}
+				if (m_AllTimeBestTestcase.m_CanAcessBranch[i] == 0) {
+					res[i][j] = 0;
+				} else {
+					res[i][j] = 1;
+				}
+			}
+			return res;
+		} else
+			return null;
 	}
 
 	private boolean IsDone() {
@@ -56,21 +84,11 @@ public class GA implements Cons {
 		return false;
 	}
 
-	private Testcase GetBestTestCase() {
-		Testcase bestTestCase = m_Population.get(0);
-		int maxAccessedBranchNum = bestTestCase.GetAcessedBranchNum();
-		for (Testcase t : m_Population) {
-			if (t.GetAcessedBranchNum() > maxAccessedBranchNum) {
-				bestTestCase = t;
-				maxAccessedBranchNum = bestTestCase.GetAcessedBranchNum();
-			}
+	public void reset() {
+		if (m_Population != null) {
+			m_Population.clear();
+			m_ChildPopulation.clear();
 		}
-//		if (bestTestCase.m_CanAcessBranch[3] == 0)
-//			System.out.println("Here" + bestTestCase.m_aiParams[3][0] + " "
-//					+ bestTestCase.m_aiParams[3][1] + " "
-//					+ bestTestCase.m_aiParams[3][2]);
-
-		return bestTestCase;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,7 +117,7 @@ public class GA implements Cons {
 				for (int i = 0; i < k_iPOPULATION_SIZE; i++) {
 					Testcase t = m_Population.get(i);
 					if (t != bestTestCase) {
-//						Random r = new Random();
+						// Random r = new Random();
 						Testcase child = bestTestCase.Clone();
 						int res = child.Hybid(t);
 						if (res != 0) {
@@ -117,25 +135,6 @@ public class GA implements Cons {
 			// m_AllTimeBestTestcase.PrintResult();
 		}
 
-	}
-
-	public int[][] getRes() {
-		if (m_AllTimeBestTestcase != null) {
-			int[][] res = new int[m_AllTimeBestTestcase.m_iBranchNum][m_AllTimeBestTestcase.m_iParamNum + 1];
-			for (int i = 0; i < m_AllTimeBestTestcase.m_iBranchNum; i++) {
-				int j;
-				for (j = 0; j < m_AllTimeBestTestcase.m_iParamNum; j++) {
-					res[i][j] = m_AllTimeBestTestcase.m_aiParams[i][j];
-				}
-				if (m_AllTimeBestTestcase.m_CanAcessBranch[i] == 0) {
-					res[i][j] = 0;
-				} else {
-					res[i][j] = 1;
-				}
-			}
-			return res;
-		} else
-			return null;
 	}
 
 }

@@ -4,10 +4,10 @@ import transform.CodeGeneration.Visitor;
 
 public class EmptyParaListAST extends ParaListAST {
 	public EmptyParaListAST() {
-		super();		
+		super();
 	}
 
-	public Object visit(Visitor v, Object o) throws CompilationException{
-		return v.visitEmptyParaListAST(this,o);
-	}	
+	public Object visit(Visitor v, Object o) throws CompilationException {
+		return v.visitEmptyParaListAST(this, o);
+	}
 }

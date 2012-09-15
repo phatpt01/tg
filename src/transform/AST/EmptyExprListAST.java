@@ -4,9 +4,10 @@ import transform.CodeGeneration.Visitor;
 
 public class EmptyExprListAST extends ExprListAST {
 	public EmptyExprListAST() {
-		super();		
+		super();
 	}
-	public Object visit(Visitor v, Object o) throws CompilationException{
-		return v.visitEmptyExprListAST(this,o);
+
+	public Object visit(Visitor v, Object o) throws CompilationException {
+		return v.visitEmptyExprListAST(this, o);
 	}
 }

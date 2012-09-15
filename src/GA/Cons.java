@@ -1,7 +1,6 @@
 package GA;
 
-public interface Cons 
-{
+public interface Cons {
 	final static public int k_iTRUE = 0;
 	final static public int k_iFALSE = 1;
 	final static public int k_iNULL = -1;

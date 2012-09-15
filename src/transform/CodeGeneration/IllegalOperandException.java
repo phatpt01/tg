@@ -10,21 +10,16 @@ package transform.CodeGeneration;
 import transform.CompilationException;
 
 @SuppressWarnings("serial")
-public class IllegalOperandException
-        extends CompilationException
-{
-    public IllegalOperandException()
-    {
-    }
-    
-    public IllegalOperandException(String s)
-    {
-    }
-    
-    @Override
-    public String getMessage()
-    {
-        return "Illegal Operand Exception";
-    }
-    
+public class IllegalOperandException extends CompilationException {
+	public IllegalOperandException() {
+	}
+
+	public IllegalOperandException(String s) {
+	}
+
+	@Override
+	public String getMessage() {
+		return "Illegal Operand Exception";
+	}
+
 }

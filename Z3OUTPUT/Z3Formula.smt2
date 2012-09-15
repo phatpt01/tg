@@ -1,4 +1,5 @@
 (declare-const n Int)
+(declare-const result Int)
 (assert (not (> n 0)))
 (check-sat)
 (model)

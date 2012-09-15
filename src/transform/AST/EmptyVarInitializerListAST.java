@@ -4,9 +4,10 @@ import transform.CodeGeneration.Visitor;
 
 public class EmptyVarInitializerListAST extends VarInitializerListAST {
 	public EmptyVarInitializerListAST() {
-		super();		
+		super();
 	}
-	public Object visit(Visitor v, Object o) throws CompilationException{
-		return v.visitEmptyVarInitializerListAST(this,o);
+
+	public Object visit(Visitor v, Object o) throws CompilationException {
+		return v.visitEmptyVarInitializerListAST(this, o);
 	}
 }

@@ -4,9 +4,10 @@ import transform.CodeGeneration.Visitor;
 
 public class EmptyTypeListAST extends TypeListAST {
 	public EmptyTypeListAST() {
-		super();		
+		super();
 	}
-	public Object visit(Visitor v, Object o) throws CompilationException{
-		return v.visitEmptyTypeListAST(this,o);
+
+	public Object visit(Visitor v, Object o) throws CompilationException {
+		return v.visitEmptyTypeListAST(this, o);
 	}
 }

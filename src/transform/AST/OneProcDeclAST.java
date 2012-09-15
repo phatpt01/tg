@@ -1,7 +1,5 @@
 package transform.AST;
 
-public abstract class OneProcDeclAST
-        extends AST
-{
-    
+public abstract class OneProcDeclAST extends AST {
+
 }

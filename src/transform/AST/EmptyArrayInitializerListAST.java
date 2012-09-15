@@ -4,9 +4,10 @@ import transform.CodeGeneration.Visitor;
 
 public class EmptyArrayInitializerListAST extends ArrayInitializerListAST {
 	public EmptyArrayInitializerListAST() {
-		super();		
+		super();
 	}
-	public Object visit(Visitor v, Object o) throws CompilationException{
-		return v.visitEmptyArrayInitializerListAST(this,o);
+
+	public Object visit(Visitor v, Object o) throws CompilationException {
+		return v.visitEmptyArrayInitializerListAST(this, o);
 	}
 }

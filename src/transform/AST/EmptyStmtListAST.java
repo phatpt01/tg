@@ -5,9 +5,10 @@ import transform.CodeGeneration.Visitor;
 public class EmptyStmtListAST extends StmtListAST {
 
 	public EmptyStmtListAST() {
-		super();		
+		super();
 	}
-	public Object visit(Visitor v, Object o) throws CompilationException{
-		return v.visitEmptyStmtListAST(this,o);
+
+	public Object visit(Visitor v, Object o) throws CompilationException {
+		return v.visitEmptyStmtListAST(this, o);
 	}
 }
