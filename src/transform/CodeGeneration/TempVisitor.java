@@ -144,17 +144,17 @@ public class TempVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		String var;
 		String value;
-		var = (String) ast.d.visit(this, o);
-		if (ast.dl instanceof EmptyDeclarationListAST) {
-			value = (String) ast.d.visit(this, "c");
+		var = (String) ast.declarationAST.visit(this, o);
+		if (ast.declarationListAST instanceof EmptyDeclarationListAST) {
+			value = (String) ast.declarationAST.visit(this, "c");
 		} else {
-			value = (String) ast.dl.visit(this, o);
+			value = (String) ast.declarationListAST.visit(this, o);
 			int i = this.findVar(var);
 			if (i >= 0) {
 				this.var.set(i, value);
 			} else {
 				i = this.findPara(var);
-				value = (String) ast.dl.visit(this, o);
+				value = (String) ast.declarationListAST.visit(this, o);
 				this.para.set(i, value);
 			}
 		}

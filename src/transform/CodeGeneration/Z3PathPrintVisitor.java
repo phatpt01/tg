@@ -1,6 +1,3 @@
-/**
- * 
- */
 package transform.CodeGeneration;
 
 import system.Path;

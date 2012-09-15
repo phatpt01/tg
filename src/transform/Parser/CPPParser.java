@@ -139,7 +139,6 @@ public class CPPParser
             switch (s)
             {
                 case 0:
-                    int LA18_1 = input.LA(1);
                     
                     int index18_1 = input.index();
                     input.rewind();
@@ -158,8 +157,7 @@ public class CPPParser
                     }
                     break;
                 case 1:
-                    int LA18_2 = input.LA(1);
-                    
+                   
                     int index18_2 = input.index();
                     input.rewind();
                     s = -1;
@@ -177,7 +175,6 @@ public class CPPParser
                     }
                     break;
                 case 2:
-                    int LA18_3 = input.LA(1);
                     
                     int index18_3 = input.index();
                     input.rewind();
@@ -196,7 +193,6 @@ public class CPPParser
                     }
                     break;
                 case 3:
-                    int LA18_4 = input.LA(1);
                     
                     int index18_4 = input.index();
                     input.rewind();
@@ -215,7 +211,6 @@ public class CPPParser
                     }
                     break;
                 case 4:
-                    int LA18_5 = input.LA(1);
                     
                     int index18_5 = input.index();
                     input.rewind();
@@ -234,7 +229,6 @@ public class CPPParser
                     }
                     break;
                 case 5:
-                    int LA18_6 = input.LA(1);
                     
                     int index18_6 = input.index();
                     input.rewind();
@@ -253,7 +247,6 @@ public class CPPParser
                     }
                     break;
                 case 6:
-                    int LA18_7 = input.LA(1);
                     
                     int index18_7 = input.index();
                     input.rewind();
@@ -272,7 +265,6 @@ public class CPPParser
                     }
                     break;
                 case 7:
-                    int LA18_8 = input.LA(1);
                     
                     int index18_8 = input.index();
                     input.rewind();
@@ -291,7 +283,6 @@ public class CPPParser
                     }
                     break;
                 case 8:
-                    int LA18_9 = input.LA(1);
                     
                     int index18_9 = input.index();
                     input.rewind();
@@ -310,7 +301,6 @@ public class CPPParser
                     }
                     break;
                 case 9:
-                    int LA18_10 = input.LA(1);
                     
                     int index18_10 = input.index();
                     input.rewind();
@@ -329,7 +319,6 @@ public class CPPParser
                     }
                     break;
                 case 10:
-                    int LA18_11 = input.LA(1);
                     
                     int index18_11 = input.index();
                     input.rewind();
@@ -348,7 +337,6 @@ public class CPPParser
                     }
                     break;
                 case 11:
-                    int LA18_12 = input.LA(1);
                     
                     int index18_12 = input.index();
                     input.rewind();
@@ -367,7 +355,6 @@ public class CPPParser
                     }
                     break;
                 case 12:
-                    int LA18_13 = input.LA(1);
                     
                     int index18_13 = input.index();
                     input.rewind();
@@ -386,7 +373,6 @@ public class CPPParser
                     }
                     break;
                 case 13:
-                    int LA18_14 = input.LA(1);
                     
                     int index18_14 = input.index();
                     input.rewind();
@@ -405,7 +391,6 @@ public class CPPParser
                     }
                     break;
                 case 14:
-                    int LA18_15 = input.LA(1);
                     
                     int index18_15 = input.index();
                     input.rewind();
@@ -424,7 +409,6 @@ public class CPPParser
                     }
                     break;
                 case 15:
-                    int LA18_16 = input.LA(1);
                     
                     int index18_16 = input.index();
                     input.rewind();
@@ -443,7 +427,6 @@ public class CPPParser
                     }
                     break;
                 case 16:
-                    int LA18_17 = input.LA(1);
                     
                     int index18_17 = input.index();
                     input.rewind();
@@ -462,7 +445,6 @@ public class CPPParser
                     }
                     break;
                 case 17:
-                    int LA18_18 = input.LA(1);
                     
                     int index18_18 = input.index();
                     input.rewind();
@@ -481,7 +463,6 @@ public class CPPParser
                     }
                     break;
                 case 18:
-                    int LA18_19 = input.LA(1);
                     
                     int index18_19 = input.index();
                     input.rewind();
@@ -500,7 +481,6 @@ public class CPPParser
                     }
                     break;
                 case 19:
-                    int LA18_20 = input.LA(1);
                     
                     int index18_20 = input.index();
                     input.rewind();
@@ -519,7 +499,6 @@ public class CPPParser
                     }
                     break;
                 case 20:
-                    int LA18_21 = input.LA(1);
                     
                     int index18_21 = input.index();
                     input.rewind();
@@ -538,7 +517,6 @@ public class CPPParser
                     }
                     break;
                 case 21:
-                    int LA18_22 = input.LA(1);
                     
                     int index18_22 = input.index();
                     input.rewind();
@@ -557,7 +535,6 @@ public class CPPParser
                     }
                     break;
                 case 22:
-                    int LA18_23 = input.LA(1);
                     
                     int index18_23 = input.index();
                     input.rewind();
@@ -576,7 +553,6 @@ public class CPPParser
                     }
                     break;
                 case 23:
-                    int LA18_24 = input.LA(1);
                     
                     int index18_24 = input.index();
                     input.rewind();
@@ -595,7 +571,6 @@ public class CPPParser
                     }
                     break;
                 case 24:
-                    int LA18_25 = input.LA(1);
                     
                     int index18_25 = input.index();
                     input.rewind();
@@ -614,7 +589,6 @@ public class CPPParser
                     }
                     break;
                 case 25:
-                    int LA18_26 = input.LA(1);
                     
                     int index18_26 = input.index();
                     input.rewind();
@@ -633,7 +607,6 @@ public class CPPParser
                     }
                     break;
                 case 26:
-                    int LA18_27 = input.LA(1);
                     
                     int index18_27 = input.index();
                     input.rewind();
@@ -652,7 +625,6 @@ public class CPPParser
                     }
                     break;
                 case 27:
-                    int LA18_28 = input.LA(1);
                     
                     int index18_28 = input.index();
                     input.rewind();
@@ -671,7 +643,6 @@ public class CPPParser
                     }
                     break;
                 case 28:
-                    int LA18_29 = input.LA(1);
                     
                     int index18_29 = input.index();
                     input.rewind();
@@ -690,7 +661,6 @@ public class CPPParser
                     }
                     break;
                 case 29:
-                    int LA18_30 = input.LA(1);
                     
                     int index18_30 = input.index();
                     input.rewind();
@@ -709,7 +679,6 @@ public class CPPParser
                     }
                     break;
                 case 30:
-                    int LA18_31 = input.LA(1);
                     
                     int index18_31 = input.index();
                     input.rewind();
@@ -728,7 +697,6 @@ public class CPPParser
                     }
                     break;
                 case 31:
-                    int LA18_32 = input.LA(1);
                     
                     int index18_32 = input.index();
                     input.rewind();
@@ -747,7 +715,6 @@ public class CPPParser
                     }
                     break;
                 case 32:
-                    int LA18_33 = input.LA(1);
                     
                     int index18_33 = input.index();
                     input.rewind();
@@ -766,8 +733,7 @@ public class CPPParser
                     }
                     break;
                 case 33:
-                    int LA18_34 = input.LA(1);
-                    
+                        
                     int index18_34 = input.index();
                     input.rewind();
                     s = -1;
@@ -785,7 +751,6 @@ public class CPPParser
                     }
                     break;
                 case 34:
-                    int LA18_35 = input.LA(1);
                     
                     int index18_35 = input.index();
                     input.rewind();
@@ -804,7 +769,6 @@ public class CPPParser
                     }
                     break;
                 case 35:
-                    int LA18_36 = input.LA(1);
                     
                     int index18_36 = input.index();
                     input.rewind();
@@ -823,7 +787,6 @@ public class CPPParser
                     }
                     break;
                 case 36:
-                    int LA18_37 = input.LA(1);
                     
                     int index18_37 = input.index();
                     input.rewind();
@@ -842,7 +805,6 @@ public class CPPParser
                     }
                     break;
                 case 37:
-                    int LA18_38 = input.LA(1);
                     
                     int index18_38 = input.index();
                     input.rewind();
@@ -901,7 +863,6 @@ public class CPPParser
             switch (s)
             {
                 case 0:
-                    int LA2_1 = input.LA(1);
                     
                     int index2_1 = input.index();
                     input.rewind();
@@ -920,7 +881,6 @@ public class CPPParser
                     }
                     break;
                 case 1:
-                    int LA2_2 = input.LA(1);
                     
                     int index2_2 = input.index();
                     input.rewind();
@@ -939,7 +899,6 @@ public class CPPParser
                     }
                     break;
                 case 2:
-                    int LA2_3 = input.LA(1);
                     
                     int index2_3 = input.index();
                     input.rewind();
@@ -958,7 +917,6 @@ public class CPPParser
                     }
                     break;
                 case 3:
-                    int LA2_4 = input.LA(1);
                     
                     int index2_4 = input.index();
                     input.rewind();
@@ -977,7 +935,6 @@ public class CPPParser
                     }
                     break;
                 case 4:
-                    int LA2_5 = input.LA(1);
                     
                     int index2_5 = input.index();
                     input.rewind();
@@ -996,7 +953,6 @@ public class CPPParser
                     }
                     break;
                 case 5:
-                    int LA2_6 = input.LA(1);
                     
                     int index2_6 = input.index();
                     input.rewind();
@@ -1015,7 +971,6 @@ public class CPPParser
                     }
                     break;
                 case 6:
-                    int LA2_7 = input.LA(1);
                     
                     int index2_7 = input.index();
                     input.rewind();
@@ -1034,7 +989,6 @@ public class CPPParser
                     }
                     break;
                 case 7:
-                    int LA2_8 = input.LA(1);
                     
                     int index2_8 = input.index();
                     input.rewind();
@@ -1053,7 +1007,6 @@ public class CPPParser
                     }
                     break;
                 case 8:
-                    int LA2_9 = input.LA(1);
                     
                     int index2_9 = input.index();
                     input.rewind();
@@ -1072,7 +1025,6 @@ public class CPPParser
                     }
                     break;
                 case 9:
-                    int LA2_10 = input.LA(1);
                     
                     int index2_10 = input.index();
                     input.rewind();
@@ -1091,7 +1043,6 @@ public class CPPParser
                     }
                     break;
                 case 10:
-                    int LA2_11 = input.LA(1);
                     
                     int index2_11 = input.index();
                     input.rewind();
@@ -1150,7 +1101,6 @@ public class CPPParser
             switch (s)
             {
                 case 0:
-                    int LA21_12 = input.LA(1);
                     
                     int index21_12 = input.index();
                     input.rewind();
@@ -1169,7 +1119,6 @@ public class CPPParser
                     }
                     break;
                 case 1:
-                    int LA21_13 = input.LA(1);
                     
                     int index21_13 = input.index();
                     input.rewind();
@@ -1188,7 +1137,6 @@ public class CPPParser
                     }
                     break;
                 case 2:
-                    int LA21_14 = input.LA(1);
                     
                     int index21_14 = input.index();
                     input.rewind();
@@ -1207,7 +1155,6 @@ public class CPPParser
                     }
                     break;
                 case 3:
-                    int LA21_15 = input.LA(1);
                     
                     int index21_15 = input.index();
                     input.rewind();
@@ -1226,7 +1173,6 @@ public class CPPParser
                     }
                     break;
                 case 4:
-                    int LA21_16 = input.LA(1);
                     
                     int index21_16 = input.index();
                     input.rewind();
@@ -1245,7 +1191,6 @@ public class CPPParser
                     }
                     break;
                 case 5:
-                    int LA21_17 = input.LA(1);
                     
                     int index21_17 = input.index();
                     input.rewind();
@@ -1264,7 +1209,6 @@ public class CPPParser
                     }
                     break;
                 case 6:
-                    int LA21_18 = input.LA(1);
                     
                     int index21_18 = input.index();
                     input.rewind();
@@ -1283,7 +1227,6 @@ public class CPPParser
                     }
                     break;
                 case 7:
-                    int LA21_19 = input.LA(1);
                     
                     int index21_19 = input.index();
                     input.rewind();
@@ -1302,7 +1245,6 @@ public class CPPParser
                     }
                     break;
                 case 8:
-                    int LA21_20 = input.LA(1);
                     
                     int index21_20 = input.index();
                     input.rewind();
@@ -1321,7 +1263,6 @@ public class CPPParser
                     }
                     break;
                 case 9:
-                    int LA21_21 = input.LA(1);
                     
                     int index21_21 = input.index();
                     input.rewind();
@@ -1340,7 +1281,6 @@ public class CPPParser
                     }
                     break;
                 case 10:
-                    int LA21_22 = input.LA(1);
                     
                     int index21_22 = input.index();
                     input.rewind();
@@ -1359,7 +1299,6 @@ public class CPPParser
                     }
                     break;
                 case 11:
-                    int LA21_23 = input.LA(1);
                     
                     int index21_23 = input.index();
                     input.rewind();
@@ -1378,7 +1317,6 @@ public class CPPParser
                     }
                     break;
                 case 12:
-                    int LA21_24 = input.LA(1);
                     
                     int index21_24 = input.index();
                     input.rewind();
@@ -1397,7 +1335,6 @@ public class CPPParser
                     }
                     break;
                 case 13:
-                    int LA21_25 = input.LA(1);
                     
                     int index21_25 = input.index();
                     input.rewind();
@@ -1416,7 +1353,6 @@ public class CPPParser
                     }
                     break;
                 case 14:
-                    int LA21_26 = input.LA(1);
                     
                     int index21_26 = input.index();
                     input.rewind();
@@ -1435,7 +1371,6 @@ public class CPPParser
                     }
                     break;
                 case 15:
-                    int LA21_27 = input.LA(1);
                     
                     int index21_27 = input.index();
                     input.rewind();
@@ -1454,7 +1389,6 @@ public class CPPParser
                     }
                     break;
                 case 16:
-                    int LA21_28 = input.LA(1);
                     
                     int index21_28 = input.index();
                     input.rewind();
@@ -1513,7 +1447,6 @@ public class CPPParser
             switch (s)
             {
                 case 0:
-                    int LA29_1 = input.LA(1);
                     
                     int index29_1 = input.index();
                     input.rewind();
@@ -1532,7 +1465,6 @@ public class CPPParser
                     }
                     break;
                 case 1:
-                    int LA29_2 = input.LA(1);
                     
                     int index29_2 = input.index();
                     input.rewind();
@@ -1551,7 +1483,6 @@ public class CPPParser
                     }
                     break;
                 case 2:
-                    int LA29_3 = input.LA(1);
                     
                     int index29_3 = input.index();
                     input.rewind();
@@ -1570,7 +1501,6 @@ public class CPPParser
                     }
                     break;
                 case 3:
-                    int LA29_4 = input.LA(1);
                     
                     int index29_4 = input.index();
                     input.rewind();
@@ -1589,7 +1519,6 @@ public class CPPParser
                     }
                     break;
                 case 4:
-                    int LA29_5 = input.LA(1);
                     
                     int index29_5 = input.index();
                     input.rewind();
@@ -1608,7 +1537,6 @@ public class CPPParser
                     }
                     break;
                 case 5:
-                    int LA29_6 = input.LA(1);
                     
                     int index29_6 = input.index();
                     input.rewind();
@@ -1627,7 +1555,6 @@ public class CPPParser
                     }
                     break;
                 case 6:
-                    int LA29_7 = input.LA(1);
                     
                     int index29_7 = input.index();
                     input.rewind();
@@ -1646,7 +1573,6 @@ public class CPPParser
                     }
                     break;
                 case 7:
-                    int LA29_8 = input.LA(1);
                     
                     int index29_8 = input.index();
                     input.rewind();
@@ -1665,7 +1591,6 @@ public class CPPParser
                     }
                     break;
                 case 8:
-                    int LA29_9 = input.LA(1);
                     
                     int index29_9 = input.index();
                     input.rewind();
@@ -1684,7 +1609,6 @@ public class CPPParser
                     }
                     break;
                 case 9:
-                    int LA29_10 = input.LA(1);
                     
                     int index29_10 = input.index();
                     input.rewind();
@@ -1703,7 +1627,6 @@ public class CPPParser
                     }
                     break;
                 case 10:
-                    int LA29_11 = input.LA(1);
                     
                     int index29_11 = input.index();
                     input.rewind();
@@ -1722,7 +1645,6 @@ public class CPPParser
                     }
                     break;
                 case 11:
-                    int LA29_12 = input.LA(1);
                     
                     int index29_12 = input.index();
                     input.rewind();
@@ -1741,7 +1663,6 @@ public class CPPParser
                     }
                     break;
                 case 12:
-                    int LA29_13 = input.LA(1);
                     
                     int index29_13 = input.index();
                     input.rewind();
@@ -1760,7 +1681,6 @@ public class CPPParser
                     }
                     break;
                 case 13:
-                    int LA29_14 = input.LA(1);
                     
                     int index29_14 = input.index();
                     input.rewind();
@@ -1779,7 +1699,6 @@ public class CPPParser
                     }
                     break;
                 case 14:
-                    int LA29_15 = input.LA(1);
                     
                     int index29_15 = input.index();
                     input.rewind();
@@ -1798,7 +1717,6 @@ public class CPPParser
                     }
                     break;
                 case 15:
-                    int LA29_16 = input.LA(1);
                     
                     int index29_16 = input.index();
                     input.rewind();
@@ -3759,7 +3677,7 @@ public class CPPParser
                         }
                         else {
                             if (ast3 instanceof DeclarationListAST) {
-                                ((DeclarationListAST) ast3).dl = (DeclarationListAST) ast2;
+                                ((DeclarationListAST) ast3).declarationListAST = (DeclarationListAST) ast2;
                                 this.out = ast1;
                             }
                         }
@@ -6760,7 +6678,6 @@ public class CPPParser
                     break;
                 case 23:
                 {
-                    int LA24_3 = this.input.LA(2);
                     
                     if ((this.synpred47_CPP())) {
                         alt24 = 2;
@@ -6768,15 +6685,15 @@ public class CPPParser
                     else if ((true)) {
                         alt24 = 3;
                     }
-                    else {
-                        if (this.state.backtracking > 0) {
-                            this.state.failed = true;
-                            return;
-                        }
-                        NoViableAltException nvae = new NoViableAltException("", 24, 3, this.input);
-                        
-                        throw nvae;
-                    }
+//                    else {
+//                        if (this.state.backtracking > 0) {
+//                            this.state.failed = true;
+//                            return;
+//                        }
+//                        NoViableAltException nvae = new NoViableAltException("", 24, 3, this.input);
+//                        
+//                        throw nvae;
+//                    }
                 }
                     break;
                 default:
@@ -6936,7 +6853,6 @@ public class CPPParser
                     alt23 = 1;
                 }
                 else if ((LA23_0 == 43)) {
-                    int LA23_2 = this.input.LA(2);
                     
                     if ((this.synpred45_CPP())) {
                         alt23 = 1;
@@ -7124,7 +7040,6 @@ public class CPPParser
                 int LA20_0 = this.input.LA(1);
                 
                 if ((LA20_0 == 46)) {
-                    int LA20_2 = this.input.LA(2);
                     
                     if ((this.synpred42_CPP())) {
                         alt20 = 1;
@@ -7771,7 +7686,7 @@ public class CPPParser
     public final void pointerType() throws RecognitionException
     {
         
-        AST ast1 = null;
+//        AST ast1 = null;
         
         try {
             // CPP.g:199:3: ( combinedType pointerTypeRest )
@@ -8937,8 +8852,7 @@ public class CPPParser
     // $ANTLR start synpred61_CPP
     public final void synpred61_CPP_fragment() throws RecognitionException
     {
-        Token op = null;
-        
+               
         // CPP.g:512:5: ( exprLOGICAL_OR (op= '=' | op= '+=' | op= '-=' | op= '*=' | op= '/=' | op=
         // '%=' | op= '<<=' | op= '>>=' | op= '&=' | op= '^=' | op= '|=' ) exprASSIGN )
         // CPP.g:512:5: exprLOGICAL_OR (op= '=' | op= '+=' | op= '-=' | op= '*=' | op= '/=' | op=
@@ -9021,6 +8935,7 @@ public class CPPParser
                     throw nvae;
             }
             
+            Token op = null;
             switch (alt54)
             {
                 case 1:

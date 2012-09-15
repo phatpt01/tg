@@ -1,5 +1,5 @@
 (declare-const n Int)
-(declare-const result Int)
-(assert (not (> n 0)))
+(declare-const b Int)
+(assert (not (> (+ (+ (sin n) (cos n)) 0) 0)))
 (check-sat)
 (model)

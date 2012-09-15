@@ -301,9 +301,9 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitDeclarationListAST(DeclarationListAST ast, Object o)
 			throws CompilationException {
-		ast.d.visit(this, o);
-		if (ast.dl != null) {
-			ast.dl.visit(this, o);
+		ast.declarationAST.visit(this, o);
+		if (ast.declarationListAST != null) {
+			ast.declarationListAST.visit(this, o);
 		}
 		return null;
 	}

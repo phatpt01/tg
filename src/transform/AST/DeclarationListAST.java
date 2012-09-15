@@ -3,18 +3,18 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class DeclarationListAST extends AST {
-	public DeclarationAST d;
-	public DeclarationListAST dl;
+	public DeclarationAST declarationAST;
+	public DeclarationListAST declarationListAST;
 
 	public DeclarationListAST() {
-		this.d = null;
-		this.dl = null;
+		this.declarationAST = null;
+		this.declarationListAST = null;
 	}
 
 	public DeclarationListAST(DeclarationAST decl, DeclarationListAST decll) {
-		this.d = decl;
-		this.dl = decll;
-		this.d.parent = this.dl.parent = this;
+		this.declarationAST = decl;
+		this.declarationListAST = decll;
+		this.declarationAST.parent = this.declarationListAST.parent = this;
 	}
 
 	@Override

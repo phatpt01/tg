@@ -19,7 +19,9 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 		listBranch = new ArrayList<ArrayList<Integer>>();
 	}
 
-	public boolean find(int conline, boolean branch, int i) {
+	// conditionLine: so thu tu cua dong lenh sau khi chuan hoa
+	public boolean find(int conditionLine, boolean branch, int i) {
+
 		int size = this.listDependence.get(i).size();
 		if (size == 0)
 			return false;
@@ -27,7 +29,7 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 			for (int j = size - 1; j >= 0; j--) {
 				if (this.listDependence.get(i).get(j) == -1)
 					return false;
-				if (this.listDependence.get(i).get(j) == conline) {
+				if (this.listDependence.get(i).get(j) == conditionLine) {
 					if (this.listBranch.get(i).get(j) == 0 && branch == true)
 						return true;
 					if (this.listBranch.get(i).get(j) == 1 && branch == false)
@@ -65,8 +67,8 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitDeclarationListAST(DeclarationListAST ast, Object o)
 			throws CompilationException {
-		ast.d.visit(this, o);
-		ast.dl.visit(this, o);
+		ast.declarationAST.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 

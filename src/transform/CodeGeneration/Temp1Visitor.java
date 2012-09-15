@@ -24,24 +24,24 @@ import transform.AST.VarExprAST;
 import transform.AST.VarInitializerAST;
 
 public class Temp1Visitor extends DoNothingVisitor {
-	ArrayList<Variable> listVar;
-	ArrayList<Parameter> listPara;
-	ArrayList<String> para;
-	ArrayList<String> var;
+	ArrayList<Variable> lstVariable;
+	ArrayList<Parameter> lstParameter;
+	ArrayList<String> para; // lưu giá trị mới của tham số đầu vào sau một phép gán
+	ArrayList<String> var; // lưu giá trị mới của 1 biến nội bộ sau một phép gán
 	ArrayList<Condition> con;
 	ArrayList<Integer> conditionline;
 	ArrayList<Integer> branch;
-	String res;
+	String result;
 
 	public Temp1Visitor(ArrayList<Parameter> listPara,
 			ArrayList<Variable> listVar, ArrayList<Condition> listCon) {
-		this.listVar = listVar;
-		this.listPara = listPara;
+		this.lstVariable = listVar;
+		this.lstParameter = listPara;
 		this.con = listCon;
 		para = new ArrayList<String>();
 		var = new ArrayList<String>();
 		branch = new ArrayList<Integer>();
-		res = "";
+		result = "";
 		para.clear();
 		var.clear();
 		for (int i = 0; i < listVar.size(); i++)
@@ -51,12 +51,12 @@ public class Temp1Visitor extends DoNothingVisitor {
 	}
 
 	public void clear() {
-		res = "";
+		result = "";
 		para.clear();
 		var.clear();
-		for (int i = 0; i < listVar.size(); i++)
+		for (int i = 0; i < lstVariable.size(); i++)
 			var.add("");
-		for (int j = 0; j < listPara.size(); j++)
+		for (int j = 0; j < lstParameter.size(); j++)
 			para.add("");
 	}
 
@@ -73,11 +73,11 @@ public class Temp1Visitor extends DoNothingVisitor {
 	}
 
 	private int findPara(String paraName) {
-		if (this.listPara.size() <= 0) {
+		if (this.lstParameter.size() <= 0) {
 			return -1;
 		} else {
-			for (int i = 0; i < this.listPara.size(); i++) {
-				if (paraName.equals(this.listPara.get(i).getName())) {
+			for (int i = 0; i < this.lstParameter.size(); i++) {
+				if (paraName.equals(this.lstParameter.get(i).getName())) {
 					return i;
 				}
 			}
@@ -87,11 +87,11 @@ public class Temp1Visitor extends DoNothingVisitor {
 
 	// get the index of the varName in varReindex
 	private int findVar(String varName) {
-		if (this.listVar.size() <= 0) {
+		if (this.lstVariable.size() <= 0) {
 			return -1;
 		} else {
-			for (int i = 0; i < this.listVar.size(); i++) {
-				if (varName.equals(this.listVar.get(i).getName())) {
+			for (int i = 0; i < this.lstVariable.size(); i++) {
+				if (varName.equals(this.lstVariable.get(i).getName())) {
 					return i;
 				}
 			}
@@ -206,25 +206,25 @@ public class Temp1Visitor extends DoNothingVisitor {
 							+ constmt);
 					boolean check = true;
 					if (branch == 0) {
-						res += "(assert " + output + ")\n";
+						result += "(assert " + output + ")\n";
 						ArrayList<String> temp = con.get(constmt).getTruepath();
 						for (int i = 0; i < temp.size(); i++)
-							if (temp.get(i).equals(res))
+							if (temp.get(i).equals(result))
 								check = false;
 						if (check == true) {
-							con.get(constmt).getTruepath().add(res);
+							con.get(constmt).getTruepath().add(result);
 							con.get(constmt).getTruecon().add(obj.con);
 						}
 					}
 					if (branch == 1) {
-						res += "(assert (not " + output + "))\n";
+						result += "(assert (not " + output + "))\n";
 						ArrayList<String> temp = con.get(constmt)
 								.getFalsepath();
 						for (int i = 0; i < temp.size(); i++)
-							if (temp.get(i).equals(res))
+							if (temp.get(i).equals(result))
 								check = false;
 						if (check == true) {
-							con.get(constmt).getFalsepath().add(res);
+							con.get(constmt).getFalsepath().add(result);
 							con.get(constmt).getFalsecon().add(obj.con);
 						}
 					}
@@ -248,17 +248,17 @@ public class Temp1Visitor extends DoNothingVisitor {
 			throws CompilationException {
 		String var;
 		String value;
-		var = (String) ast.d.visit(this, o);
-		if (ast.dl instanceof EmptyDeclarationListAST) {
-			value = (String) ast.d.visit(this, "c");
+		var = (String)ast.declarationAST.visit(this, o);
+		if (ast.declarationListAST instanceof EmptyDeclarationListAST) {
+			value = (String) ast.declarationAST.visit(this, "c");
 		} else {
-			value = (String) ast.dl.visit(this, o);
+			value = (String) ast.declarationListAST.visit(this, o);
 			int i = this.findVar(var);
 			if (i >= 0) {
 				this.var.set(i, value);
 			} else {
 				i = this.findPara(var);
-				value = (String) ast.dl.visit(this, o);
+				value = (String) ast.declarationListAST.visit(this, o);
 				this.para.set(i, value);
 			}
 		}

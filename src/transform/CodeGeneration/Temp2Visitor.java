@@ -298,17 +298,17 @@ public class Temp2Visitor extends DoNothingVisitor {
 			throws CompilationException {
 		String var;
 		int value;
-		var = (String) ast.d.visit(this, "c");
-		if (ast.dl instanceof EmptyDeclarationListAST) {
+		var = (String) ast.declarationAST.visit(this, "c");
+		if (ast.declarationListAST instanceof EmptyDeclarationListAST) {
 			return 0;
 		} else {
-			value = (Integer) ast.dl.visit(this, o);
+			value = (Integer) ast.declarationListAST.visit(this, o);
 			int i = this.findVar(var);
 			if (i >= 0) {
 				this.var.set(i, value);
 			} else {
 				i = this.findPara(var);
-				value = (Integer) ast.dl.visit(this, o);
+				value = (Integer) ast.declarationListAST.visit(this, o);
 				this.para.set(i, value);
 			}
 		}

@@ -372,8 +372,8 @@ public class CopyASTVisitor implements Visitor {
 			throws CompilationException {
 		try {
 			DeclarationListAST dl = (DeclarationListAST) ast.clone();
-			dl.d = (DeclarationAST) ast.d.visit(this, null);
-			dl.dl = (DeclarationListAST) ast.dl.visit(this, null);
+			dl.declarationAST = (DeclarationAST) ast.declarationAST.visit(this, null);
+			dl.declarationListAST = (DeclarationListAST) ast.declarationListAST.visit(this, null);
 
 			return dl;
 		} catch (CloneNotSupportedException e) {
@@ -517,11 +517,11 @@ public class CopyASTVisitor implements Visitor {
 			Object o) throws CompilationException {
 		try {
 			EmptyDeclarationListAST edl = (EmptyDeclarationListAST) ast.clone();
-			if (ast.d != null) {
-				edl.d = (DeclarationAST) ast.d.visit(this, null);
+			if (ast.declarationAST != null) {
+				edl.declarationAST = (DeclarationAST) ast.declarationAST.visit(this, null);
 			}
-			if (ast.dl != null) {
-				edl.dl = (DeclarationListAST) ast.dl.visit(this, null);
+			if (ast.declarationListAST != null) {
+				edl.declarationListAST = (DeclarationListAST) ast.declarationListAST.visit(this, null);
 			}
 
 			return edl;

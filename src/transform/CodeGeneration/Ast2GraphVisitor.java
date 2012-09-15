@@ -243,8 +243,8 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	// DeclarationListAST
 	public Object visitDeclarationListAST(DeclarationListAST ast, Object o)
 			throws CompilationException {
-		ast.d.visit(this, o);
-		ast.dl.visit(this, o);
+		ast.declarationAST.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 
