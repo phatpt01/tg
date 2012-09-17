@@ -9,15 +9,12 @@ public class Node {
 	TYPE StatementTYPE;
 	VariableUsed definedVar = null;
 	ArrayList<VariableUsed> usedVars = null;
-	ArrayList<DataDep> dataDep = null;
-	ControlDep conDep = null;
+	ArrayList<DataDependence> dataDep = null;
+	ControlDependence conDep = null;
 	ArrayList<Node> potDep = null;
 
 	protected int indexInPDG = -1;
 
-	/*
-	 * Constructor
-	 */
 	public Node(int ID, TYPE Type) {
 		this.StatementID = ID;
 		this.StatementTYPE = Type;
@@ -28,11 +25,8 @@ public class Node {
 		this.potDep = null;
 	}
 
-	/**
-	 * Default Constructor
-	 */
-	public Node(int id, TYPE type, ArrayList<DataDep> data, ControlDep control,
-			ArrayList<Node> pot) {
+	public Node(int id, TYPE type, ArrayList<DataDependence> data,
+			ControlDependence control, ArrayList<Node> pot) {
 		this.StatementID = id;
 		this.StatementTYPE = type;
 		this.dataDep = data;
@@ -53,13 +47,13 @@ public class Node {
 	}
 
 	public void addControlDep(Node nodeY, boolean branch) {
-		this.conDep = new ControlDep(nodeY, branch);
+		this.conDep = new ControlDependence(nodeY, branch);
 	}
 
 	public void addDataDep(Node nodeY, String varName) {
-		DataDep ddTemp = new DataDep(nodeY, varName);
+		DataDependence ddTemp = new DataDependence(nodeY, varName);
 		if (this.dataDep == null) {
-			this.dataDep = new ArrayList<DataDep>();
+			this.dataDep = new ArrayList<DataDependence>();
 			this.dataDep.add(ddTemp);
 		} else {
 			this.dataDep.ensureCapacity(1);
@@ -107,11 +101,11 @@ public class Node {
 		return null;
 	}
 
-	public ControlDep getConDep() {
+	public ControlDependence getConDep() {
 		return this.conDep;
 	}
 
-	public ArrayList<DataDep> getDataDep() {
+	public ArrayList<DataDependence> getDataDep() {
 		return this.dataDep;
 	}
 
@@ -198,7 +192,7 @@ public class Node {
 		return result;
 	}
 
-	public String toString(ArrayList<DataDep> list) {
+	public String toString(ArrayList<DataDependence> list) {
 		String result = "";
 		for (int i = 0; i < list.size(); i++) {
 			result += "\t" + list.get(i).toString() + "\n";

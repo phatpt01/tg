@@ -1,19 +1,20 @@
 package transform.DependenceGraph;
 
-public class ControlDep {
+public class ControlDependence {
+
 	Node node = null;
 	boolean branch;
 
-	public ControlDep() {
+	public ControlDependence() {
 		this.node = null;
 	}
 
-	public ControlDep(ControlDep controlDep) {
-		this.node = controlDep.node;
-		this.branch = controlDep.branch;
+	public ControlDependence(ControlDependence controlDependence) {
+		this.node = controlDependence.node;
+		this.branch = controlDependence.branch;
 	}
 
-	public ControlDep(Node n, boolean b) {
+	public ControlDependence(Node n, boolean b) {
 		this.node = n;
 		this.branch = b;
 	}
@@ -30,7 +31,7 @@ public class ControlDep {
 		return this.node == null;
 	}
 
-	public void set(ControlDep that) {
+	public void set(ControlDependence that) {
 		this.node = that.node;
 		this.branch = that.branch;
 	}

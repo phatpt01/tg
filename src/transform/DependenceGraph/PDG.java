@@ -23,11 +23,11 @@ public class PDG { // Program Dependence Graph
 			// luu them index cua node trong PDG
 			nodeInPDG.setIndex(i);
 
-			ArrayList<DataDep> listData = nodeInPDG.getDataDep();
+			ArrayList<DataDependence> listData = nodeInPDG.getDataDep();
 			if (listData == null)
 				continue;
 			for (int j = 0; j < listData.size(); j++) {
-				DataDep data = listData.get(j);
+				DataDependence data = listData.get(j);
 				data.setNode(findNodeAtLine(data.getID()));
 			}
 		}

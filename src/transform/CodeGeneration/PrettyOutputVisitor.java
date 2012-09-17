@@ -278,9 +278,9 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.em.printout("{" + this.newline());
 		String checkSwitch = (String) o;
 		if ((checkSwitch != null) && checkSwitch.equals("switch")) {
-			ast.s.visit(this, "switch");
+			ast.stmtListAST.visit(this, "switch");
 		} else {
-			ast.s.visit(this, "block");
+			ast.stmtListAST.visit(this, "block");
 		}
 		return null;
 	}

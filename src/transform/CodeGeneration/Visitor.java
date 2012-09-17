@@ -91,7 +91,7 @@ public interface Visitor {
 	public abstract Object visitAssiStmtAST(AssiStmtAST ast, Object o)
 			throws CompilationException;
 
-	// expression
+	// Expression
 	public abstract Object visitBinExprAST(BinExprAST ast, Object o)
 			throws CompilationException;
 
@@ -246,7 +246,7 @@ public interface Visitor {
 	public abstract Object visitProcDeclAST(ProcDeclAST ast, Object o)
 			throws CompilationException;
 
-	// Procedure/function declaration
+	// Procedure / Function declaration
 	public abstract Object visitProcDeclPartAST(ProcDeclPartAST ast, Object o)
 			throws CompilationException;
 
@@ -266,7 +266,7 @@ public interface Visitor {
 	public abstract Object visitSignedTypeAST(SignedTypeAST ast, Object o)
 			throws CompilationException;
 
-	// statement
+	// Statement
 	public abstract Object visitStmtListAST(StmtListAST ast, Object o)
 			throws CompilationException;
 
@@ -298,7 +298,7 @@ public interface Visitor {
 	public abstract Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException;
 
-	// initializer
+	// Initializer
 	public abstract Object visitVarInitializerAST(VarInitializerAST ast,
 			Object o) throws CompilationException;
 

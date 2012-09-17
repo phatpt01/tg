@@ -64,7 +64,7 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitCompStmtAST(CompStmtAST cAst, Object o)
 			throws CompilationException {
-		cAst.s.visit(this, o);
+		cAst.stmtListAST.visit(this, o);
 		return null;
 	}
 

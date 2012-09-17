@@ -1,6 +1,6 @@
 package transform.DependenceGraph;
 
-public class DataDep {
+public class DataDependence {
 	int lineID;
 	String var_depend = null;
 	Node node = null;
@@ -8,12 +8,12 @@ public class DataDep {
 	String newline = "\r\n";
 	String tab = "\t";
 
-	public DataDep(int id, String var) {
+	public DataDependence(int id, String var) {
 		this.lineID = id;
 		this.var_depend = var;
 	}
 
-	public DataDep(Node nodeY, String varName) {
+	public DataDependence(Node nodeY, String varName) {
 		this.node = nodeY;
 		this.var_depend = varName;
 	}

@@ -9,11 +9,11 @@ public class CompStmtAST extends OneStmtAST {
 	 * v.parent=s.parent=this; } public Object visit(Visitor v, Object o) throws
 	 * CompilationException{ return v.visitCompStmtAST(this,o); }
 	 */
-	public StmtListAST s;
+	public StmtListAST stmtListAST;
 
 	public CompStmtAST(StmtListAST stmt) {
-		s = stmt;
-		s.parent = this;
+		stmtListAST = stmt;
+		stmtListAST.parent = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

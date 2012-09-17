@@ -9,27 +9,27 @@ import java.util.*;
  * Visitor duyet qua cay AST de tao ra Program Dependence Graph
  ***********************************************************************************/
 public class Ast2GraphVisitor extends DoNothingVisitor {
-	TableAssignedVariable tableAssignedVar; // <=== table luu bien duoc gan tai
+	TableAssignedVariable tableAssignedVariable; // <=== table luu bien duoc gan tai
 											// moi dong
 	PDG graph;
-	ControlDep currentLevelNode; // <=== dung de tinh toan phu thuoc dieu khien
+	ControlDependence currentLevelNode; // <=== dung de tinh toan phu thuoc dieu khien
 
 	// bien constant bao hieu dang duyet cac lenh trong vong loop de tim nhung
 	// bien duoc gan
-	// khong tao ra node hay tim DataDep trong luc duyet
+	// khong tao ra node hay tim DataDependence trong luc duyet
 	static final String FIND_ASSIGN_STMT_IN_LOOP = "findAssiInLoop";
 
 	// bien constant bao hieu 1 statement dang o trong 1 loop
 	static final String STMT_IN_LOOP = "stmtInLoop";
 
 	public Ast2GraphVisitor() {
-		tableAssignedVar = new TableAssignedVariable();
+		tableAssignedVariable = new TableAssignedVariable();
 		graph = new PDG();
-		currentLevelNode = new ControlDep();
+		currentLevelNode = new ControlDependence();
 	}
 
-	public void add2ListDataDep(ArrayList<DataDep> list1,
-			ArrayList<DataDep> list2) {
+	public void add2ListDataDep(ArrayList<DataDependence> list1,
+			ArrayList<DataDependence> list2) {
 		int size1 = list1.size();
 		for (int i = 0; i < list2.size(); i++) {
 			boolean existsInList1 = false;
@@ -101,7 +101,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	}
 
 	public String getTableAssignedVar() {
-		return tableAssignedVar.toString();
+		return tableAssignedVariable.toString();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -149,8 +149,8 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	public Object visitBinExprAST(BinExprAST ast, Object o)
 			throws CompilationException {
 		ast.line = ast.op.getLine();
-		ArrayList<DataDep> list1 = (ArrayList<DataDep>) ast.e1.visit(this, o);
-		ArrayList<DataDep> list2 = (ArrayList<DataDep>) ast.e2.visit(this, o);
+		ArrayList<DataDependence> list1 = (ArrayList<DataDependence>) ast.e1.visit(this, o);
+		ArrayList<DataDependence> list2 = (ArrayList<DataDependence>) ast.e2.visit(this, o);
 
 		// cac loai phep gan =, +=, -=, *=, /=, %=
 		if (ast.opType >= BinExprAST.ASSIGN
@@ -158,7 +158,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			// day la phep gan
 			String varNameAssigned = list1.get(0).getVarName();
 			// luu bien duoc gan vao danh sach
-			tableAssignedVar.addAssignedVar(ast.line, varNameAssigned);
+			tableAssignedVariable.addAssignedVar(ast.line, varNameAssigned);
 			if (ast.parent instanceof ExprStmtAST) {
 				// neu return true <=> dang tim kiem lenh gan trong vong lap
 				if (checkEquals(o, FIND_ASSIGN_STMT_IN_LOOP))
@@ -204,7 +204,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	@SuppressWarnings("unchecked")
 	public Object visitCallExprAST(CallExprAST ast, Object o)
 			throws CompilationException {
-		ArrayList<DataDep> list = (ArrayList<DataDep>) ast.e.visit(this, o);
+		ArrayList<DataDependence> list = (ArrayList<DataDependence>) ast.e.visit(this, o);
 		return list;
 	}
 
@@ -228,7 +228,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	// CompStmtAST
 	public Object visitCompStmtAST(CompStmtAST cAst, Object o)
 			throws CompilationException {
-		cAst.s.visit(this, o);
+		cAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -282,14 +282,14 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		wAst.o.visit(this, FIND_ASSIGN_STMT_IN_LOOP);
 
 		// bat dau duyet chinh thuc
-		ArrayList<DataDep> data = (ArrayList<DataDep>) wAst.e.visit(this, o);
-		ControlDep conDep = null;
+		ArrayList<DataDependence> data = (ArrayList<DataDependence>) wAst.e.visit(this, o);
+		ControlDependence conDep = null;
 		if (!currentLevelNode.isEmpty())
-			conDep = new ControlDep(currentLevelNode);
+			conDep = new ControlDependence(currentLevelNode);
 		Node doNode = new Node(wAst.line, TYPE.CONDITION, data, conDep, null);
 
 		// backup lai node o phia tren cua lenh loop
-		ControlDep backupLevelNode = new ControlDep(currentLevelNode);
+		ControlDependence backupLevelNode = new ControlDependence(currentLevelNode);
 		currentLevelNode.set(doNode, true);
 		wAst.o.visit(this, STMT_IN_LOOP);
 		currentLevelNode.set(backupLevelNode);
@@ -304,15 +304,15 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	public Object visitEleExprAST(EleExprAST ast, Object o)
 			throws CompilationException {
 		String varName = ast.name.getText();
-		ArrayList<Integer> linesOfVar = tableAssignedVar
+		ArrayList<Integer> linesOfVar = tableAssignedVariable
 				.getLinesOfAssignedVar(varName);
-		ArrayList<DataDep> result = new ArrayList<DataDep>();
+		ArrayList<DataDependence> result = new ArrayList<DataDependence>();
 		for (int i = 0; i < linesOfVar.size(); i++)
-			result.add(new DataDep(linesOfVar.get(i).intValue(), varName));
+			result.add(new DataDependence(linesOfVar.get(i).intValue(), varName));
 		if (result.size() == 0)
-			result.add(new DataDep(0, varName));
+			result.add(new DataDependence(0, varName));
 
-		ArrayList<DataDep> resExprList = (ArrayList<DataDep>) ast.e.visit(this,
+		ArrayList<DataDependence> resExprList = (ArrayList<DataDependence>) ast.e.visit(this,
 				o);
 		if (resExprList != null)
 			add2ListDataDep(result, resExprList);
@@ -324,8 +324,8 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	@SuppressWarnings("unchecked")
 	public Object visitExprListAST(ExprListAST ast, Object o)
 			throws CompilationException {
-		ArrayList<DataDep> list = (ArrayList<DataDep>) ast.e.visit(this, o);
-		ArrayList<DataDep> list2 = (ArrayList<DataDep>) ast.l.visit(this, o);
+		ArrayList<DataDependence> list = (ArrayList<DataDependence>) ast.e.visit(this, o);
+		ArrayList<DataDependence> list2 = (ArrayList<DataDependence>) ast.l.visit(this, o);
 		if (list != null && list2 != null) {
 			add2ListDataDep(list, list2);
 			return list;
@@ -348,7 +348,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			if (((String) res).equals("skip_adding_node"))
 				return null;
 
-		ArrayList<DataDep> data = (ArrayList<DataDep>) res;
+		ArrayList<DataDependence> data = (ArrayList<DataDependence>) res;
 		String varNameAssigned = "";
 		// lay thong tin cua variable duoc gan
 		if (ast.e instanceof BinExprAST) {
@@ -360,9 +360,9 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		} else if (ast.e instanceof UnaryExprAST)
 			varNameAssigned = ((VarExprAST) ((UnaryExprAST) ast.e).e).name
 					.getText();
-		ControlDep conDep = null;
+		ControlDependence conDep = null;
 		if (!currentLevelNode.isEmpty())
-			conDep = new ControlDep(currentLevelNode);
+			conDep = new ControlDependence(currentLevelNode);
 		Node assignNode = new Node(ast.line, TYPE.ASSIGN, data, conDep, null);
 		assignNode.setDefinedVar(new VariableUsed(varNameAssigned, -1));
 		graph.addNode(assignNode);
@@ -410,18 +410,18 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		fAst.o.visit(this, FIND_ASSIGN_STMT_IN_LOOP);
 
 		// duyet lan thu 2 de tim ra data dependence
-		ArrayList<DataDep> data1 = null;
-		ArrayList<DataDep> data2 = null;
-		ArrayList<DataDep> data3 = null;
+		ArrayList<DataDependence> data1 = null;
+		ArrayList<DataDependence> data2 = null;
+		ArrayList<DataDependence> data3 = null;
 		if (fAst.e1 != null)
-			data1 = (ArrayList<DataDep>) fAst.e1.visit(this, "");
+			data1 = (ArrayList<DataDependence>) fAst.e1.visit(this, "");
 		if (fAst.e2 != null)
-			data2 = (ArrayList<DataDep>) fAst.e2.visit(this, "");
+			data2 = (ArrayList<DataDependence>) fAst.e2.visit(this, "");
 		if (fAst.e3 != null)
-			data3 = (ArrayList<DataDep>) fAst.e3.visit(this, "");
+			data3 = (ArrayList<DataDependence>) fAst.e3.visit(this, "");
 
 		// tong hop lai cac du lieu phu thuoc nay vo bien data
-		ArrayList<DataDep> data = new ArrayList<DataDep>();
+		ArrayList<DataDependence> data = new ArrayList<DataDependence>();
 		if (data1 != null)
 			add2ListDataDep(data, data1);
 		if (data2 != null)
@@ -430,14 +430,14 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			add2ListDataDep(data, data3);
 		if (data.size() == 0)
 			data = null;
-		ControlDep conDep = null;
+		ControlDependence conDep = null;
 		if (!currentLevelNode.isEmpty())
-			conDep = new ControlDep(currentLevelNode);
+			conDep = new ControlDependence(currentLevelNode);
 		Node forNode = new Node(fAst.line, TYPE.FORLOOP, data, conDep, null);
 		graph.addNode(forNode);
 
 		// backup lai node o phia tren cua lenh loop
-		ControlDep backupLevelNode = new ControlDep(currentLevelNode);
+		ControlDependence backupLevelNode = new ControlDependence(currentLevelNode);
 		currentLevelNode.set(forNode, true);
 		fAst.o.visit(this, STMT_IN_LOOP);
 		currentLevelNode.set(backupLevelNode);
@@ -469,30 +469,30 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			return null;
 		}
 
-		ArrayList<DataDep> data = (ArrayList<DataDep>) iAst.e.visit(this, o);
-		ControlDep conDep = null;
+		ArrayList<DataDependence> data = (ArrayList<DataDependence>) iAst.e.visit(this, o);
+		ControlDependence conDep = null;
 		if (!currentLevelNode.isEmpty())
-			conDep = new ControlDep(currentLevelNode);
+			conDep = new ControlDependence(currentLevelNode);
 		Node ifNode = new Node(iAst.line, TYPE.CONDITION, data, conDep, null);
 		graph.addNode(ifNode);
 
 		// backup lai node o phia tren cua lenh if
-		ControlDep backupLevelNode = new ControlDep(currentLevelNode);
+		ControlDependence backupLevelNode = new ControlDependence(currentLevelNode);
 		if (!checkEquals(o, STMT_IN_LOOP)) {
 			// neu lenh IfElse nay khong nam trong bat ky lenh loop nao
 			// su dung 1 backup table de luu cac bien duoc gan trong nhanh IF
-			tableAssignedVar.useBackUpTable();
+			tableAssignedVariable.useBackUpTable();
 			currentLevelNode.set(ifNode, true);
 			iAst.s1.visit(this, o);
 
 			// ket thuc viec su dung backup table
 			// luu lai trong 1 stack, quay tro ve voi main table.
-			tableAssignedVar.finishUsingBackUpTable();
+			tableAssignedVariable.finishUsingBackUpTable();
 			currentLevelNode.set(ifNode, false);
 			iAst.s2.visit(this, o);
 
 			// copy lai backup table vo main table
-			tableAssignedVar.restoreBackUpTable();
+			tableAssignedVariable.restoreBackUpTable();
 		} else {
 			currentLevelNode.set(ifNode, true);
 			iAst.s1.visit(this, o);
@@ -514,15 +514,15 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			return null;
 		}
 
-		ArrayList<DataDep> data = (ArrayList<DataDep>) iAst.e.visit(this, o);
-		ControlDep conDep = null;
+		ArrayList<DataDependence> data = (ArrayList<DataDependence>) iAst.e.visit(this, o);
+		ControlDependence conDep = null;
 		if (!currentLevelNode.isEmpty())
-			conDep = new ControlDep(currentLevelNode);
+			conDep = new ControlDependence(currentLevelNode);
 		Node ifNode = new Node(iAst.line, TYPE.CONDITION, data, conDep, null);
 		graph.addNode(ifNode);
 
 		// backup lai node o phia tren cua lenh if
-		ControlDep backupLevelNode = new ControlDep(currentLevelNode);
+		ControlDependence backupLevelNode = new ControlDependence(currentLevelNode);
 
 		// gan ifNode hien tai la node dieu khien cha
 		currentLevelNode.set(ifNode, true);
@@ -547,7 +547,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		// bien khai bao tai para trong ham duoc luu vao table
 		String varNameAssigned = pAst.id.getText();
 		// luu bien duoc gan vao danh sach
-		tableAssignedVar.addAssignedVar(pAst.line, varNameAssigned);
+		tableAssignedVariable.addAssignedVar(pAst.line, varNameAssigned);
 		pAst.t.visit(this, o);
 		return null;
 	}
@@ -589,11 +589,11 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			return null;
 		if (rAst.e != null) {
 			rAst.line = getLineOfExpr(rAst.e);
-			ArrayList<DataDep> data = (ArrayList<DataDep>) rAst.e
+			ArrayList<DataDependence> data = (ArrayList<DataDependence>) rAst.e
 					.visit(this, o);
-			ControlDep conDep = null;
+			ControlDependence conDep = null;
 			if (!currentLevelNode.isEmpty())
-				conDep = new ControlDep(currentLevelNode);
+				conDep = new ControlDependence(currentLevelNode);
 			graph.addNode(new Node(rAst.line, TYPE.RETURN, data, conDep, null));
 		}
 		return null;
@@ -648,12 +648,12 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	public Object visitUnaryExprAST(UnaryExprAST ast, Object o)
 			throws CompilationException {
 		ast.line = ast.op.getLine();
-		ArrayList<DataDep> list = (ArrayList<DataDep>) ast.e.visit(this, o);
+		ArrayList<DataDependence> list = (ArrayList<DataDependence>) ast.e.visit(this, o);
 		if (ast.op.getText().equals("++") || ast.op.getText().equals("--")) {
 			// day la phep gan tang hoac giam 1 don vi
 			String varNameAssigned = ((VarExprAST) ast.e).name.getText();
 			// luu bien duoc gan vao danh sach
-			tableAssignedVar.addAssignedVar(ast.line, varNameAssigned);
+			tableAssignedVariable.addAssignedVar(ast.line, varNameAssigned);
 			if (ast.parent instanceof ExprStmtAST) {
 				// neu return true <=> dang tim kiem lenh gan trong vong lap
 				if (checkEquals(o, FIND_ASSIGN_STMT_IN_LOOP))
@@ -676,15 +676,15 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			// day la phep gan
 			String varNameAssigned = ast.id.getText();
 			// luu bien duoc gan vao danh sach
-			tableAssignedVar.addAssignedVar(ast.line, varNameAssigned);
+			tableAssignedVariable.addAssignedVar(ast.line, varNameAssigned);
 			// neu return true <=> dang tim kiem lenh gan trong vong lap
 			if (checkEquals(o, FIND_ASSIGN_STMT_IN_LOOP))
 				return null;
-			ArrayList<DataDep> data = (ArrayList<DataDep>) ast.init.visit(this,
+			ArrayList<DataDependence> data = (ArrayList<DataDependence>) ast.init.visit(this,
 					o);
-			ControlDep conDep = null;
+			ControlDependence conDep = null;
 			if (!currentLevelNode.isEmpty())
-				conDep = new ControlDep(currentLevelNode);
+				conDep = new ControlDependence(currentLevelNode);
 			Node assignNode = new Node(ast.line, TYPE.ASSIGN, data, conDep,
 					null);
 			assignNode.setDefinedVar(new VariableUsed(varNameAssigned, -1));
@@ -704,13 +704,13 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
 		String varName = ast.name.getText();
-		ArrayList<Integer> linesOfVar = tableAssignedVar
+		ArrayList<Integer> linesOfVar = tableAssignedVariable
 				.getLinesOfAssignedVar(varName);
-		ArrayList<DataDep> result = new ArrayList<DataDep>();
+		ArrayList<DataDependence> result = new ArrayList<DataDependence>();
 		for (int i = 0; i < linesOfVar.size(); i++)
-			result.add(new DataDep(linesOfVar.get(i).intValue(), varName));
+			result.add(new DataDependence(linesOfVar.get(i).intValue(), varName));
 		if (result.size() == 0)
-			result.add(new DataDep(0, varName));
+			result.add(new DataDependence(0, varName));
 		return result;
 	}
 
@@ -743,15 +743,15 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		wAst.o.visit(this, FIND_ASSIGN_STMT_IN_LOOP);
 
 		// bat dau duyet chinh thuc
-		ArrayList<DataDep> data = (ArrayList<DataDep>) wAst.e.visit(this, o);
-		ControlDep conDep = null;
+		ArrayList<DataDependence> data = (ArrayList<DataDependence>) wAst.e.visit(this, o);
+		ControlDependence conDep = null;
 		if (!currentLevelNode.isEmpty())
-			conDep = new ControlDep(currentLevelNode);
+			conDep = new ControlDependence(currentLevelNode);
 		Node whileNode = new Node(wAst.line, TYPE.CONDITION, data, conDep, null);
 		graph.addNode(whileNode);
 
 		// backup lai node o phia tren cua lenh loop
-		ControlDep backupLevelNode = new ControlDep(currentLevelNode);
+		ControlDependence backupLevelNode = new ControlDependence(currentLevelNode);
 		currentLevelNode.set(whileNode, true);
 		wAst.o.visit(this, STMT_IN_LOOP);
 		currentLevelNode.set(backupLevelNode);

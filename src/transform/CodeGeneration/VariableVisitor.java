@@ -213,7 +213,7 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitCompStmtAST(CompStmtAST ast, Object o)
 			throws CompilationException {
-		ast.s.visit(this, null);
+		ast.stmtListAST.visit(this, null);
 		return null;
 	}
 

@@ -174,7 +174,7 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 		CompStmtAST cAst = (CompStmtAST) ast;
 		print(indentString() + "CompStmt(");
 		++indent;
-		cAst.s.visit(this, o);
+		cAst.stmtListAST.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;
