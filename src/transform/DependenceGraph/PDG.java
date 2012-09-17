@@ -2,7 +2,7 @@ package transform.DependenceGraph;
 
 import java.util.ArrayList;
 
-public class PDG {
+public class PDG { // Program Dependence Graph
 	public ArrayList<Node> progDepGraph;
 
 	String newline = "\r\n";
