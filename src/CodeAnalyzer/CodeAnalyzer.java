@@ -325,21 +325,6 @@ public class CodeAnalyzer {
 		return listConditionExpr;
 	}
 
-	/*
-	 * public ArrayList<String> getFirstTestCase() { Random generator = new
-	 * Random(); ArrayList<String> testcase = new ArrayList<String>(); for(int
-	 * i=0; i<this.listPara.size(); i++) { switch(listPara.get(i).getType()) {
-	 * case "Int": testcase.add(String.valueOf(generator.nextInt(100))); break;
-	 * case "Real": case "Double":
-	 * testcase.add(String.valueOf(generator.nextDouble()*100)); break; } }
-	 * ArrayList<String> temp = new ArrayList<String>();
-	 * 
-	 * StringBuffer tc = new StringBuffer(); for (int i = 0; i <
-	 * testcase.size(); i++) { temp.add(testcase.get(i));
-	 * tc.append(testcase.get(i)); tc.append("\n"); }
-	 * this.testcaseSet.add(tc.toString()); return testcase; }
-	 */
-
 	public ArrayList<Boolean> getFalseList() {
 		ArrayList<Boolean> result = new ArrayList<Boolean>();
 		for (int i = 0; i < this.listCondition.size(); i++) {
@@ -585,8 +570,10 @@ public class CodeAnalyzer {
 	}
 
 	public String scanCondition() {
+		
 		String output = "";
-		listCondition = transform.updateConList(listCondition);
+		listCondition = transform.updateConditionList(listCondition);
+		
 		for (int i = 0; i < this.listCondition.size(); i++) {
 			output += "Condition " + (i + 1) + ":"
 					+ this.listCondition.get(i).getCondition() + "\n";

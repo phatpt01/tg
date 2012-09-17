@@ -75,8 +75,8 @@ public class ReIndexVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		if ((ast.opType == BinExprAST.ASSIGN)) { // && (ast.parent instanceof
 													// ExprStmtAST)) {
-			Token token = (Token) ast.e1.visit(this, o);
-			if ((Boolean) (ast.e2.visit(this, token)) == true) {
+			Token token = (Token) ast.exprAST1.visit(this, o);
+			if ((Boolean) (ast.exprAST2.visit(this, token)) == true) {
 				int i = this.findVar(token.getText());
 				if (i >= 0) {
 					this.var.get(i).increaseIndex();
@@ -118,13 +118,13 @@ public class ReIndexVisitor extends DoNothingVisitor {
 
 		if (o instanceof Token) {
 			Token token = (Token) o;
-			boolean b = (Boolean) ast.e1.visit(this, token);
-			b = b || (Boolean) ast.e2.visit(this, token);
+			boolean b = (Boolean) ast.exprAST1.visit(this, token);
+			b = b || (Boolean) ast.exprAST2.visit(this, token);
 			return b;
 		}
 
-		ast.e1.visit(this, "other");
-		ast.e2.visit(this, "other");
+		ast.exprAST1.visit(this, "other");
+		ast.exprAST2.visit(this, "other");
 
 		return false;
 	}

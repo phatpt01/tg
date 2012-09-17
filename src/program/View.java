@@ -15,11 +15,6 @@ import transform.AST.CompilationException;
 
 public class View {
 
-	/**
-	 * Launch the application.
-	 * 
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		try {
 			View window = new View();
@@ -30,6 +25,8 @@ public class View {
 	}
 
 	Control control;
+
+	String sourceFile;
 	protected Shell shell;
 	private Table table1;
 	private Table table2;
@@ -39,27 +36,22 @@ public class View {
 	private TableColumn columnValue;
 	private TableColumn columnCondition;
 	private TableColumn columnTrue;
+
 	private TableColumn columnFalse;
 	private Button btnOpen;
-
 	private Button btnStandard;
-	String sourceFile;
 	private Button btnGen;
 	private Button btnExit;
 	private Button btnFirst;
 	private Button btnScan;
 	private Button btnShow;
 	private Button btnPrev;
-
 	private Button btnNext;
 
 	private void changeSourceText(String source) {
 		styledText.setText(source);
 	}
 
-	/**
-	 * Create contents of the window.
-	 */
 	protected void createContents() {
 		shell = new Shell();
 		shell.setSize(940, 750);
@@ -129,7 +121,6 @@ public class View {
 
 		btnStandard = new Button(shell, SWT.NONE);
 
-		// Add action for button standardize source code
 		btnStandard.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -244,9 +235,6 @@ public class View {
 		btnNext.setBounds(850, 161, 50, 20);
 	}
 
-	/**
-	 * Open the window.
-	 */
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();

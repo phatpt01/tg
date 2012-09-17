@@ -38,17 +38,17 @@ public class BinExprAST extends ExprAST {
 	public static final int DIV = 27;
 	public static final int MOD = 28;
 
-	public ExprAST e1;
+	public ExprAST exprAST1;
 	public Token op;
 	public int opType;
-	public ExprAST e2;
+	public ExprAST exprAST2;
 
-	public BinExprAST(ExprAST exp1, int o, Token t, ExprAST exp2) {
-		this.e1 = exp1;
-		this.op = t;
+	public BinExprAST(ExprAST exp1, int o, Token token, ExprAST exp2) {
+		this.exprAST1 = exp1;
+		this.op = token;
 		this.opType = o;
-		this.e2 = exp2;
-		this.e1.parent = this.e2.parent = this;
+		this.exprAST2 = exp2;
+		this.exprAST1.parent = this.exprAST2.parent = this;
 	}
 
 	@Override

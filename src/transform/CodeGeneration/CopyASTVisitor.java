@@ -177,8 +177,8 @@ public class CopyASTVisitor implements Visitor {
 			throws CompilationException {
 		try {
 			BinExprAST be = (BinExprAST) ast.clone();
-			be.e1 = (ExprAST) ast.e1.visit(this, null);
-			be.e2 = (ExprAST) ast.e2.visit(this, null);
+			be.exprAST1 = (ExprAST) ast.exprAST1.visit(this, null);
+			be.exprAST2 = (ExprAST) ast.exprAST2.visit(this, null);
 
 			return be;
 		} catch (CloneNotSupportedException e) {

@@ -104,10 +104,10 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			// phep toan 0 - ast.e2
 			val1 = new Integer(0);
 		} else {
-			if (ast.e1 instanceof UnaryExprAST) {
-				val1 = ast.e1.visit(this, "get_pointer_value");
+			if (ast.exprAST1 instanceof UnaryExprAST) {
+				val1 = ast.exprAST1.visit(this, "get_pointer_value");
 			} else {
-				val1 = ast.e1.visit(this, o);
+				val1 = ast.exprAST1.visit(this, o);
 			}
 		}
 
@@ -116,14 +116,14 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			// phep toan ast.e1 + 1
 			val2 = new Integer(1);
 		} else {
-			if (ast.e2 instanceof UnaryExprAST) {
-				if (((UnaryExprAST) ast.e2).opType == UnaryExprAST.INDIRECTION) {
-					val2 = ast.e2.visit(this, "get_pointer_value");
+			if (ast.exprAST2 instanceof UnaryExprAST) {
+				if (((UnaryExprAST) ast.exprAST2).opType == UnaryExprAST.INDIRECTION) {
+					val2 = ast.exprAST2.visit(this, "get_pointer_value");
 				} else {
-					val2 = ast.e2.visit(this, o);
+					val2 = ast.exprAST2.visit(this, o);
 				}
 			} else {
-				val2 = ast.e2.visit(this, o);
+				val2 = ast.exprAST2.visit(this, o);
 			}
 		}
 
@@ -132,7 +132,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 				&& (ast.opType <= BinExprAST.MOD_ASSIGN)) {
 			// them phep gan dia chi pointer vao pointer table
 			if (ast.opType == BinExprAST.ASSIGN) {
-				if (ast.e2 instanceof UnaryExprAST) {
+				if (ast.exprAST2 instanceof UnaryExprAST) {
 					// String pointerName = (String) ast.e1.visit(this,
 					// GET_VARIABLE_NAME);
 					// String varName = (String) ast.e2.visit(this,
@@ -147,12 +147,12 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			}
 
 			String varName = "";
-			if (ast.e1 instanceof VarExprAST) {
-				varName = ((VarExprAST) ast.e1).name.getText();
-			} else if (ast.e1 instanceof EleExprAST) {
-				varName = ((EleExprAST) ast.e1).name.getText();
-			} else if (ast.e1 instanceof UnaryExprAST) {
-				varName = (String) ast.e1.visit(this, "get_pointer_name");
+			if (ast.exprAST1 instanceof VarExprAST) {
+				varName = ((VarExprAST) ast.exprAST1).name.getText();
+			} else if (ast.exprAST1 instanceof EleExprAST) {
+				varName = ((EleExprAST) ast.exprAST1).name.getText();
+			} else if (ast.exprAST1 instanceof UnaryExprAST) {
+				varName = (String) ast.exprAST1.visit(this, "get_pointer_name");
 			}
 
 			int scope;
@@ -166,8 +166,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 				// phep gan +=, -=, *=, /=, %=
 				// opType cua phep gan: 1, 2, 3, 4, 5
 				// opType cua phep toan tuong ung: 24, 25, 26, 27, 28
-				ExprAST binExpr = new BinExprAST(ast.e1, ast.opType + 23, null,
-						ast.e2);
+				ExprAST binExpr = new BinExprAST(ast.exprAST1, ast.opType + 23, null,
+						ast.exprAST2);
 				Object val = binExpr.visit(this, o);
 				scope = this.simulation.updateValueOfVariable(varName, val);
 				// set scope

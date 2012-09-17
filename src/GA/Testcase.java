@@ -27,12 +27,6 @@ public class Testcase {
 			m_aiParams[i] = Util.Random(m_iParamNum);
 		}
 		m_CanAcessBranch = codeAnalyzer.check(m_aiParams);
-		// if(m_CanAcessBranch[3] == 0)
-		// {
-		// System.out.println("Abc" + m_aiParams[3][0] + " " + m_aiParams[3][1]
-		// + " "+ m_aiParams[3][2]);
-		// }
-
 	}
 
 	public Testcase Clone() {
@@ -87,24 +81,9 @@ public class Testcase {
 		int pos1 = Math.abs(r.nextInt() % (m_iParamNum - 1));
 		this.m_aiParams[pos][pos1] = r.nextInt() % 10;
 		this.m_CanAcessBranch = codeAnalyzer.check(m_aiParams);
-		// if(m_CanAcessBranch[3] == 0)
-		// {
-		// System.out.println("Abc" + m_aiParams[3][0] + " " + m_aiParams[3][1]
-		// + " "+ m_aiParams[3][2]);
-		// }
 	}
 
 	public void PrintResult() {
-		// for (int i = 0; i < m_iBranchNum; i++)
-		// {
-		// String s = "Branch " + i + ": ";
-		// for (int j = 0; j < m_iParamNum; j++)
-		// {
-		// s += m_aiParams[i][j] + " ";
-		// }
-		// Util.PRINT(s + m_CanAcessBranch[i]);
-		// }
-
 		try {
 			FileWriter fstream = new FileWriter("result.txt");
 			BufferedWriter out = new BufferedWriter(fstream);

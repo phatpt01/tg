@@ -37,9 +37,9 @@ public class FormalPathPrintVisitor extends PrettyOutputVisitor {
 			// if (!checkAssgn) {
 			this.get_EM().printout("(");
 			// }
-			ast.e1.visit(this, null);
+			ast.exprAST1.visit(this, null);
 			this.get_EM().printout(" " + ast.op.getText() + " ");
-			ast.e2.visit(this, null);
+			ast.exprAST2.visit(this, null);
 			// if (!checkAssgn) {
 			this.get_EM().printout(")");
 			// }
@@ -52,13 +52,13 @@ public class FormalPathPrintVisitor extends PrettyOutputVisitor {
 			this.get_EM().printout("(");
 			// }
 
-			ast.e1.visit(this, null);
+			ast.exprAST1.visit(this, null);
 			this.get_EM().printout(" " + ast.op.getText() + " ");
 			// if (assiStmt) {
 			// ast.e2.visit(this, "assign");
 			// }
 			// else {
-			ast.e2.visit(this, null);
+			ast.exprAST2.visit(this, null);
 			// }
 			// if (!assiStmt) {
 			this.get_EM().printout(")");

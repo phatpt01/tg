@@ -29,11 +29,6 @@ public class GA implements Cons {
 				maxAccessedBranchNum = bestTestCase.GetAcessedBranchNum();
 			}
 		}
-		// if (bestTestCase.m_CanAcessBranch[3] == 0)
-		// System.out.println("Here" + bestTestCase.m_aiParams[3][0] + " "
-		// + bestTestCase.m_aiParams[3][1] + " "
-		// + bestTestCase.m_aiParams[3][2]);
-
 		return bestTestCase;
 	}
 
@@ -104,20 +99,15 @@ public class GA implements Cons {
 
 			while (!IsDone() && count < 1000) {
 				Testcase bestTestCase = GetBestTestCase();
+				
 				if (m_AllTimeBestTestcase.GetAcessedBranchNum() < bestTestCase
 						.GetAcessedBranchNum()) {
 					m_AllTimeBestTestcase = bestTestCase;
 				}
-				// if(bestTestCase.m_CanAcessBranch[3] == 0)
-				// {
-				// System.out.println("alo" +
-				// bestTestCase.m_aiParams[3][0]+" "+bestTestCase.m_aiParams[3][1]+" "+
-				// bestTestCase.m_aiParams[3][2]);
-				// }
+
 				for (int i = 0; i < k_iPOPULATION_SIZE; i++) {
 					Testcase t = m_Population.get(i);
 					if (t != bestTestCase) {
-						// Random r = new Random();
 						Testcase child = bestTestCase.Clone();
 						int res = child.Hybid(t);
 						if (res != 0) {
@@ -132,9 +122,6 @@ public class GA implements Cons {
 				m_ChildPopulation = new ArrayList<Testcase>();
 				count++;
 			}
-			// m_AllTimeBestTestcase.PrintResult();
 		}
-
 	}
-
 }

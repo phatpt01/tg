@@ -36,15 +36,15 @@ public class ConditionPrintVisitor extends FormalPathPrintVisitor {
 
 		if ((ast.opType >= 24) && (ast.opType <= 28)) {
 			this.get_EM().printout("(");
-			ast.e1.visit(this, null);
+			ast.exprAST1.visit(this, null);
 			this.get_EM().printout(ast.op.getText());
-			ast.e2.visit(this, null);
+			ast.exprAST2.visit(this, null);
 			this.get_EM().printout(")");
 		} else {
 			this.get_EM().printout("(");
-			ast.e1.visit(this, null);
+			ast.exprAST1.visit(this, null);
 			this.get_EM().printout(ast.op.getText());
-			ast.e2.visit(this, null);
+			ast.exprAST2.visit(this, null);
 			this.get_EM().printout(")");
 		}
 		return null;

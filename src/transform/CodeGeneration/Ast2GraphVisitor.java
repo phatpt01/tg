@@ -149,8 +149,8 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	public Object visitBinExprAST(BinExprAST ast, Object o)
 			throws CompilationException {
 		ast.line = ast.op.getLine();
-		ArrayList<DataDependence> list1 = (ArrayList<DataDependence>) ast.e1.visit(this, o);
-		ArrayList<DataDependence> list2 = (ArrayList<DataDependence>) ast.e2.visit(this, o);
+		ArrayList<DataDependence> list1 = (ArrayList<DataDependence>) ast.exprAST1.visit(this, o);
+		ArrayList<DataDependence> list2 = (ArrayList<DataDependence>) ast.exprAST2.visit(this, o);
 
 		// cac loai phep gan =, +=, -=, *=, /=, %=
 		if (ast.opType >= BinExprAST.ASSIGN
@@ -352,7 +352,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		String varNameAssigned = "";
 		// lay thong tin cua variable duoc gan
 		if (ast.e instanceof BinExprAST) {
-			ExprAST leftSide = ((BinExprAST) ast.e).e1;
+			ExprAST leftSide = ((BinExprAST) ast.e).exprAST1;
 			if (leftSide instanceof VarExprAST)
 				varNameAssigned = ((VarExprAST) leftSide).name.getText();
 			else if (leftSide instanceof EleExprAST)

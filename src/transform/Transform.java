@@ -23,36 +23,26 @@ import transform.Parser.CPPParser;
 import system.Temp;
 
 public class Transform {
-	/**
-	 * Source File
-	 */
 	String originalSourceFile;
 	String standardSourceFile;
 
-	/**
-	 * Abstract Syntax Tree
-	 */
 	AST astree;
-	/**
-	 * Mapping Table
-	 */
-	MappingTable mapTable;
-	/**
-	 * Program Dependence Graph
-	 */
+
+	MappingTable mappingTable;
+	
 	PDG pdg;
 
-	ArrayList<ArrayList<AST>> res;
-	ArrayList<ArrayList<Integer>> res1;
+	ArrayList<ArrayList<AST>> lstPath;
+	ArrayList<ArrayList<Integer>> lstBranch;
 
 	/**
 	 * this object contains all parameters of program
 	 */
-	ArrayList<Parameter> listParameters;
+	ArrayList<Parameter> lstParameters;
 	/**
 	 * this object contains all variables of program
 	 */
-	ArrayList<Variable> listVariables;
+	ArrayList<Variable> lstVariables;
 
 	public Transform(String strSourceFile) {
 		this.originalSourceFile = strSourceFile;
@@ -110,12 +100,12 @@ public class Transform {
 					pdg);
 			astree.visit(cfgVisitor, null);
 
-			res = cfgVisitor.getListPath();
-			res1 = cfgVisitor.getListBranch();
-			for (int i = 0; i < res.size(); i++) {
-				for (int j = 0; j < res.get(i).size(); j++) {
-					System.out.println(res.get(i).get(j).getClass().toString()
-							+ " " + res1.get(i).get(j));
+			lstPath = cfgVisitor.getListPath();
+			lstBranch = cfgVisitor.getListBranch();
+			for (int i = 0; i < lstPath.size(); i++) {
+				for (int j = 0; j < lstPath.get(i).size(); j++) {
+					System.out.println(lstPath.get(i).get(j).getClass().toString()
+							+ " " + lstBranch.get(i).get(j));
 				}
 				System.out.println("Next");
 			}
@@ -125,7 +115,7 @@ public class Transform {
 			 */
 			Ast2MappingTableVisitor ast2Table = new Ast2MappingTableVisitor();
 			this.astree.visit(ast2Table, "");
-			this.mapTable = ast2Table.getMappingTable(); // get the mapping
+			this.mappingTable = ast2Table.getMappingTable(); // get the mapping
 															// table
 
 			/**
@@ -134,9 +124,9 @@ public class Transform {
 			VariableVisitor varVisitor = new VariableVisitor();
 			this.astree.visit(varVisitor, null); // Get list variables of the
 													// program
-			this.listParameters = varVisitor.getListPara();
+			this.lstParameters = varVisitor.getListPara();
 			// System.out.println(this.listParameters.get(0).getName());
-			this.listVariables = varVisitor.getListVar();
+			this.lstVariables = varVisitor.getListVar();
 		} catch (NullPointerException e) {
 			throw e;
 		} catch (Exception e) {
@@ -149,23 +139,23 @@ public class Transform {
 	}
 
 	public ArrayList<ArrayList<Integer>> getListBranch() {
-		return this.res1;
+		return this.lstBranch;
 	}
 
 	public ArrayList<Parameter> getListParameters() {
-		return listParameters;
+		return lstParameters;
 	}
 
 	public ArrayList<ArrayList<AST>> getListPath() {
-		return this.res;
+		return this.lstPath;
 	}
 
 	public ArrayList<Variable> getListVariables() {
-		return listVariables;
+		return lstVariables;
 	}
 
 	public MappingTable getMapTable() {
-		return mapTable;
+		return mappingTable;
 	}
 
 	public PDG getPdg() {
@@ -176,23 +166,25 @@ public class Transform {
 		return standardSourceFile;
 	}
 
-	public ArrayList<Condition> updateConList(ArrayList<Condition> conlist) {
-		Temp1Visitor tmp1Visitor = new Temp1Visitor(listParameters,
-				listVariables, conlist);
+	public ArrayList<Condition> updateConditionList(ArrayList<Condition> lstCondition) {
+	
+		Temp1Visitor tmp1Visitor = new Temp1Visitor(lstParameters,
+				lstVariables, lstCondition);
 		Temp obj = new Temp();
+		
 		try {
-			for (int i = 0; i < res.size(); i++) {
-				for (int j = 0; j < res.get(i).size(); j++) {
+			for (int i = 0; i < lstPath.size(); i++) {
+				for (int j = 0; j < lstPath.get(i).size(); j++) {
 					obj.con = i;
 					obj.pos = j;
-					obj.branch = res1.get(i).get(j);
-					res.get(i).get(j).visit(tmp1Visitor, obj);
+					obj.branch = lstBranch.get(i).get(j);
+					lstPath.get(i).get(j).visit(tmp1Visitor, obj);
 				}
 				tmp1Visitor.clear();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return tmp1Visitor.getCon();
+		return tmp1Visitor.getArrayCondition();
 	}
 }

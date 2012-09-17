@@ -83,9 +83,9 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 		BinExprAST bAst = (BinExprAST) ast;
 		print(indentString() + "BinExpr(");
 		++indent;
-		bAst.e1.visit(this, o);
+		bAst.exprAST1.visit(this, o);
 		print(indentString() + bAst.op.getText());
-		bAst.e2.visit(this, o);
+		bAst.exprAST2.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;

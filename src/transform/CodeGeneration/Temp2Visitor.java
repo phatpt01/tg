@@ -89,23 +89,23 @@ public class Temp2Visitor extends DoNothingVisitor {
 		if ((ast.opType == BinExprAST.ASSIGN)) { // && (ast.parent instanceof
 													// ExprStmtAST)) {
 
-			String var = (String) ast.e1.visit(this, "c");
+			String var = (String) ast.exprAST1.visit(this, "c");
 			int temp = 0;
 			int i = this.findVar(var);
 			if (i >= 0) {
-				temp = (Integer) ast.e2.visit(this, o);
+				temp = (Integer) ast.exprAST2.visit(this, o);
 				this.var.set(i, temp);
 			} else {
 				i = this.findPara(var);
 				if (i >= 0) {
-					temp = (Integer) ast.e2.visit(this, o);
+					temp = (Integer) ast.exprAST2.visit(this, o);
 					this.para.set(i, temp);
 				}
 			}
 			return -1;
 		} else {
-			int val1 = (Integer) ast.e1.visit(this, null);
-			int val2 = (Integer) ast.e2.visit(this, null);
+			int val1 = (Integer) ast.exprAST1.visit(this, null);
+			int val2 = (Integer) ast.exprAST2.visit(this, null);
 			int value = 0;
 			switch (ast.opType) {
 			case BinExprAST.PLUS:

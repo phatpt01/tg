@@ -69,16 +69,16 @@ public class TempVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		if ((ast.opType == BinExprAST.ASSIGN)) { // && (ast.parent instanceof
 													// ExprStmtAST)) {
-			String var = (String) ast.e1.visit(this, o);
+			String var = (String) ast.exprAST1.visit(this, o);
 			String temp = "";
 			int i = this.findVar(var);
 			if (i >= 0) {
-				temp = (String) ast.e2.visit(this, "c");
+				temp = (String) ast.exprAST2.visit(this, "c");
 				this.var.set(i, temp);
 			} else {
 				i = this.findPara(var);
 				if (i >= 0) {
-					temp = (String) ast.e2.visit(this, "c");
+					temp = (String) ast.exprAST2.visit(this, "c");
 					this.para.set(i, temp);
 				}
 			}
@@ -87,8 +87,8 @@ public class TempVisitor extends DoNothingVisitor {
 			if (o == "c") {
 				String output = "";
 
-				String val1 = (String) ast.e1.visit(this, "c");
-				String val2 = (String) ast.e2.visit(this, "c");
+				String val1 = (String) ast.exprAST1.visit(this, "c");
+				String val2 = (String) ast.exprAST2.visit(this, "c");
 				if (val1.matches("((-|\\+)?[0-9]+(\\.[0-9]+)?)+")
 						&& val2.matches("((-|\\+)?[0-9]+(\\.[0-9]+)?)+")) {
 					int temp = Integer.parseInt(val1);
@@ -112,7 +112,7 @@ public class TempVisitor extends DoNothingVisitor {
 					output += temp;
 				} else {
 					output += "(";
-					output += (String) ast.e1.visit(this, "c");
+					output += (String) ast.exprAST1.visit(this, "c");
 					switch (ast.opType) {
 					case 24:
 						output += " + ";
@@ -130,7 +130,7 @@ public class TempVisitor extends DoNothingVisitor {
 						output += " % ";
 						break;
 					}
-					output += (String) ast.e2.visit(this, "c") + ")";
+					output += (String) ast.exprAST2.visit(this, "c") + ")";
 				}
 				return output;
 			} else {

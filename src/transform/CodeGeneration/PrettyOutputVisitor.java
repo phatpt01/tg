@@ -170,9 +170,9 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 			if (!checkAssgn) {
 				this.em.printout("(");
 			}
-			ast.e1.visit(this, null);
+			ast.exprAST1.visit(this, null);
 			this.em.printout(" " + ast.op.getText() + " ");
-			ast.e2.visit(this, null);
+			ast.exprAST2.visit(this, null);
 			if (!checkAssgn) {
 				this.em.printout(")");
 			}
@@ -184,12 +184,12 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 				this.em.printout("(");
 			}
 
-			ast.e1.visit(this, null);
+			ast.exprAST1.visit(this, null);
 			this.em.printout(" " + ast.op.getText() + " ");
 			if (assiStmt) {
-				ast.e2.visit(this, "assign");
+				ast.exprAST2.visit(this, "assign");
 			} else {
-				ast.e2.visit(this, null);
+				ast.exprAST2.visit(this, null);
 			}
 			if (!assiStmt) {
 				this.em.printout(")");

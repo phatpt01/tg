@@ -136,7 +136,7 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitBinExprAST(BinExprAST ast, Object o)
 			throws CompilationException {
-		ast.e1.visit(this, null);
+		ast.exprAST1.visit(this, null);
 		return null;
 	}
 
