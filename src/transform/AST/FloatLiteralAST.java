@@ -7,7 +7,7 @@ import transform.CodeGeneration.Visitor;
 public class FloatLiteralAST extends LiteralAST {
 
 	public FloatLiteralAST(Token t) {
-		this.literal = t;
+		this.literalToken = t;
 	}
 
 	@Override

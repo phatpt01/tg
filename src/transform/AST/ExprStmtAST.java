@@ -8,7 +8,7 @@ public class ExprStmtAST extends OneStmtAST {
 
 	public ExprStmtAST(ExprAST ex) {
 		this.e = ex;
-		this.e.parent = this;
+		this.e.parentAST = this;
 	}
 
 	@Override

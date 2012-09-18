@@ -7,7 +7,7 @@ public class GlobalVarDeclPartAST extends OneProcDeclAST {
 
 	public GlobalVarDeclPartAST(VarDeclPartAST varPart) {
 		vp = varPart;
-		vp.parent = this;
+		vp.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

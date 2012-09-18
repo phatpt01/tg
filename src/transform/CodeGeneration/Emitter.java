@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 public class Emitter {
+	
 	private final String prefixVarName = "m";
 	private String switch_str = "";
 	private boolean case_on = false;

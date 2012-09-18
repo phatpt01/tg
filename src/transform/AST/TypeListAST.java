@@ -14,7 +14,7 @@ public class TypeListAST extends TypeAST {
 	public TypeListAST(TypeAST type, TypeListAST typel) {
 		this.t = type;
 		this.tl = typel;
-		this.t.parent = this.tl.parent = this;
+		this.t.parentAST = this.tl.parentAST = this;
 	}
 
 	@Override

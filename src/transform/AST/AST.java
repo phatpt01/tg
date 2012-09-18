@@ -3,7 +3,8 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public abstract class AST implements Cloneable {
-	public AST parent;
+	
+	public AST parentAST;
 	public int line;
 
 	@Override

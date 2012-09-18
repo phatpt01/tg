@@ -7,7 +7,7 @@ public class ProgramAST extends AST {
 
 	public ProgramAST(DeclarationListAST decll) {
 		this.dl = decll;
-		this.dl.parent = this;
+		this.dl.parentAST = this;
 	}
 
 	@Override

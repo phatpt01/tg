@@ -20,30 +20,33 @@ public class CodeAnalyzer {
 	private AST astTree;
 
 	private PDG pdg;
+
 	// Mapping Table
 	private MappingTable mapTable;
+
 	// Transform
 	private Transform transform;
 
+	// List path
 	private ArrayList<ArrayList<AST>> listPath;
+
+	// List Branch
 	private ArrayList<ArrayList<Integer>> listBranch;
 
 	// List Variable
 	private ArrayList<Variable> listVariable;
+
 	// List Parameter
 	private ArrayList<Parameter> listParameter;
+
 	// List Condition
 	private ArrayList<Condition> listCondition;
 
-	// private ArrayList<ArrayList<Integer>> testcaseSet;
-
-	// private ArrayList<ArrayList<Integer>> slideset;
-
-	private int currTestCase = 0;
+	private int currentTestCase = 0;
 
 	private String testcase = "";
 
-	private int numUnsolCon;
+	private int numUnSolvableCondition;
 
 	int temp1 = 1;
 
@@ -51,21 +54,19 @@ public class CodeAnalyzer {
 	}
 
 	public CodeAnalyzer(String strSourceFile) {
-		// this.testcaseSet = new ArrayList<ArrayList<Integer>>();
 		this.listCondition = new ArrayList<Condition>();
-		// this.slideset = new ArrayList<ArrayList<Integer>>();
 		transform = new Transform(strSourceFile);
-		this.mapTable = transform.getMapTable(); // Mapping Table
+		this.mapTable = transform.getMapTable();
 		this.pdg = transform.getPdg();
 		this.astTree = transform.getAstree();
-		this.listParameter = transform.getListParameters(); // list Parameters
-		this.listVariable = transform.getListVariables(); // list Variables
+		this.listParameter = transform.getListParameters();
+		this.listVariable = transform.getListVariables();
 	}
 
 	public int[] check(int[][] testcase) {
 		int numCon = this.listCondition.size();
 		int numPar = this.listParameter.size();
-		int[] result = new int[numUnsolCon * 2];
+		int[] result = new int[numUnSolvableCondition * 2];
 		int count = 0;
 
 		for (int i = 0; i < numCon; i++) {
@@ -81,11 +82,6 @@ public class CodeAnalyzer {
 				count += 2;
 			}
 		}
-		// if(result[3] == 0)
-		// {
-		// System.out.println(testcase[3][0]+" "+ testcase[3][1]+" "+
-		// testcase[3][2]);
-		// }
 		return result;
 	}
 
@@ -177,11 +173,11 @@ public class CodeAnalyzer {
 		return result;
 	}
 
-	public String GenerateSolvable() {
+	public String generateSolvable() {
 		int count = 0;
 		String output = "";
 		for (int i = 0; i < this.listCondition.size(); i++) {
-			GenNextTestCase(i);
+			generateNextTestCase(i);
 		}
 
 		for (int i = 0; i < this.listCondition.size(); i++) {
@@ -199,10 +195,10 @@ public class CodeAnalyzer {
 		return output;
 	}
 
-	private void GenNextTestCase(int i) {
+	private void generateNextTestCase(int i) {
 		boolean check = false;
 		for (int j = 0; j < this.listCondition.get(i).getTruepath().size(); j++) {
-			String res = GenTestCase(this.listCondition.get(i).getTruepath()
+			String res = generateTestCase(this.listCondition.get(i).getTruepath()
 					.get(j));
 			if (!res.equals("")) {
 				this.listCondition.get(i).setTruetc(res);
@@ -212,7 +208,7 @@ public class CodeAnalyzer {
 			}
 		}
 		for (int k = 0; k < this.listCondition.get(i).getFalsepath().size(); k++) {
-			String res = GenTestCase(this.listCondition.get(i).getFalsepath()
+			String res = generateTestCase(this.listCondition.get(i).getFalsepath()
 					.get(k));
 			if (!res.equals("")) {
 
@@ -226,7 +222,7 @@ public class CodeAnalyzer {
 		this.listCondition.get(i).setHastc(check);
 	}
 
-	private String GenTestCase(String con) {
+	private String generateTestCase(String con) {
 		String z3output = "Z3OUTPUT";
 		File z3outFolder = new File(z3output);
 		if (!z3outFolder.exists()) {
@@ -358,7 +354,6 @@ public class CodeAnalyzer {
 						} else {
 							sub = line.substring(8, line.length() - 3);
 						}
-						// System.out.println(sub);
 						Scanner sc = new Scanner(sub);
 						sc.useDelimiter(" ");
 						z3result.add(sc.next());
@@ -428,12 +423,12 @@ public class CodeAnalyzer {
 
 	public ArrayList<Integer> getNextTestCase() {
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		if (currTestCase < this.listCondition.size() * 2 - 1)
-			currTestCase++;
-		if (currTestCase % 2 == 0) {
-			testcase = this.listCondition.get(currTestCase / 2).getTruetc();
+		if (currentTestCase < this.listCondition.size() * 2 - 1)
+			currentTestCase++;
+		if (currentTestCase % 2 == 0) {
+			testcase = this.listCondition.get(currentTestCase / 2).getTruetc();
 		} else {
-			testcase = this.listCondition.get(currTestCase / 2).getFalsetc();
+			testcase = this.listCondition.get(currentTestCase / 2).getFalsetc();
 		}
 		StringTokenizer st = new StringTokenizer(testcase, "[, ]");
 		while (st.hasMoreTokens()) {
@@ -469,12 +464,12 @@ public class CodeAnalyzer {
 	 */
 
 	public int getNumCon() {
-		numUnsolCon = 0;
+		numUnSolvableCondition = 0;
 		for (int i = 0; i < this.listCondition.size(); i++) {
 			if (this.listCondition.get(i).isHastc() == false)
-				numUnsolCon++;
+				numUnSolvableCondition++;
 		}
-		return numUnsolCon;
+		return numUnSolvableCondition;
 	}
 
 	public int getNumPar() {
@@ -491,12 +486,12 @@ public class CodeAnalyzer {
 
 	public ArrayList<Integer> getPrevTestCase() {
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		if (currTestCase > 0)
-			currTestCase--;
-		if (currTestCase % 2 == 0) {
-			testcase = this.listCondition.get(currTestCase / 2).getTruetc();
+		if (currentTestCase > 0)
+			currentTestCase--;
+		if (currentTestCase % 2 == 0) {
+			testcase = this.listCondition.get(currentTestCase / 2).getTruetc();
 		} else {
-			testcase = this.listCondition.get(currTestCase / 2).getFalsetc();
+			testcase = this.listCondition.get(currentTestCase / 2).getFalsetc();
 		}
 		StringTokenizer st = new StringTokenizer(testcase, "[, ]");
 		while (st.hasMoreTokens()) {
@@ -556,24 +551,22 @@ public class CodeAnalyzer {
 	}
 
 	public void loadFile(String strSourceFile) {
-		// this.testcaseSet = new ArrayList<ArrayList<Integer>>();
-		this.listCondition = new ArrayList<Condition>();
-		// this.slideset = new ArrayList<ArrayList<Integer>>();
+		listCondition = new ArrayList<Condition>();
 		transform = new Transform(strSourceFile);
-		this.mapTable = transform.getMapTable(); // Mapping Table
-		this.astTree = transform.getAstree();
-		this.pdg = transform.getPdg();
-		this.listParameter = transform.getListParameters(); // list Parameters
-		this.listVariable = transform.getListVariables(); // list Variables
-		this.listPath = transform.getListPath();
-		this.listBranch = transform.getListBranch();
+		mapTable = transform.getMapTable();
+		astTree = transform.getAstree();
+		pdg = transform.getPdg();
+		listParameter = transform.getListParameters();
+		listVariable = transform.getListVariables(); 
+		listPath = transform.getListPath();
+		listBranch = transform.getListBranch();
 	}
 
 	public String scanCondition() {
-		
+
 		String output = "";
 		listCondition = transform.updateConditionList(listCondition);
-		
+
 		for (int i = 0; i < this.listCondition.size(); i++) {
 			output += "Condition " + (i + 1) + ":"
 					+ this.listCondition.get(i).getCondition() + "\n";
@@ -647,8 +640,8 @@ public class CodeAnalyzer {
 				count += 2;
 			}
 		}
-		output = "Number of unsolvable condition: " + this.numUnsolCon + "\n"
-				+ output;
+		output = "Number of unsolvable condition: "
+				+ this.numUnSolvableCondition + "\n" + output;
 		return output;
 	}
 }

@@ -14,7 +14,7 @@ public class IntLiteralListAST extends AST {
 	public IntLiteralListAST(IntLiteralAST lit, IntLiteralListAST list) {
 		i = lit;
 		l = list;
-		i.parent = l.parent = this;
+		i.parentAST = l.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

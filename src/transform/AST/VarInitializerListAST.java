@@ -14,7 +14,7 @@ public class VarInitializerListAST extends InitializerAST {
 	public VarInitializerListAST(VarInitializerAST vx, VarInitializerListAST vlx) {
 		this.v = vx;
 		this.vl = vlx;
-		this.v.parent = this.vl.parent = this;
+		this.v.parentAST = this.vl.parentAST = this;
 	}
 
 	@Override

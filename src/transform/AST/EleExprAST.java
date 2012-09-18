@@ -11,7 +11,7 @@ public class EleExprAST extends LvalueAST {
 	public EleExprAST(Token t, ExprListAST exp) {
 		this.name = t;
 		this.e = exp;
-		this.e.parent = this;
+		this.e.parentAST = this;
 	}
 
 	@Override

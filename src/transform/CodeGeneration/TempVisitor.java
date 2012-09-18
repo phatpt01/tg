@@ -164,7 +164,7 @@ public class TempVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitDeclarationStmtAST(DeclarationStmtAST ast, Object o)
 			throws CompilationException {
-		return ast.dl.visit(this, o);
+		return ast.declarationListAST.visit(this, o);
 
 	}
 
@@ -193,7 +193,7 @@ public class TempVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitIntLiteralAST(IntLiteralAST ast, Object o)
 			throws CompilationException {
-		return ast.literal.getText();
+		return ast.literalToken.getText();
 	}
 
 	@Override

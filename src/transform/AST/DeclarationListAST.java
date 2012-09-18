@@ -14,7 +14,7 @@ public class DeclarationListAST extends AST {
 	public DeclarationListAST(DeclarationAST decl, DeclarationListAST decll) {
 		this.declarationAST = decl;
 		this.declarationListAST = decll;
-		this.declarationAST.parent = this.declarationListAST.parent = this;
+		this.declarationAST.parentAST = this.declarationListAST.parentAST = this;
 	}
 
 	@Override

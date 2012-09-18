@@ -3,19 +3,20 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class ArrayInitializerListAST extends InitializerAST {
-	public ArrayInitializerAST a;
-	public ArrayInitializerListAST al;
+	public ArrayInitializerAST arrayInitializerAST;
+	public ArrayInitializerListAST arrayInitializerAST1;
 
 	public ArrayInitializerListAST() {
-		a = null;
-		al = null;
+		arrayInitializerAST = null;
+		arrayInitializerAST1 = null;
 	}
 
-	public ArrayInitializerListAST(ArrayInitializerAST ax,
-			ArrayInitializerListAST alx) {
-		a = ax;
-		al = alx;
-		a.parent = al.parent = this;
+	public ArrayInitializerListAST(ArrayInitializerAST arrayInitializerAST,
+			ArrayInitializerListAST arrayInitializerAST1) {
+		this.arrayInitializerAST = arrayInitializerAST;
+		this.arrayInitializerAST1 = arrayInitializerAST1;
+
+		arrayInitializerAST.parentAST = arrayInitializerAST1.parentAST = this;
 	}
 
 	@Override

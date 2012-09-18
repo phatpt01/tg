@@ -10,7 +10,7 @@ public class DoStmtAST extends OneStmtAST {
 	public DoStmtAST(ExprAST exp, OneStmtAST stmt) {
 		e = exp;
 		o = stmt;
-		e.parent = o.parent = this;
+		e.parentAST = o.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

@@ -14,7 +14,7 @@ public class VarDeclPartAST extends AST {
 	public VarDeclPartAST(VarDeclAST var, VarDeclPartAST varPart) {
 		v = var;
 		vp = varPart;
-		v.parent = vp.parent = this;
+		v.parentAST = vp.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

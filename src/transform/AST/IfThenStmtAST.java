@@ -10,7 +10,7 @@ public class IfThenStmtAST extends OneStmtAST {
 	public IfThenStmtAST(ExprAST exp, OneStmtAST one) {
 		e = exp;
 		s = one;
-		e.parent = s.parent = this;
+		e.parentAST = s.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

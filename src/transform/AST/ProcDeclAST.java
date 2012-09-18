@@ -13,7 +13,7 @@ public class ProcDeclAST extends OneProcDeclAST {
 		this.name = n;
 		this.para = pl;
 		this.c = comp;
-		this.para.parent = this.c.parent = this;
+		this.para.parentAST = this.c.parentAST = this;
 	}
 
 	@Override

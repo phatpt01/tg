@@ -16,9 +16,9 @@ public class VarDeclAST extends DeclarationAST {
 		this.id = tk;
 		this.t = type;
 		this.init = i;
-		this.t.parent = this;
+		this.t.parentAST = this;
 		if (this.init != null) {
-			this.init.parent = this;
+			this.init.parentAST = this;
 		}
 	}
 

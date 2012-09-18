@@ -7,7 +7,7 @@ public class DefaultStmtAST extends OneStmtAST {
 
 	public DefaultStmtAST(StmtListAST sl) {
 		s = sl;
-		s.parent = this;
+		s.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

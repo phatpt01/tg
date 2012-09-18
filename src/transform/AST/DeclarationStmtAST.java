@@ -3,11 +3,11 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class DeclarationStmtAST extends OneStmtAST {
-	public DeclarationListAST dl;
+	public DeclarationListAST declarationListAST;
 
 	public DeclarationStmtAST(DeclarationListAST decl) {
-		this.dl = decl;
-		this.dl.parent = this;
+		this.declarationListAST = decl;
+		this.declarationListAST.parentAST = this;
 	}
 
 	@Override

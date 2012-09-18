@@ -11,7 +11,7 @@ public class DefineDirectiveAST extends DirectiveAST {
 	public DefineDirectiveAST(Token tk, ExprAST e) {
 		id = tk;
 		l = e;
-		l.parent = this;
+		l.parentAST = this;
 	}
 
 	@Override

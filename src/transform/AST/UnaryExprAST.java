@@ -24,7 +24,7 @@ public class UnaryExprAST extends ExprAST {
 		this.op = t;
 		this.opType = o;
 		this.e = exp;
-		this.e.parent = this;
+		this.e.parentAST = this;
 	}
 
 	@Override

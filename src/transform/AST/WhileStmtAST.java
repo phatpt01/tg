@@ -10,7 +10,7 @@ public class WhileStmtAST extends OneStmtAST {
 	public WhileStmtAST(ExprAST exp, OneStmtAST stmt) {
 		this.e = exp;
 		this.o = stmt;
-		this.e.parent = this.o.parent = this;
+		this.e.parentAST = this.o.parentAST = this;
 	}
 
 	@Override

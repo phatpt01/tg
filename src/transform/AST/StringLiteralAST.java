@@ -6,7 +6,7 @@ import transform.CodeGeneration.Visitor;
 
 public class StringLiteralAST extends LiteralAST {
 	public StringLiteralAST(Token t) {
-		literal = t;
+		literalToken = t;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

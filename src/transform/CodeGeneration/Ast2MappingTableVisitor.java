@@ -55,8 +55,8 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitCaseStmtAST(CaseStmtAST cAst, Object o)
 			throws CompilationException {
 		this.println("CaseStmtAST: " + cAst.line);
-		cAst.e.visit(this, o);
-		cAst.s.visit(this, o);
+		cAst.exprAST.visit(this, o);
+		cAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -90,7 +90,7 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitDeclarationStmtAST(DeclarationStmtAST ast, Object o)
 			throws CompilationException {
 		this.mapTable.addMappingNode(new MappingNode(ast.line, ast));
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 

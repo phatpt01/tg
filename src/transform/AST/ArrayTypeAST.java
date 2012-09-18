@@ -3,13 +3,14 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class ArrayTypeAST extends TypeAST {
-	public TypeAST type;
-	public ExprListAST el;
+	
+	public TypeAST typeAST;
+	public ExprListAST exprListAST;
 
 	public ArrayTypeAST(TypeAST prim, ExprListAST l) {
-		this.type = prim;
-		this.el = l;
-		this.type.parent = this.el.parent = this;
+		this.typeAST = prim;
+		this.exprListAST = l;
+		this.typeAST.parentAST = this.exprListAST.parentAST = this;
 	}
 
 	@Override

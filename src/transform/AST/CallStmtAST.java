@@ -5,13 +5,15 @@ import org.antlr.runtime.*;
 import transform.CodeGeneration.Visitor;
 
 public class CallStmtAST extends OneStmtAST {
-	public Token name;
-	public ExprListAST e;
+	
+	public Token op;
+	public ExprListAST exprListAST;
 
-	public CallStmtAST(Token t, ExprListAST exp) {
-		name = t;
-		e = exp;
-		e.parent = this;
+	public CallStmtAST(Token op, ExprListAST exprListAST) {
+		this.op = op;
+		this.exprListAST = exprListAST;
+	
+		exprListAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

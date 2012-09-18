@@ -13,7 +13,7 @@ public class ParaAST extends AST {
 		this.id = i;
 		this.t = type;
 		this.ref = r;
-		this.t.parent = this;
+		this.t.parentAST = this;
 	}
 
 	@Override

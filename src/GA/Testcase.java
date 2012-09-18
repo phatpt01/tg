@@ -45,7 +45,7 @@ public class Testcase {
 		return newTestcase;
 	}
 
-	public int GetAcessedBranchNum() {
+	public int getAcessedBranchNum() {
 		int count = 0;
 		for (int ok : m_CanAcessBranch) {
 			if (ok == 0)
@@ -54,7 +54,8 @@ public class Testcase {
 		return count;
 	}
 
-	public int Hybid(Testcase t) {
+	// Lai testcase
+	public int hybrid(Testcase t) { 
 		int count = 0;
 		for (int i = 0; i < m_iBranchNum; i++) {
 			if (this.m_CanAcessBranch[i] > t.m_CanAcessBranch[i]) {
@@ -76,14 +77,15 @@ public class Testcase {
 		return true;
 	}
 
-	public void Mutate(CodeAnalyzer codeAnalyzer, int pos) {
+	// Thay đổi, biến đổi
+	public void mutate(CodeAnalyzer codeAnalyzer, int pos) {
 		Random r = new Random();
 		int pos1 = Math.abs(r.nextInt() % (m_iParamNum - 1));
 		this.m_aiParams[pos][pos1] = r.nextInt() % 10;
 		this.m_CanAcessBranch = codeAnalyzer.check(m_aiParams);
 	}
 
-	public void PrintResult() {
+	public void printResult() {
 		try {
 			FileWriter fstream = new FileWriter("result.txt");
 			BufferedWriter out = new BufferedWriter(fstream);

@@ -13,20 +13,20 @@ public class GA implements Cons {
 
 	public Testcase m_AllTimeBestTestcase;
 
-	private void GenerateRandomPopulation(CodeAnalyzer codeAnalyzer) {
+	private void generateRandomPopulation(CodeAnalyzer codeAnalyzer) {
 		m_Population = new ArrayList<Testcase>();
 		for (int i = 0; i < k_iPOPULATION_SIZE; i++) {
 			m_Population.add(new Testcase(codeAnalyzer));
 		}
 	}
 
-	private Testcase GetBestTestCase() {
+	private Testcase getBestTestCase() {
 		Testcase bestTestCase = m_Population.get(0);
-		int maxAccessedBranchNum = bestTestCase.GetAcessedBranchNum();
+		int maxAccessedBranchNum = bestTestCase.getAcessedBranchNum();
 		for (Testcase t : m_Population) {
-			if (t.GetAcessedBranchNum() > maxAccessedBranchNum) {
+			if (t.getAcessedBranchNum() > maxAccessedBranchNum) {
 				bestTestCase = t;
-				maxAccessedBranchNum = bestTestCase.GetAcessedBranchNum();
+				maxAccessedBranchNum = bestTestCase.getAcessedBranchNum();
 			}
 		}
 		return bestTestCase;
@@ -51,7 +51,7 @@ public class GA implements Cons {
 			return null;
 	}
 
-	private boolean IsDone() {
+	private boolean isDone() {
 		if (m_AllTimeBestTestcase.isAcesssAllBranch()) {
 			for (int i = 0; i < m_AllTimeBestTestcase.m_iBranchNum; i += 2) {
 				System.out.println(m_AllTimeBestTestcase.m_CanAcessBranch[i]);
@@ -89,19 +89,19 @@ public class GA implements Cons {
 	@SuppressWarnings("unchecked")
 	public void run(CodeAnalyzer codeAnalyzer) {
 		if (codeAnalyzer.getNumCon() != 0) {
-			GenerateRandomPopulation(codeAnalyzer);
+			generateRandomPopulation(codeAnalyzer);
 
 			m_ChildPopulation = new ArrayList<Testcase>();
 
-			m_AllTimeBestTestcase = GetBestTestCase();
+			m_AllTimeBestTestcase = getBestTestCase();
 
 			int count = 0;
 
-			while (!IsDone() && count < 1000) {
-				Testcase bestTestCase = GetBestTestCase();
+			while (!isDone() && count < 1000) {
+				Testcase bestTestCase = getBestTestCase();
 				
-				if (m_AllTimeBestTestcase.GetAcessedBranchNum() < bestTestCase
-						.GetAcessedBranchNum()) {
+				if (m_AllTimeBestTestcase.getAcessedBranchNum() < bestTestCase
+						.getAcessedBranchNum()) {
 					m_AllTimeBestTestcase = bestTestCase;
 				}
 
@@ -109,9 +109,9 @@ public class GA implements Cons {
 					Testcase t = m_Population.get(i);
 					if (t != bestTestCase) {
 						Testcase child = bestTestCase.Clone();
-						int res = child.Hybid(t);
+						int res = child.hybrid(t);
 						if (res != 0) {
-							child.Mutate(codeAnalyzer, res);
+							child.mutate(codeAnalyzer, res);
 						}
 						m_ChildPopulation.add(child);
 					}

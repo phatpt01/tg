@@ -3658,7 +3658,7 @@ public class CPPParser
                         ast1 = this.out;
                         this.out = null;
                         if (this.in instanceof EmptyDeclarationListAST) {
-                            ast3 = this.in.parent;
+                            ast3 = this.in.parentAST;
                         }
                         
                     }

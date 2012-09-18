@@ -15,7 +15,7 @@ public class ExprListAST extends AST {
 	public ExprListAST(ExprAST exp, ExprListAST expl) {
 		e = exp;
 		l = expl;
-		e.parent = l.parent = this;
+		e.parentAST = l.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

@@ -12,7 +12,7 @@ public class RetStmtAST extends OneStmtAST {
 
 	public RetStmtAST(ExprAST exp) {
 		e = exp;
-		e.parent = this;
+		e.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

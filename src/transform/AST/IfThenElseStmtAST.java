@@ -13,7 +13,7 @@ public class IfThenElseStmtAST extends OneStmtAST {
 		e = exp;
 		s1 = stmt1;
 		s2 = stmt2;
-		e.parent = s1.parent = s2.parent = this;
+		e.parentAST = s1.parentAST = s2.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

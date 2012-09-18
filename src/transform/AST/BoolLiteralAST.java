@@ -5,8 +5,9 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class BoolLiteralAST extends LiteralAST {
-	public BoolLiteralAST(Token t) {
-		this.literal = t;
+	
+	public BoolLiteralAST(Token op) {
+		this.literalToken = op;
 	}
 
 	@Override

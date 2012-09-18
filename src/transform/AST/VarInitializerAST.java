@@ -7,7 +7,7 @@ public class VarInitializerAST extends InitializerAST {
 
 	public VarInitializerAST(ExprAST ex) {
 		this.e = ex;
-		this.e.parent = this;
+		this.e.parentAST = this;
 	}
 
 	@Override

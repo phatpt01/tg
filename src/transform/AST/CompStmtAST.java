@@ -13,7 +13,7 @@ public class CompStmtAST extends OneStmtAST {
 
 	public CompStmtAST(StmtListAST stmt) {
 		stmtListAST = stmt;
-		stmtListAST.parent = this;
+		stmtListAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

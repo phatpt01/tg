@@ -20,7 +20,7 @@ public class TernaryExprAST extends ExprAST {
 		e1 = exp1;
 		e2 = exp2;
 		e3 = exp3;
-		e1.parent = e2.parent = e3.parent = this;
+		e1.parentAST = e2.parentAST = e3.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

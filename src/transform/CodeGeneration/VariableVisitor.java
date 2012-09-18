@@ -237,8 +237,8 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitDeclarationStmtAST(DeclarationStmtAST ast, Object o)
 			throws CompilationException {
-		if (ast.dl != null) {
-			ast.dl.visit(this, null);
+		if (ast.declarationListAST != null) {
+			ast.declarationListAST.visit(this, null);
 		}
 		return null;
 	}

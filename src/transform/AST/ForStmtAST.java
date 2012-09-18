@@ -18,13 +18,13 @@ public class ForStmtAST extends OneStmtAST {
 		this.e3 = exp3;
 		this.o = one;
 		if (this.e1 != null) {
-			this.e1.parent = this;
+			this.e1.parentAST = this;
 		}
 		if (this.e2 != null) {
-			this.e2.parent = this;
+			this.e2.parentAST = this;
 		}
 		if (this.e3 != null) {
-			this.e3.parent = this;
+			this.e3.parentAST = this;
 		}
 	}
 

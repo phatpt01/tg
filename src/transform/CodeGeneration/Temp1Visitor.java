@@ -190,8 +190,8 @@ public class Temp1Visitor extends DoNothingVisitor {
 				Temp obj = (Temp) o;
 				int branch = obj.branch;
 				if (!output.equals("(  )")) {
-					int constmt = findCon(binExprAST.parent.line);
-					System.out.println("Parent line1 " + binExprAST.parent.line
+					int constmt = findCon(binExprAST.parentAST.line);
+					System.out.println("Parent line1 " + binExprAST.parentAST.line
 							+ " " + constmt);
 					boolean check = true;
 					if (branch == 0) {
@@ -229,8 +229,8 @@ public class Temp1Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitCallExprAST(CallExprAST callExprAST, Object o)
 			throws CompilationException {
-		String text = "(" + callExprAST.name.getText() + " "
-				+ callExprAST.e.visit(this, "c") + ")";
+		String text = "(" + callExprAST.op.getText() + " "
+				+ callExprAST.exprListAST.visit(this, "c") + ")";
 		return text;
 	}
 
@@ -263,7 +263,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 	public Object visitDeclarationStmtAST(
 			DeclarationStmtAST declarationStmtAST, Object o)
 			throws CompilationException {
-		declarationStmtAST.dl.visit(this, "c");
+		declarationStmtAST.declarationListAST.visit(this, "c");
 		return "";
 	}
 
@@ -298,7 +298,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitIntLiteralAST(IntLiteralAST ast, Object o)
 			throws CompilationException {
-		return ast.literal.getText();
+		return ast.literalToken.getText();
 	}
 
 	// ProgramAST
@@ -313,8 +313,8 @@ public class Temp1Visitor extends DoNothingVisitor {
 	public Object visitUnaryExprAST(UnaryExprAST ast, Object o)
 			throws CompilationException {
 
-		int constmt = findCon(ast.parent.line);
-		System.out.println("Parent line " + ast.parent.line + " " + constmt);
+		int constmt = findCon(ast.parentAST.line);
+		System.out.println("Parent line " + ast.parentAST.line + " " + constmt);
 		String res = "";
 		if (ast.opType == UnaryExprAST.LOGICAL_NOT) {
 			if (o == "c") {

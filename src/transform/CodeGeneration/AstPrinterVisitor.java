@@ -58,8 +58,8 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 
 		print(indentString() + "ArrayInitializerList(");
 		++indent;
-		ast.a.visit(this, o);
-		ast.al.visit(this, o);
+		ast.arrayInitializerAST.visit(this, o);
+		ast.arrayInitializerAST1.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -70,8 +70,8 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		print(indentString() + "ArrayType(");
 		++indent;
-		ast.type.visit(this, o);
-		ast.el.visit(this, o);
+		ast.typeAST.visit(this, o);
+		ast.exprListAST.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -97,7 +97,7 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 
 		print(indentString() + "BoolLiteral(");
 		++indent;
-		print(indentString() + ast.literal.getText());
+		print(indentString() + ast.literalToken.getText());
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -116,8 +116,8 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 		CallExprAST cAst = (CallExprAST) ast;
 		print(indentString() + "CallExpr(");
 		++indent;
-		print(indentString() + cAst.name.getText());
-		cAst.e.visit(this, o);
+		print(indentString() + cAst.op.getText());
+		cAst.exprListAST.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -129,8 +129,8 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 
 		print(indentString() + "CallStmt(");
 		++indent;
-		print(indentString() + ast.name.getText());
-		ast.e.visit(this, o);
+		print(indentString() + ast.op.getText());
+		ast.exprListAST.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -142,8 +142,8 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 		CaseStmtAST cAst = (CaseStmtAST) ast;
 		print(indentString() + "CaseStmt(");
 		++indent;
-		cAst.e.visit(this, o);
-		cAst.s.visit(this, o);
+		cAst.exprAST.visit(this, o);
+		cAst.stmtListAST.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -155,7 +155,7 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 
 		print(indentString() + "CharLiteral(");
 		++indent;
-		print(indentString() + ast.literal.getText());
+		print(indentString() + ast.literalToken.getText());
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -193,7 +193,7 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		print(indentString() + "DeclarationStmt(");
 		++indent;
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -328,7 +328,7 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 
 		print(indentString() + "FloatLiteral(");
 		++indent;
-		print(indentString() + ast.literal.getText());
+		print(indentString() + ast.literalToken.getText());
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -420,7 +420,7 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 
 		print(indentString() + "IntLiteral(");
 		++indent;
-		print(indentString() + ast.literal.getText());
+		print(indentString() + ast.literalToken.getText());
 		--indent;
 		print(indentString() + ")");
 		return null;
@@ -560,7 +560,7 @@ public class AstPrinterVisitor extends DoNothingVisitor {
 
 		print(indentString() + "StringLiteral(");
 		++indent;
-		print(indentString() + ast.literal.getText());
+		print(indentString() + ast.literalToken.getText());
 		--indent;
 		print(indentString() + ")");
 		return null;

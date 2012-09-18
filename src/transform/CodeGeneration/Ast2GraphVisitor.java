@@ -68,9 +68,9 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		else if (ast instanceof SwitchStmtAST)
 			line = getLineOfExpr(((SwitchStmtAST) ast).exprAST);
 		else if (ast instanceof CaseStmtAST)
-			line = getLineOfExpr(((CaseStmtAST) ast).e);
+			line = getLineOfExpr(((CaseStmtAST) ast).exprAST);
 		else if (ast instanceof BreakStmtAST)
-			line = ((BreakStmtAST) ast).t.getLine();
+			line = ((BreakStmtAST) ast).op.getLine();
 		else if (ast instanceof ContStmtAST)
 			line = ((ContStmtAST) ast).t.getLine();
 		else if (ast instanceof RetStmtAST)
@@ -86,11 +86,11 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 		if (exprAST instanceof UnaryExprAST)
 			line = ((UnaryExprAST) exprAST).op.getLine();
 		if (exprAST instanceof CallExprAST)
-			line = ((CallExprAST) exprAST).name.getLine();
+			line = ((CallExprAST) exprAST).op.getLine();
 		if (exprAST instanceof VarExprAST)
 			line = ((VarExprAST) exprAST).name.getLine();
 		if (exprAST instanceof LiteralAST)
-			line = ((LiteralAST) exprAST).literal.getLine();
+			line = ((LiteralAST) exprAST).literalToken.getLine();
 		if (exprAST instanceof EleExprAST)
 			line = ((EleExprAST) exprAST).name.getLine();
 		return line;
@@ -128,8 +128,8 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	// ArrayInitializerList
 	public Object visitArrayInitializerListAST(ArrayInitializerListAST ast,
 			Object o) throws CompilationException {
-		ast.a.visit(this, o);
-		ast.al.visit(this, o);
+		ast.arrayInitializerAST.visit(this, o);
+		ast.arrayInitializerAST1.visit(this, o);
 		return null;
 	}
 
@@ -139,8 +139,8 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	// ArrayTypeAST
 	public Object visitArrayTypeAST(ArrayTypeAST ast, Object o)
 			throws CompilationException {
-		ast.type.visit(this, o);
-		ast.el.visit(this, o);
+		ast.typeAST.visit(this, o);
+		ast.exprListAST.visit(this, o);
 		return null;
 	}
 
@@ -159,7 +159,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			String varNameAssigned = list1.get(0).getVarName();
 			// luu bien duoc gan vao danh sach
 			tableAssignedVariable.addAssignedVar(ast.line, varNameAssigned);
-			if (ast.parent instanceof ExprStmtAST) {
+			if (ast.parentAST instanceof ExprStmtAST) {
 				// neu return true <=> dang tim kiem lenh gan trong vong lap
 				if (checkEquals(o, FIND_ASSIGN_STMT_IN_LOOP))
 					return "skip_adding_node";
@@ -168,7 +168,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 
 		// truong hop phep gan thi DataDep = list2
 		if (ast.opType == BinExprAST.ASSIGN
-				&& (ast.parent instanceof ExprStmtAST || ast.parent instanceof ExprListAST))
+				&& (ast.parentAST instanceof ExprStmtAST || ast.parentAST instanceof ExprListAST))
 			return list2;
 
 		// cac truong hop khac thi add 2 danh sach du lieu phu thuoc
@@ -195,7 +195,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	// BreakStmtAST
 	public Object visitBreakStmtAST(BreakStmtAST ast, Object o)
 			throws CompilationException {
-		ast.line = ast.t.getLine();
+		ast.line = ast.op.getLine();
 		println("BreakStmtAST: " + ast.line);
 		return null;
 	}
@@ -204,17 +204,17 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	@SuppressWarnings("unchecked")
 	public Object visitCallExprAST(CallExprAST ast, Object o)
 			throws CompilationException {
-		ArrayList<DataDependence> list = (ArrayList<DataDependence>) ast.e.visit(this, o);
+		ArrayList<DataDependence> list = (ArrayList<DataDependence>) ast.exprListAST.visit(this, o);
 		return list;
 	}
 
 	// CaseStmtAST
 	public Object visitCaseStmtAST(CaseStmtAST cAst, Object o)
 			throws CompilationException {
-		cAst.line = getLineOfExpr(cAst.e);
+		cAst.line = getLineOfExpr(cAst.exprAST);
 		println("CaseStmtAST: " + cAst.line);
-		cAst.e.visit(this, o);
-		cAst.s.visit(this, o);
+		cAst.exprAST.visit(this, o);
+		cAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -251,7 +251,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	// DeclarationStmtAST
 	public Object visitDeclarationStmtAST(DeclarationStmtAST ast, Object o)
 			throws CompilationException {
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 
@@ -654,7 +654,7 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 			String varNameAssigned = ((VarExprAST) ast.e).name.getText();
 			// luu bien duoc gan vao danh sach
 			tableAssignedVariable.addAssignedVar(ast.line, varNameAssigned);
-			if (ast.parent instanceof ExprStmtAST) {
+			if (ast.parentAST instanceof ExprStmtAST) {
 				// neu return true <=> dang tim kiem lenh gan trong vong lap
 				if (checkEquals(o, FIND_ASSIGN_STMT_IN_LOOP))
 					return "skip_adding_node";
@@ -668,8 +668,8 @@ public class Ast2GraphVisitor extends DoNothingVisitor {
 	public Object visitVarDeclAST(VarDeclAST ast, Object o)
 			throws CompilationException {
 		ast.line = ast.id.getLine();
-		if (ast.parent.parent instanceof DeclarationStmtAST)
-			ast.parent.parent.line = ast.line;
+		if (ast.parentAST.parentAST instanceof DeclarationStmtAST)
+			ast.parentAST.parentAST.line = ast.line;
 
 		ast.t.visit(this, o);
 		if (ast.init != null) {

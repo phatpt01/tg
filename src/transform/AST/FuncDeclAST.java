@@ -16,7 +16,7 @@ public class FuncDeclAST extends DeclarationAST {
 		this.retType = rt;
 		this.c = comp;
 		// para.parent = ret.parent = c.parent = this;
-		this.para.parent = this.retType.parent = this;
+		this.para.parentAST = this.retType.parentAST = this;
 	}
 
 	@Override

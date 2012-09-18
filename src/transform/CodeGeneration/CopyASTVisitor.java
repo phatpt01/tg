@@ -122,9 +122,9 @@ public class CopyASTVisitor implements Visitor {
 			Object o) throws CompilationException {
 		try {
 			ArrayInitializerListAST ail = (ArrayInitializerListAST) ast.clone();
-			ail.a = (ArrayInitializerAST) ast.a.visit(this, null);
-			if (ast.al != null) {
-				ail.al = (ArrayInitializerListAST) ast.al.visit(this, null);
+			ail.arrayInitializerAST = (ArrayInitializerAST) ast.arrayInitializerAST.visit(this, null);
+			if (ast.arrayInitializerAST1 != null) {
+				ail.arrayInitializerAST1 = (ArrayInitializerListAST) ast.arrayInitializerAST1.visit(this, null);
 			}
 			return ail;
 		} catch (CloneNotSupportedException e) {
@@ -144,8 +144,8 @@ public class CopyASTVisitor implements Visitor {
 			throws CompilationException {
 		try {
 			ArrayTypeAST at = (ArrayTypeAST) ast.clone();
-			at.type = (TypeAST) ast.type.visit(this, null);
-			at.el = (ExprListAST) ast.el.visit(this, null);
+			at.typeAST = (TypeAST) ast.typeAST.visit(this, null);
+			at.exprListAST = (ExprListAST) ast.exprListAST.visit(this, null);
 
 			return at;
 		} catch (CloneNotSupportedException e) {
@@ -394,7 +394,7 @@ public class CopyASTVisitor implements Visitor {
 			throws CompilationException {
 		try {
 			DeclarationStmtAST ds = (DeclarationStmtAST) ast.clone();
-			ds.dl = (DeclarationListAST) ast.dl.visit(this, null);
+			ds.declarationListAST = (DeclarationListAST) ast.declarationListAST.visit(this, null);
 
 			return ds;
 		} catch (CloneNotSupportedException e) {

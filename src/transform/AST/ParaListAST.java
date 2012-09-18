@@ -14,7 +14,7 @@ public class ParaListAST extends AST {
 	public ParaListAST(ParaAST var, ParaListAST par) {
 		v = var;
 		p = par;
-		v.parent = p.parent = this;
+		v.parentAST = p.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

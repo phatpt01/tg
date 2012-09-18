@@ -261,32 +261,32 @@ public class Temp2Visitor extends DoNothingVisitor {
 	public Object visitCallExprAST(CallExprAST ast, Object o)
 			throws CompilationException {
 		int value = 0;
-		switch (ast.name.getText()) {
+		switch (ast.op.getText()) {
 		case "cos":
-			value = (int) Math.cos((Integer) ast.e.visit(this, o));
+			value = (int) Math.cos((Integer) ast.exprListAST.visit(this, o));
 			break;
 		case "sin":
-			value = (int) Math.sin((Integer) ast.e.visit(this, o));
+			value = (int) Math.sin((Integer) ast.exprListAST.visit(this, o));
 			break;
 		case "tan":
-			value = (int) Math.tan((Integer) ast.e.visit(this, o));
+			value = (int) Math.tan((Integer) ast.exprListAST.visit(this, o));
 			break;
 		case "exp":
-			value = (int) Math.exp((Integer) ast.e.visit(this, o));
+			value = (int) Math.exp((Integer) ast.exprListAST.visit(this, o));
 			break;
 		case "log":
-			value = (int) Math.log((Integer) ast.e.visit(this, o));
+			value = (int) Math.log((Integer) ast.exprListAST.visit(this, o));
 			break;
 		case "pow":
-			value = (int) Math.pow((Integer) ast.e.visit(this, o),
-					(Integer) ast.e.l.visit(this, o));
+			value = (int) Math.pow((Integer) ast.exprListAST.visit(this, o),
+					(Integer) ast.exprListAST.l.visit(this, o));
 			System.out.println("POW " + value);
 			break;
 		case "sqrt":
-			value = (int) Math.sqrt((Integer) ast.e.visit(this, o));
+			value = (int) Math.sqrt((Integer) ast.exprListAST.visit(this, o));
 			break;
 		case "abs":
-			value = (int) Math.abs((Integer) ast.e.visit(this, o));
+			value = (int) Math.abs((Integer) ast.exprListAST.visit(this, o));
 			System.out.println("ABS " + value);
 			break;
 		}
@@ -313,13 +313,12 @@ public class Temp2Visitor extends DoNothingVisitor {
 			}
 		}
 		return 0;
-		// return var + " = " + value;
 	}
 
 	@Override
 	public Object visitDeclarationStmtAST(DeclarationStmtAST ast, Object o)
 			throws CompilationException {
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return 0;
 	}
 
@@ -353,7 +352,7 @@ public class Temp2Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitIntLiteralAST(IntLiteralAST ast, Object o)
 			throws CompilationException {
-		return Integer.parseInt(ast.literal.getText());
+		return Integer.parseInt(ast.literalToken.getText());
 	}
 
 	// ProgramAST

@@ -14,7 +14,7 @@ public class StmtListAST extends AST {
 	public StmtListAST(OneStmtAST one, StmtListAST stmt) {
 		o = one;
 		s = stmt;
-		s.parent = o.parent = this;
+		s.parentAST = o.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

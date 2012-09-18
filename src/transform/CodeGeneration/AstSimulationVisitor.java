@@ -81,8 +81,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitArrayInitializerListAST(ArrayInitializerListAST ast,
 			Object o) throws CompilationException {
-		ast.a.visit(this, o);
-		ast.al.visit(this, o);
+		ast.arrayInitializerAST.visit(this, o);
+		ast.arrayInitializerAST1.visit(this, o);
 		return null;
 	}
 
@@ -90,8 +90,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitArrayTypeAST(ArrayTypeAST ast, Object o)
 			throws CompilationException {
-		ast.type.visit(this, o);
-		ast.el.visit(this, o);
+		ast.typeAST.visit(this, o);
+		ast.exprListAST.visit(this, o);
 		return null;
 	}
 
@@ -466,8 +466,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitCallExprAST(CallExprAST ast, Object o)
 			throws CompilationException {
-		if (ast.name.getText().equals("println")) {
-			Object value = ast.e.e.visit(this, o);
+		if (ast.op.getText().equals("println")) {
+			Object value = ast.exprListAST.e.visit(this, o);
 			this.println(value);
 			return null;
 		}
@@ -480,8 +480,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	public Object visitCaseStmtAST(CaseStmtAST cAst, Object o)
 			throws CompilationException {
 		this.println("CaseStmtAST: " + cAst.line);
-		cAst.e.visit(this, o);
-		cAst.s.visit(this, o);
+		cAst.exprAST.visit(this, o);
+		cAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -489,7 +489,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitCharLiteralAST(CharLiteralAST ast, Object o)
 			throws CompilationException {
-		String str = ast.literal.getText();
+		String str = ast.literalToken.getText();
 		str = str.substring(1, str.length() - 1);
 		return str;
 	}
@@ -523,7 +523,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitDeclarationStmtAST(DeclarationStmtAST ast, Object o)
 			throws CompilationException {
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 
@@ -590,7 +590,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitFloatLiteralAST(FloatLiteralAST ast, Object o)
 			throws CompilationException {
-		return new Float(ast.literal.getText());
+		return new Float(ast.literalToken.getText());
 	}
 
 	// ForInitAST
@@ -689,7 +689,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitIntLiteralAST(IntLiteralAST ast, Object o)
 			throws CompilationException {
-		return new Integer(ast.literal.getText());
+		return new Integer(ast.literalToken.getText());
 	}
 
 	// ParaAST
@@ -769,7 +769,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitStringLiteralAST(StringLiteralAST ast, Object o)
 			throws CompilationException {
-		String str = ast.literal.getText();
+		String str = ast.literalToken.getText();
 		str = str.substring(1, str.length() - 1);
 		return str;
 	}
@@ -922,7 +922,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
-		ast.line = ast.parent.line;
+		ast.line = ast.parentAST.line;
 
 		String name = ast.name.getText();
 		if (o.equals(GET_VARIABLE_NAME)) {

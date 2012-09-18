@@ -159,7 +159,7 @@ public class View {
 		btnFirst.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				txtLog.setText(control.GenerateSolvable());
+				txtLog.setText(control.generateSolvable());
 				btnFirst.setEnabled(false);
 				btnGen.setEnabled(true);
 			}
@@ -175,7 +175,7 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 
 				// control.GenerateSolvable();
-				txtLog.setText(control.RunGA());
+				txtLog.setText(control.runGA());
 				btnGen.setEnabled(false);
 				btnShow.setEnabled(true);
 			}
@@ -190,7 +190,7 @@ public class View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.showAllTestCase());
-				UpdateConditionList();
+				updateConditionList();
 				btnShow.setEnabled(false);
 			}
 		});
@@ -213,7 +213,7 @@ public class View {
 		btnPrev.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				ArrayList<Integer> testcase = control.getPrevTestCase();
-				UpdateTestCase(testcase);
+				updateTestCase(testcase);
 				// UpdateSlide();
 			}
 		});
@@ -226,7 +226,7 @@ public class View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				ArrayList<Integer> testcase = control.getNextTestCase();
-				UpdateTestCase(testcase);
+				updateTestCase(testcase);
 				// UpdateSlide();
 			}
 		});
@@ -268,7 +268,7 @@ public class View {
 		}
 	}
 
-	protected void SetValue(ArrayList<String> testcase) {
+	protected void setValue(ArrayList<String> testcase) {
 		int c = 1;
 		TableItem[] items = table1.getItems();
 		for (int i = 0; i < testcase.size(); i++) {
@@ -276,7 +276,7 @@ public class View {
 		}
 	}
 
-	protected void UpdateConditionList() {
+	protected void updateConditionList() {
 		ArrayList<Boolean> trueList = control.getTrueList();
 		ArrayList<Boolean> falseList = control.getFalseList();
 		int c = 1;
@@ -296,7 +296,7 @@ public class View {
 		}
 	}
 
-	protected void UpdateSlide() {
+	protected void updateSlide() {
 		// Color criteriaColor = new Color(Display.getCurrent(), 255, 166, 107);
 		Color highlightColor = Display.getCurrent().getSystemColor(
 				SWT.COLOR_CYAN);
@@ -328,7 +328,7 @@ public class View {
 		}
 	}
 
-	protected void UpdateTestCase(ArrayList<Integer> testcase) {
+	protected void updateTestCase(ArrayList<Integer> testcase) {
 		int c = 1;
 		TableItem[] items = table1.getItems();
 		for (int i = 0; i < testcase.size(); i++) {

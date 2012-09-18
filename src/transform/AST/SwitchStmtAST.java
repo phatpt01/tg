@@ -9,8 +9,8 @@ public class SwitchStmtAST extends OneStmtAST {
 	public SwitchStmtAST(ExprAST expr, OneStmtAST one) {
 		exprAST = expr;
 		oneStmtAST = one;
-		exprAST.parent = this;
-		one.parent = this;
+		exprAST.parentAST = this;
+		one.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

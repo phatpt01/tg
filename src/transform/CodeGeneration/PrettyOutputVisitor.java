@@ -146,10 +146,10 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	public Object visitArrayTypeAST(ArrayTypeAST ast, Object o)
 			throws CompilationException {
 		String id = (String) o;
-		ast.type.visit(this, o);
+		ast.typeAST.visit(this, o);
 		if (id != null) {
 			this.em.printout(id);
-			ast.el.visit(this, "arraytype");
+			ast.exprListAST.visit(this, "arraytype");
 			this.em.printout(";" + this.newline());
 		}
 		return null;
@@ -178,7 +178,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 			}
 		} else {
 			boolean assiStmt = false;
-			if ((ast.opType == 0) && (ast.parent instanceof ExprStmtAST)) {
+			if ((ast.opType == 0) && (ast.parentAST instanceof ExprStmtAST)) {
 				assiStmt = true;
 			} else {
 				this.em.printout("(");
@@ -202,7 +202,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitBoolLiteralAST(BoolLiteralAST ast, Object o)
 			throws CompilationException {
-		this.em.printout(ast.literal.getText());
+		this.em.printout(ast.literalToken.getText());
 		return null;
 	}
 
@@ -229,8 +229,8 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitCallExprAST(CallExprAST ast, Object o)
 			throws CompilationException {
-		this.em.printout(ast.name.getText() + "(");
-		ast.e.visit(this, "CallExpr");
+		this.em.printout(ast.op.getText() + "(");
+		ast.exprListAST.visit(this, "CallExpr");
 		this.em.printout(")");
 		return null;
 	}
@@ -246,11 +246,11 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		}
 		this.indentString();
 		this.em.printout("case ");
-		ast.e.visit(this, null);
+		ast.exprAST.visit(this, null);
 		this.em.printout(": " + this.newline());
 		this.inScope();
 		this.inLineCase = true;
-		ast.s.visit(this, "case");
+		ast.stmtListAST.visit(this, "case");
 		return null;
 	}
 
@@ -258,7 +258,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitCharLiteralAST(CharLiteralAST ast, Object o)
 			throws CompilationException {
-		this.em.printout(ast.literal.getText());
+		this.em.printout(ast.literalToken.getText());
 		return null;
 	}
 
@@ -312,7 +312,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitDeclarationStmtAST(DeclarationStmtAST ast, Object o)
 			throws CompilationException {
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 
@@ -481,7 +481,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitFloatLiteralAST(FloatLiteralAST ast, Object o)
 			throws CompilationException {
-		this.em.printout(ast.literal.getText());
+		this.em.printout(ast.literalToken.getText());
 		return null;
 	}
 
@@ -650,8 +650,8 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitIntLiteralAST(IntLiteralAST ast, Object o)
 			throws CompilationException {
-		this.em.printout(ast.literal.getText());
-		return ast.literal.getText();
+		this.em.printout(ast.literalToken.getText());
+		return ast.literalToken.getText();
 	}
 
 	// IntTypeAST
@@ -782,7 +782,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitStringLiteralAST(StringLiteralAST ast, Object o)
 			throws CompilationException {
-		this.em.printout(ast.literal.getText());
+		this.em.printout(ast.literalToken.getText());
 		return null;
 	}
 

@@ -5,6 +5,7 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class BinExprAST extends ExprAST {
+	
 	public static final int ASSIGN = 0;
 	public static final int PLUS_ASSIGN = 1;
 	public static final int MINUS_ASSIGN = 2;
@@ -44,11 +45,12 @@ public class BinExprAST extends ExprAST {
 	public ExprAST exprAST2;
 
 	public BinExprAST(ExprAST exp1, int o, Token token, ExprAST exp2) {
+		
 		this.exprAST1 = exp1;
 		this.op = token;
 		this.opType = o;
 		this.exprAST2 = exp2;
-		this.exprAST1.parent = this.exprAST2.parent = this;
+		this.exprAST1.parentAST = this.exprAST2.parentAST = this;
 	}
 
 	@Override

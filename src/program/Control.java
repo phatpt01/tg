@@ -8,6 +8,7 @@ import system.*;
 import transform.AST.CompilationException;
 
 public class Control {
+	
 	private InOut io;
 	private String standardFile;
 	private String standardSource;
@@ -21,8 +22,8 @@ public class Control {
 		m_GA = new GA();
 	}
 
-	public String GenerateSolvable() {
-		return this.codeAnalyzer.GenerateSolvable();
+	public String generateSolvable() {
+		return this.codeAnalyzer.generateSolvable();
 	}
 
 	public ArrayList<String> getConditionList() throws CompilationException {
@@ -58,7 +59,7 @@ public class Control {
 		return originalSource;
 	}
 
-	public String RunGA() {
+	public String runGA() {
 		m_GA.run(codeAnalyzer);
 		m_GA.reset();
 		return this.codeAnalyzer.update(m_GA.getRes());

@@ -12,10 +12,10 @@ public class ForInitAST extends AST {
 		this.d = decl;
 		this.e = expr;
 		if (this.d != null) {
-			this.d.parent = this;
+			this.d.parentAST = this;
 		}
 		if (this.e != null) {
-			this.e.parent = this;
+			this.e.parentAST = this;
 		}
 	}
 

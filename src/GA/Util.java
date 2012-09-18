@@ -30,7 +30,7 @@ public class Util implements Cons {
 		}
 	}
 
-	public static double GetRandomProbability() {
+	public static double getRandomProbability() {
 		return r.nextDouble();
 	}
 

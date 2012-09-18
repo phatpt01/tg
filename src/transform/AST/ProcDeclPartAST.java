@@ -14,7 +14,7 @@ public class ProcDeclPartAST extends AST {
 	public ProcDeclPartAST(OneProcDeclAST one, ProcDeclPartAST pro) {
 		this.o = one;
 		this.p = pro;
-		this.o.parent = this.p.parent = this;
+		this.o.parentAST = this.p.parentAST = this;
 	}
 
 	@Override
