@@ -80,7 +80,10 @@ public class Testcase {
 	// Thay đổi, biến đổi
 	public void mutate(CodeAnalyzer codeAnalyzer, int pos) {
 		Random r = new Random();
-		int pos1 = Math.abs(r.nextInt() % (m_iParamNum - 1));
+		// Phat 20120918: sua loi divide by zero
+//		int pos1 = Math.abs(r.nextInt() % (m_iParamNum - 1));
+		int pos1 = (m_iParamNum>1) ? Math.abs(r.nextInt() % (m_iParamNum - 1)) : Math.abs(r.nextInt());
+		// End Phat
 		this.m_aiParams[pos][pos1] = r.nextInt() % 10;
 		this.m_CanAcessBranch = codeAnalyzer.check(m_aiParams);
 	}

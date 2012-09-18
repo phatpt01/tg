@@ -476,7 +476,7 @@ public class CodeAnalyzer {
 		return this.listParameter.size();
 	}
 
-	public ArrayList<String> getParaNameList() {
+	public ArrayList<String> getParameterNameList() {
 		ArrayList<String> listParaName = new ArrayList<String>();
 		for (int i = 0; i < listParameter.size(); i++) {
 			listParaName.add(listParameter.get(i).getName());

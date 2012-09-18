@@ -38,8 +38,8 @@ public class Control {
 		return codeAnalyzer.getNextTestCase();
 	}
 
-	public ArrayList<String> getParaList() {
-		return this.codeAnalyzer.getParaNameList();
+	public ArrayList<String> getParameterList() {
+		return this.codeAnalyzer.getParameterNameList();
 	}
 
 	public ArrayList<Integer> getPrevTestCase() {

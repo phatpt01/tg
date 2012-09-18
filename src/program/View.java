@@ -25,31 +25,32 @@ public class View {
 	}
 
 	Control control;
-
 	String sourceFile;
 	protected Shell shell;
-	private Table table1;
-	private Table table2;
+
 	private StyledText txtLog;
-	private StyledText styledText;
+	private StyledText txtSourceCode;
+
+	private Table tblParameter;
+	private Table tblCondition;
 	private TableColumn columnPara;
 	private TableColumn columnValue;
 	private TableColumn columnCondition;
 	private TableColumn columnTrue;
-
 	private TableColumn columnFalse;
+
 	private Button btnOpen;
 	private Button btnStandard;
-	private Button btnGen;
+	private Button btnGenerateUnsolvable;
 	private Button btnExit;
-	private Button btnFirst;
+	private Button btnGenerateSolvable;
 	private Button btnScan;
 	private Button btnShow;
 	private Button btnPrev;
 	private Button btnNext;
 
 	private void changeSourceText(String source) {
-		styledText.setText(source);
+		txtSourceCode.setText(source);
 	}
 
 	protected void createContents() {
@@ -62,46 +63,73 @@ public class View {
 		Font font = new Font(Display.getCurrent(), "Courier New", 12, SWT.NONE);
 		txtLog.setFont(font);
 
-		styledText = new StyledText(shell, SWT.BORDER | SWT.H_SCROLL
+		txtSourceCode = new StyledText(shell, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL);
-		styledText.setEditable(false);
-		styledText.setBounds(10, 10, 580, 407);
-		styledText.setFont(font);
+		txtSourceCode.setEditable(false);
+		txtSourceCode.setBounds(10, 10, 580, 407);
+		txtSourceCode.setFont(font);
 
-		table1 = new Table(shell, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+		tblParameter = new Table(shell, SWT.MULTI | SWT.BORDER
+				| SWT.FULL_SELECTION);
 		font = new Font(Display.getCurrent(), "Courier New", 10, SWT.NONE);
-		table1.setFont(font);
-		table1.setBounds(600, 10, 160, 197);
-		table1.setHeaderVisible(true);
-		table1.setLinesVisible(true);
+		tblParameter.setFont(font);
+		tblParameter.setBounds(600, 10, 160, 197);
+		tblParameter.setHeaderVisible(true);
+		tblParameter.setLinesVisible(true);
 
-		columnPara = new TableColumn(table1, SWT.CENTER);
+		columnPara = new TableColumn(tblParameter, SWT.CENTER);
 		columnPara.setWidth(100);
 		columnPara.setText("Parameters");
 
-		columnValue = new TableColumn(table1, SWT.LEFT);
+		columnValue = new TableColumn(tblParameter, SWT.LEFT);
 		columnValue.setWidth(60);
 		columnValue.setText("Value");
 
-		table2 = new Table(shell, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
-		table2.setFont(font);
-		table2.setBounds(602, 213, 320, 204);
-		table2.setHeaderVisible(true);
-		table2.setLinesVisible(true);
+		tblCondition = new Table(shell, SWT.MULTI | SWT.BORDER
+				| SWT.FULL_SELECTION);
+		tblCondition.setFont(font);
+		tblCondition.setBounds(602, 213, 320, 204);
+		tblCondition.setHeaderVisible(true);
+		tblCondition.setLinesVisible(true);
 
-		columnCondition = new TableColumn(table2, SWT.RIGHT);
+		columnCondition = new TableColumn(tblCondition, SWT.RIGHT);
 		columnCondition.setWidth(180);
 		columnCondition.setText("Conditions");
 
-		columnTrue = new TableColumn(table2, SWT.LEFT);
+		columnTrue = new TableColumn(tblCondition, SWT.LEFT);
 		columnTrue.setWidth(70);
 		columnTrue.setText("True");
 
-		columnFalse = new TableColumn(table2, SWT.LEFT);
+		columnFalse = new TableColumn(tblCondition, SWT.LEFT);
 		columnFalse.setWidth(70);
 		columnFalse.setText("False");
 
-		btnOpen = new Button(shell, SWT.NONE);
+		btnOpen = createButton("Open Source", true, 800, 10, 100, 20);
+		btnStandard = createButton("Standard Source", false, 800, 35, 100, 20);
+		btnScan = createButton("Scan Condition", false, 800, 60, 100, 20);
+		btnGenerateSolvable = createButton("Generate Solvable", false, 800, 85,
+				100, 20);
+		btnGenerateUnsolvable = createButton("Generate Unsolvable", false, 800,
+				110, 100, 20);
+		btnShow = createButton("Show all test case", false, 800, 135, 100, 20);
+		btnExit = createButton("Exit", false, 800, 187, 100, 20);
+		btnPrev = createButton("Prev", false, 800, 161, 50, 20);
+		btnNext = createButton("Next", false, 850, 161, 50, 20);
+
+		addSelectionListener();
+	}
+
+	private Button createButton(String buttonCaption, boolean initEnable,
+			int x, int y, int w, int h) {
+		Button btnTemp = new Button(shell, SWT.NONE);
+		btnTemp.setBounds(x, y, w, h);
+		btnTemp.setText(buttonCaption);
+		btnTemp.setEnabled(initEnable);
+
+		return btnTemp;
+	}
+
+	private void addSelectionListener() {
 		btnOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -116,10 +144,6 @@ public class View {
 				}
 			}
 		});
-		btnOpen.setBounds(800, 10, 100, 20);
-		btnOpen.setText("Open Source");
-
-		btnStandard = new Button(shell, SWT.NONE);
 
 		btnStandard.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -136,56 +160,36 @@ public class View {
 				btnScan.setEnabled(true);
 			}
 		});
-		btnStandard.setBounds(800, 35, 100, 20);
-		btnStandard.setText("Standard Source");
-		btnStandard.setEnabled(false);
 
-		btnScan = new Button(shell, SWT.NONE);
-
-		// Add action for button scan condition
 		btnScan.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.scanCondition());
 				btnScan.setEnabled(false);
-				btnFirst.setEnabled(true);
+				btnGenerateSolvable.setEnabled(true);
 			}
 		});
-		btnScan.setText("Scan Condition");
-		btnScan.setEnabled(false);
-		btnScan.setBounds(800, 60, 100, 20);
 
-		btnFirst = new Button(shell, SWT.NONE);
-		btnFirst.addSelectionListener(new SelectionAdapter() {
+		btnGenerateSolvable.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.generateSolvable());
-				btnFirst.setEnabled(false);
-				btnGen.setEnabled(true);
+				btnGenerateSolvable.setEnabled(false);
+				btnGenerateUnsolvable.setEnabled(true);
 			}
 
 		});
-		btnFirst.setText("Generate Solvable");
-		btnFirst.setBounds(800, 85, 100, 20);
-		btnFirst.setEnabled(false);
 
-		btnGen = new Button(shell, SWT.NONE);
-		btnGen.addSelectionListener(new SelectionAdapter() {
+		btnGenerateUnsolvable.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-
-				// control.GenerateSolvable();
 				txtLog.setText(control.runGA());
-				btnGen.setEnabled(false);
+				btnGenerateUnsolvable.setEnabled(false);
 				btnShow.setEnabled(true);
 			}
 
 		});
-		btnGen.setText("Generate Unsolvable");
-		btnGen.setBounds(800, 110, 100, 20);
-		btnGen.setEnabled(false);
 
-		btnShow = new Button(shell, SWT.NONE);
 		btnShow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -194,45 +198,29 @@ public class View {
 				btnShow.setEnabled(false);
 			}
 		});
-		btnShow.setText("Show All TC");
-		btnShow.setEnabled(false);
-		btnShow.setBounds(800, 135, 100, 20);
 
-		btnExit = new Button(shell, SWT.NONE);
 		btnExit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				shell.dispose();
 			}
 		});
-		btnExit.setText("Exit");
-		btnExit.setBounds(800, 187, 100, 20);
-		btnExit.setEnabled(true);
 
-		btnPrev = new Button(shell, SWT.NONE);
 		btnPrev.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				ArrayList<Integer> testcase = control.getPrevTestCase();
 				updateTestCase(testcase);
-				// UpdateSlide();
 			}
 		});
-		btnPrev.setText("Prev");
-		btnPrev.setEnabled(true);
-		btnPrev.setBounds(800, 161, 50, 20);
 
-		btnNext = new Button(shell, SWT.NONE);
 		btnNext.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				ArrayList<Integer> testcase = control.getNextTestCase();
 				updateTestCase(testcase);
-				// UpdateSlide();
 			}
 		});
-		btnNext.setText("Next");
-		btnNext.setEnabled(true);
-		btnNext.setBounds(850, 161, 50, 20);
+
 	}
 
 	public void open() {
@@ -249,38 +237,40 @@ public class View {
 	}
 
 	protected void printConditionsList() throws CompilationException {
-		table2.removeAll();
-		ArrayList<String> listCondition = control.getConditionList();
-		int c = 0;
-		for (int i = 0; i < listCondition.size(); i++) {
-			TableItem item = new TableItem(table2, SWT.CENTER);
-			item.setText(c, listCondition.get(i));
+		tblCondition.removeAll();
+		ArrayList<String> lstCondition = control.getConditionList();
+		// int c = 0;
+		for (int i = 0; i < lstCondition.size(); i++) {
+			TableItem tblItem = new TableItem(tblCondition, SWT.CENTER);
+			// tblItem.setText (c, lstCondition.get(i));
+			tblItem.setText(lstCondition.get(i));
 		}
 	}
 
 	protected void printParameterList() {
-		table1.removeAll();
-		ArrayList<String> listPara = control.getParaList();
-		int c = 0;
-		for (int i = 0; i < listPara.size(); i++) {
-			TableItem item = new TableItem(table1, SWT.CENTER);
-			item.setText(c, listPara.get(i));
+		tblParameter.removeAll();
+		ArrayList<String> lstParameter = control.getParameterList();
+		// int c = 0;
+		for (int i = 0; i < lstParameter.size(); i++) {
+			TableItem tblItem = new TableItem(tblParameter, SWT.CENTER);
+			// item.setText(c, lstParameter.get(i));
+			tblItem.setText(lstParameter.get(i));
 		}
 	}
 
-	protected void setValue(ArrayList<String> testcase) {
-		int c = 1;
-		TableItem[] items = table1.getItems();
-		for (int i = 0; i < testcase.size(); i++) {
-			items[i].setText(c, testcase.get(i));
-		}
-	}
+	// protected void setValue(ArrayList<String> testcase) {
+	// int c = 1;
+	// TableItem[] items = tblParameter.getItems();
+	// for (int i = 0; i < testcase.size(); i++) {
+	// items[i].setText(c, testcase.get(i));
+	// }
+	// }
 
 	protected void updateConditionList() {
 		ArrayList<Boolean> trueList = control.getTrueList();
 		ArrayList<Boolean> falseList = control.getFalseList();
 		int c = 1;
-		TableItem[] items = table2.getItems();
+		TableItem[] items = tblCondition.getItems();
 		for (int i = 0; i < trueList.size(); i++) {
 			if (trueList.get(i) == true)
 				items[i].setText(c, "X");
@@ -308,14 +298,15 @@ public class View {
 			for (int i = 0; i < size; i++) {
 				int line = slide.get(i) - 1;
 				// find the offset of the beginning of the line
-				int offsetLine = this.styledText.getOffsetAtLine(line);
-				while (this.styledText.getTextRange(offsetLine, 1).equals("\t")
-						|| this.styledText.getTextRange(offsetLine, 1).equals(
-								" ")) {
+				int offsetLine = this.txtSourceCode.getOffsetAtLine(line);
+				while (this.txtSourceCode.getTextRange(offsetLine, 1).equals(
+						"\t")
+						|| this.txtSourceCode.getTextRange(offsetLine, 1)
+								.equals(" ")) {
 					offsetLine++;
 				}
 				// the lenght of text need to be highlight
-				int length = this.styledText.getOffsetAtLine(line + 1)
+				int length = this.txtSourceCode.getOffsetAtLine(line + 1)
 						- offsetLine;
 
 				// create new StyleRange
@@ -324,13 +315,13 @@ public class View {
 						highlightColor);
 
 			}
-			this.styledText.setStyleRanges(ranges);
+			this.txtSourceCode.setStyleRanges(ranges);
 		}
 	}
 
 	protected void updateTestCase(ArrayList<Integer> testcase) {
 		int c = 1;
-		TableItem[] items = table1.getItems();
+		TableItem[] items = tblParameter.getItems();
 		for (int i = 0; i < testcase.size(); i++) {
 			items[i].setText(c, testcase.get(i).toString());
 		}
