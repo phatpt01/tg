@@ -173,11 +173,11 @@ public class TempVisitor extends DoNothingVisitor {
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
 		// this.indentString();
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			// ast.line = this.line;
 			// this.em.setFilter(true);
 		}
-		return ast.e.visit(this, o);
+		return ast.exprAST.visit(this, o);
 
 		// String short_if = (String) ast.e.visit(this, o);
 		// if ((short_if != null) && short_if.equals("short_if")) {
@@ -200,13 +200,13 @@ public class TempVisitor extends DoNothingVisitor {
 	public Object visitVarDeclAST(VarDeclAST ast, Object o)
 			throws CompilationException {
 		String temp = null;
-		int i = this.findVar(ast.id.getText());
+		int i = this.findVar(ast.op.getText());
 		if (i >= 0) {
 			temp = (String) ast.init.visit(this, o);
 			if (temp != "")
 				this.var.set(i, temp);
 		} else {
-			i = this.findPara(ast.id.toString());
+			i = this.findPara(ast.op.toString());
 			if (i >= 0) {
 				temp = (String) ast.init.visit(this, o);
 				if (temp != "")
@@ -216,7 +216,7 @@ public class TempVisitor extends DoNothingVisitor {
 		if (o == "c") {
 			return temp;
 		} else {
-			return ast.id.getText();
+			return ast.op.getText();
 		}
 	}
 
@@ -224,16 +224,16 @@ public class TempVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
-		String value = ast.name.getText();
+		String value = ast.op.getText();
 		String val = "";
-		int i = this.findVar(ast.name.getText());
+		int i = this.findVar(ast.op.getText());
 		if (i >= 0) {
 			if (this.var.get(i) != "")
 				val = this.var.get(i);
 			else
 				val = value;
 		} else {
-			i = this.findPara(ast.name.getText());
+			i = this.findPara(ast.op.getText());
 			if (i >= 0) {
 				if (this.para.get(i) != "")
 					val = this.para.get(i);
@@ -249,7 +249,7 @@ public class TempVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarInitializerAST(VarInitializerAST ast, Object o)
 			throws CompilationException {
-		return (String) ast.e.visit(this, o);
+		return (String) ast.exprAST.visit(this, o);
 	}
 
 }

@@ -5,10 +5,10 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class VarExprAST extends LvalueAST {
-	public Token name;
+	public Token op;
 
-	public VarExprAST(Token t) {
-		this.name = t;
+	public VarExprAST(Token op) {
+		this.op = op;
 	}
 
 	@Override

@@ -29,26 +29,22 @@ public class Transform {
 	AST astree;
 
 	MappingTable mappingTable;
-	
+
 	PDG pdg;
 
 	ArrayList<ArrayList<AST>> lstPath;
 	ArrayList<ArrayList<Integer>> lstBranch;
-
-	/**
-	 * this object contains all parameters of program
-	 */
-	ArrayList<Parameter> lstParameters;
-	/**
-	 * this object contains all variables of program
-	 */
-	ArrayList<Variable> lstVariables;
+	ArrayList<Parameter> lstParameters; // contains all parameters of program
+	ArrayList<Variable> lstVariables; // contains all variables of program
 
 	public Transform(String strSourceFile) {
+
 		this.originalSourceFile = strSourceFile;
+
 		try {
 			File sourceFile = new File(originalSourceFile);
 			String filename = sourceFile.getName();
+
 			String output = "OUTPUT" + File.separatorChar + "OUT_FOR "
 					+ filename;
 			File outFolder = new File(output);
@@ -58,18 +54,16 @@ public class Transform {
 			this.standardSourceFile = outFolder.getAbsolutePath()
 					+ File.separatorChar + filename;
 
-			/*
-			 * using ANTLR library to lexer and parser the original code then
-			 * create AST Tree
-			 */
+			// using ANTLR library to lexical and parse the original code then
+			// create AST Tree
+
 			CPPParser parser = new CPPParser(new CommonTokenStream(
 					new CPPLexer(new ANTLRReaderStream(new BufferedReader(
 							new FileReader(strSourceFile))))));
 			try {
 				this.astree = parser.parse();
 			} catch (NullPointerException e) {
-				throw new NullPointerException(
-						"Can't standardize the source code!!!");
+				throw new NullPointerException("Cannot parse the source code");
 			}
 
 			// Standardize source
@@ -82,51 +76,46 @@ public class Transform {
 							new File(this.standardSourceFile)))))));
 			this.astree = parser.parse();
 
-			// Print the AST structure to text file
-			// Visitor walkerPrint = new
-			// AstPrinterVisitor(this.standardSourceFile);
-			// astree.visit(walkerPrint, null);
-			// System.out.println(this.standardSourceFile +
-			// ": AST internal structure");
+//			// Print the AST structure to text file
+//			Visitor walkerPrint = new AstPrinterVisitor(this.standardSourceFile);
+//			astree.visit(walkerPrint, null);
+//			System.out.println(this.standardSourceFile
+//					+ ": AST internal structure");
 
-			/**
-			 * Creating Program Dependence Graph (PDG)
-			 */
+			// Creating Program Dependence Graph (PDG)
 			Ast2GraphVisitor ast2PDG = new Ast2GraphVisitor();
 			this.astree.visit(ast2PDG, "");
 			this.pdg = ast2PDG.getProgramDependenceGraph();
 
-			ControlFlowGraphVisitor cfgVisitor = new ControlFlowGraphVisitor(
+			ControlFlowGraphVisitor controlFlowGraphVisitor = new ControlFlowGraphVisitor(
 					pdg);
-			astree.visit(cfgVisitor, null);
+			astree.visit(controlFlowGraphVisitor, null);
 
-			lstPath = cfgVisitor.getListPath();
-			lstBranch = cfgVisitor.getListBranch();
+			lstPath = controlFlowGraphVisitor.getListPath();
+			lstBranch = controlFlowGraphVisitor.getListBranch();
+
 			for (int i = 0; i < lstPath.size(); i++) {
 				for (int j = 0; j < lstPath.get(i).size(); j++) {
-					System.out.println(lstPath.get(i).get(j).getClass().toString()
-							+ " " + lstBranch.get(i).get(j));
+					System.out.println("AAAAA - "
+							+ lstPath.get(i).get(j).getClass().toString()
+							+ ", branch:  " + lstBranch.get(i).get(j));
 				}
 				System.out.println("Next");
 			}
 
-			/**
-			 * Creating Mapping Table
-			 */
+			// Creating Mapping Table
 			Ast2MappingTableVisitor ast2Table = new Ast2MappingTableVisitor();
 			this.astree.visit(ast2Table, "");
 			this.mappingTable = ast2Table.getMappingTable(); // get the mapping
-															// table
+																// table
 
-			/**
-			 * Collecting Variable and Parameter
-			 */
+			// Collecting Variable and Parameter
+
 			VariableVisitor varVisitor = new VariableVisitor();
 			this.astree.visit(varVisitor, null); // Get list variables of the
 													// program
-			this.lstParameters = varVisitor.getListPara();
-			// System.out.println(this.listParameters.get(0).getName());
-			this.lstVariables = varVisitor.getListVar();
+			this.lstParameters = varVisitor.getListParameters();
+			this.lstVariables = varVisitor.getListVariables();
 		} catch (NullPointerException e) {
 			throw e;
 		} catch (Exception e) {
@@ -166,12 +155,13 @@ public class Transform {
 		return standardSourceFile;
 	}
 
-	public ArrayList<Condition> updateConditionList(ArrayList<Condition> lstCondition) {
-	
+	public ArrayList<Condition> updateConditionList(
+			ArrayList<Condition> lstCondition) {
+
 		Temp1Visitor tmp1Visitor = new Temp1Visitor(lstParameters,
 				lstVariables, lstCondition);
 		Temp obj = new Temp();
-		
+
 		try {
 			for (int i = 0; i < lstPath.size(); i++) {
 				for (int j = 0; j < lstPath.get(i).size(); j++) {

@@ -3,10 +3,10 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class PointerTypeAST extends PrimTypeAST {
-	public TypeAST t;
+	public TypeAST typeAST;
 
 	public PointerTypeAST(TypeAST type) {
-		this.t = type;
+		this.typeAST = type;
 	}
 
 	@Override

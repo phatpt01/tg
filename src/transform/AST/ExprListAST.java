@@ -3,19 +3,21 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class ExprListAST extends AST {
-	public ExprAST e;
-	public ExprListAST l;
+
+	public ExprAST exprAST;
+	public ExprListAST exprListAST;
 	public String line_str;
 
 	public ExprListAST() {
-		e = null;
-		l = null;
+		exprAST = null;
+		exprListAST = null;
 	}
 
-	public ExprListAST(ExprAST exp, ExprListAST expl) {
-		e = exp;
-		l = expl;
-		e.parentAST = l.parentAST = this;
+	public ExprListAST(ExprAST exprAST, ExprListAST exprListAST) {
+		this.exprAST = exprAST;
+		this.exprListAST = exprListAST;
+		
+		exprAST.parentAST = exprListAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

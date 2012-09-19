@@ -3,18 +3,19 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class TypeListAST extends TypeAST {
-	public TypeAST t;
-	public TypeListAST tl;
+	public TypeAST typeAST;
+	public TypeListAST typeListAST;
 
 	public TypeListAST() {
-		this.t = null;
-		this.tl = null;
+		this.typeAST = null;
+		this.typeListAST = null;
 	}
 
 	public TypeListAST(TypeAST type, TypeListAST typel) {
-		this.t = type;
-		this.tl = typel;
-		this.t.parentAST = this.tl.parentAST = this;
+		this.typeAST = type;
+		this.typeListAST = typel;
+	
+		this.typeAST.parentAST = this.typeListAST.parentAST = this;
 	}
 
 	@Override

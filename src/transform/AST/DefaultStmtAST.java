@@ -3,11 +3,11 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class DefaultStmtAST extends OneStmtAST {
-	public StmtListAST s;
+	public StmtListAST stmtListAST;
 
-	public DefaultStmtAST(StmtListAST sl) {
-		s = sl;
-		s.parentAST = this;
+	public DefaultStmtAST(StmtListAST stmtListAST) {
+		this.stmtListAST = stmtListAST;
+		this.stmtListAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

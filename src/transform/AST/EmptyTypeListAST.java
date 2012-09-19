@@ -3,6 +3,7 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class EmptyTypeListAST extends TypeListAST {
+	
 	public EmptyTypeListAST() {
 		super();
 	}

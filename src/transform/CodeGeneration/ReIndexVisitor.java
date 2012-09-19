@@ -134,11 +134,11 @@ public class ReIndexVisitor extends DoNothingVisitor {
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
 		// this.indentString();
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			// ast.line = this.line;
 			// this.em.setFilter(true);
 		}
-		return ast.e.visit(this, o);
+		return ast.exprAST.visit(this, o);
 		// return null;
 
 		// String short_if = (String) ast.e.visit(this, o);
@@ -164,16 +164,16 @@ public class ReIndexVisitor extends DoNothingVisitor {
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
 		if (o instanceof Token) {
-			if (ast.name.getText().equals(((Token) o).getText())) {
-				int i = this.findVar(ast.name.getText());
+			if (ast.op.getText().equals(((Token) o).getText())) {
+				int i = this.findVar(ast.op.getText());
 				if (i < 0) {
-					VariableReIndex vr = new VariableReIndex(ast.name.getText());
+					VariableReIndex vr = new VariableReIndex(ast.op.getText());
 					this.var.add(vr);
 				} else {
 					int index = this.var.get(i).getIndex();
 					if (index > 0) {
-						String name = ast.name.getText();
-						ast.name.setText(name + "_" + index); // reindex
+						String name = ast.op.getText();
+						ast.op.setText(name + "_" + index); // reindex
 						// Token token = ast.name;
 						// if (this.findVarName(token.getText()) == -1) {
 						// int in = this.getIndex(name);
@@ -187,12 +187,12 @@ public class ReIndexVisitor extends DoNothingVisitor {
 				}
 				return true;
 			} else {
-				int i = this.findVar(ast.name.getText());
+				int i = this.findVar(ast.op.getText());
 				if (i >= 0) {
 					int index = this.var.get(i).getIndex();
 					if (index > 0) {
-						String name = ast.name.getText();
-						ast.name.setText(name + "_" + index); // reindex
+						String name = ast.op.getText();
+						ast.op.setText(name + "_" + index); // reindex
 						// Token token = ast.name;
 						// if (this.findVarName(token.getText()) == -1) {
 						// int in = this.getIndex(name);
@@ -208,12 +208,12 @@ public class ReIndexVisitor extends DoNothingVisitor {
 			}
 		} else if (o instanceof String) {
 			if (o.equals("other")) {
-				int i = this.findVar(ast.name.getText());
+				int i = this.findVar(ast.op.getText());
 				if (i >= 0) {
 					int index = this.var.get(i).getIndex();
 					if (index > 0) {
-						String name = ast.name.getText();
-						ast.name.setText(name + "_" + index); // reindex
+						String name = ast.op.getText();
+						ast.op.setText(name + "_" + index); // reindex
 						// Token token = ast.name;
 						// if (this.findVarName(token.getText()) == -1) {
 						// int in = this.getIndex(name);
@@ -228,7 +228,7 @@ public class ReIndexVisitor extends DoNothingVisitor {
 			}
 			return false;
 		} else {
-			return ast.name;
+			return ast.op;
 		}
 	}
 }

@@ -5,6 +5,7 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class UnaryExprAST extends ExprAST {
+	
 	public static final int UNARY_PLUS = 0; // +
 	public static final int UNARY_MINUS = 1; // -
 	public static final int PRE_INC = 2; // ++a
@@ -18,13 +19,15 @@ public class UnaryExprAST extends ExprAST {
 
 	public Token op;
 	public int opType;
-	public ExprAST e;
+	public ExprAST exprAST;
 
 	public UnaryExprAST(int o, Token t, ExprAST exp) {
+		
 		this.op = t;
 		this.opType = o;
-		this.e = exp;
-		this.e.parentAST = this;
+		this.exprAST = exp;
+	
+		this.exprAST.parentAST = this;
 	}
 
 	@Override

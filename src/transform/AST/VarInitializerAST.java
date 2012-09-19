@@ -3,11 +3,12 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class VarInitializerAST extends InitializerAST {
-	public ExprAST e;
+	public ExprAST exprAST;
 
 	public VarInitializerAST(ExprAST ex) {
-		this.e = ex;
-		this.e.parentAST = this;
+		this.exprAST = ex;
+		
+		this.exprAST.parentAST = this;
 	}
 
 	@Override

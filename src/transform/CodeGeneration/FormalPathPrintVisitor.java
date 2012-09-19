@@ -72,16 +72,16 @@ public class FormalPathPrintVisitor extends PrettyOutputVisitor {
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
 		this.indentString();
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			// ast.line = this.line;
 			this.get_EM().setFilter(true);
 		}
-		String short_if = (String) ast.e.visit(this, o);
+		String short_if = (String) ast.exprAST.visit(this, o);
 		if ((short_if != null) && short_if.equals("short_if")) {
 			return null;
 		}
 		// this.get_EM().printout(this.newline());
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			ast.line_str = this.get_EM().setFilter(false);
 		}
 		return null;
@@ -92,13 +92,13 @@ public class FormalPathPrintVisitor extends PrettyOutputVisitor {
 	public Object visitVarDeclAST(VarDeclAST ast, Object o)
 			throws CompilationException {
 		this.indentString();
-		if (ast.t instanceof ArrayTypeAST) {
-			ast.t.visit(this, ast.id.getText());
+		if (ast.typeAST instanceof ArrayTypeAST) {
+			ast.typeAST.visit(this, ast.op.getText());
 			return null;
 		}
 		// ast.t.visit(this, o); not print type in path
 		this.get_EM().printout("(");
-		this.get_EM().printout(ast.id.getText());
+		this.get_EM().printout(ast.op.getText());
 		if (ast.init != null) {
 			this.get_EM().printout(" = ");
 			ast.init.visit(this, o);
@@ -111,7 +111,7 @@ public class FormalPathPrintVisitor extends PrettyOutputVisitor {
 	@Override
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
-		this.get_EM().printout(ast.name.getText());
-		return ast.name.getText();
+		this.get_EM().printout(ast.op.getText());
+		return ast.op.getText();
 	}
 }

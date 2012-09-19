@@ -197,26 +197,26 @@ public class Temp1Visitor extends DoNothingVisitor {
 					if (branch == 0) {
 						result += "(assert " + output + ")\n";
 						ArrayList<String> temp = arrCondition.get(constmt)
-								.getTruepath();
+								.getTruePaths();
 						for (int i = 0; i < temp.size(); i++)
 							if (temp.get(i).equals(result))
 								check = false;
 						if (check == true) {
-							arrCondition.get(constmt).getTruepath().add(result);
-							arrCondition.get(constmt).getTruecon().add(obj.con);
+							arrCondition.get(constmt).getTruePaths().add(result);
+							arrCondition.get(constmt).getTrueConditions().add(obj.con);
 						}
 					}
 					if (branch == 1) {
 						result += "(assert (not " + output + "))\n";
 						ArrayList<String> temp = arrCondition.get(constmt)
-								.getFalsepath();
+								.getFalsePaths();
 						for (int i = 0; i < temp.size(); i++)
 							if (temp.get(i).equals(result))
 								check = false;
 						if (check == true) {
-							arrCondition.get(constmt).getFalsepath()
+							arrCondition.get(constmt).getFalsePaths()
 									.add(result);
-							arrCondition.get(constmt).getFalsecon()
+							arrCondition.get(constmt).getFalseConditions()
 									.add(obj.con);
 						}
 					}
@@ -276,9 +276,9 @@ public class Temp1Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitExprListAST(ExprListAST ast, Object o)
 			throws CompilationException {
-		String text = (String) ast.e.visit(this, "c");
-		if (!(ast.l instanceof EmptyExprListAST)) {
-			text += " " + ast.l.visit(this, "c");
+		String text = (String) ast.exprAST.visit(this, "c");
+		if (!(ast.exprListAST instanceof EmptyExprListAST)) {
+			text += " " + ast.exprListAST.visit(this, "c");
 		}
 		return text;
 	}
@@ -287,11 +287,11 @@ public class Temp1Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			// ast.line = this.line;
 			// this.em.setFilter(true);
 		}
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		return "";
 	}
 
@@ -318,33 +318,33 @@ public class Temp1Visitor extends DoNothingVisitor {
 		String res = "";
 		if (ast.opType == UnaryExprAST.LOGICAL_NOT) {
 			if (o == "c") {
-				res += "(not " + ast.e.visit(this, "c") + ")";
+				res += "(not " + ast.exprAST.visit(this, "c") + ")";
 				return res;
 			} else {
 				boolean check = true;
 				Temp obj = (Temp) o;
 				int branch = obj.branch;
 				if (branch == 0) {
-					res += "(assert (not " + ast.e.visit(this, "c") + "))\n";
+					res += "(assert (not " + ast.exprAST.visit(this, "c") + "))\n";
 					ArrayList<String> temp = arrCondition.get(constmt)
-							.getTruepath();
+							.getTruePaths();
 					for (int i = 0; i < temp.size(); i++)
 						if (temp.get(i).equals(res))
 							check = false;
 					if (check == true) {
-						arrCondition.get(constmt).getTruepath().add(res);
-						arrCondition.get(constmt).getTruecon().add(obj.con);
+						arrCondition.get(constmt).getTruePaths().add(res);
+						arrCondition.get(constmt).getTrueConditions().add(obj.con);
 					}
 				} else {
-					res += "(assert " + ast.e.visit(this, "c") + ")\n";
+					res += "(assert " + ast.exprAST.visit(this, "c") + ")\n";
 					ArrayList<String> temp = arrCondition.get(constmt)
-							.getFalsepath();
+							.getFalsePaths();
 					for (int i = 0; i < temp.size(); i++)
 						if (temp.get(i).equals(res))
 							check = false;
 					if (check == true) {
-						arrCondition.get(constmt).getFalsepath().add(res);
-						arrCondition.get(constmt).getFalsecon().add(obj.con);
+						arrCondition.get(constmt).getFalsePaths().add(res);
+						arrCondition.get(constmt).getFalseConditions().add(obj.con);
 					}
 				}
 				return "";
@@ -357,13 +357,13 @@ public class Temp1Visitor extends DoNothingVisitor {
 	public Object visitVarDeclAST(VarDeclAST ast, Object o)
 			throws CompilationException {
 		String temp = "";
-		int i = this.findVar(ast.id.getText());
+		int i = this.findVar(ast.op.getText());
 		if (i >= 0) {
 			temp = (String) ast.init.visit(this, o);
 			if (temp != "")
 				this.arrVariable.set(i, temp);
 		} else {
-			i = this.findPara(ast.id.toString());
+			i = this.findPara(ast.op.toString());
 			if (i >= 0) {
 				temp = (String) ast.init.visit(this, o);
 				if (temp != "")
@@ -373,7 +373,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 		if (o == "c") {
 			return temp;
 		} else {
-			return ast.id.getText();
+			return ast.op.getText();
 		}
 	}
 
@@ -381,16 +381,16 @@ public class Temp1Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
-		String value = ast.name.getText();
+		String value = ast.op.getText();
 		String val = "";
-		int i = this.findVar(ast.name.getText());
+		int i = this.findVar(ast.op.getText());
 		if (i >= 0) {
 			if (this.arrVariable.get(i) != "")
 				val = this.arrVariable.get(i);
 			else
 				val = value;
 		} else {
-			i = this.findPara(ast.name.getText());
+			i = this.findPara(ast.op.getText());
 			if (i >= 0) {
 				if (this.arrParameter.get(i) != "")
 					val = this.arrParameter.get(i);
@@ -406,6 +406,6 @@ public class Temp1Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarInitializerAST(VarInitializerAST ast, Object o)
 			throws CompilationException {
-		return (String) ast.e.visit(this, o);
+		return (String) ast.exprAST.visit(this, o);
 	}
 }

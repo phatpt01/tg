@@ -3,18 +3,20 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class VarDeclPartAST extends AST {
-	public VarDeclAST v;
-	public VarDeclPartAST vp;
+	
+	public VarDeclAST varDeclAST;
+	public VarDeclPartAST varDeclPartAST;
 
 	public VarDeclPartAST() {
-		v = null;
-		vp = null;
+		varDeclAST = null;
+		varDeclPartAST = null;
 	}
 
 	public VarDeclPartAST(VarDeclAST var, VarDeclPartAST varPart) {
-		v = var;
-		vp = varPart;
-		v.parentAST = vp.parentAST = this;
+		varDeclAST = var;
+		varDeclPartAST = varPart;
+		
+		varDeclAST.parentAST = varDeclPartAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

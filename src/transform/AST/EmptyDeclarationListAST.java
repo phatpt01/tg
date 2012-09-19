@@ -3,6 +3,7 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class EmptyDeclarationListAST extends DeclarationListAST {
+	
 	public EmptyDeclarationListAST() {
 		super();
 	}

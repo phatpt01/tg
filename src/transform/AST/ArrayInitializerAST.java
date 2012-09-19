@@ -3,15 +3,15 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class ArrayInitializerAST extends InitializerAST {
-	public VarInitializerListAST v;
+	public VarInitializerListAST varInitializerListAST;
 
 	public ArrayInitializerAST() {
-		v = null;
+		varInitializerListAST = null;
 	}
 
 	public ArrayInitializerAST(VarInitializerListAST vx) {
-		v = vx;
-		v.parentAST = this;
+		varInitializerListAST = vx;
+		varInitializerListAST.parentAST = this;
 	}
 
 	@Override

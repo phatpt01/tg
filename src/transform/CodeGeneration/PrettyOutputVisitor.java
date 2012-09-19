@@ -65,6 +65,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	Emitter em;
 	Frame frm;
 	int scope = 0;
+
 	int line = 1;
 	/**
 	 * this property is turn on/off if we want the file contains lines number or
@@ -74,9 +75,6 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 
 	boolean inLineCase = false;
 
-	/*
-	 * Constructor
-	 */
 	public PrettyOutputVisitor(String outputVerify_c, boolean debug)
 			throws CompilationException {
 		this.em = new Emitter();
@@ -326,7 +324,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.indentString();
 		this.em.printout("default:" + this.newline());
 		this.inScope();
-		ast.s.visit(this, "case");
+		ast.stmtListAST.visit(this, "case");
 		return null;
 	}
 
@@ -339,7 +337,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.em.printout("#define ");
 		this.em.printout(ast.id.getText());
 		this.em.printout(" ");
-		ast.l.visit(this, o);
+		ast.exprAST.visit(this, o);
 		this.em.printout(this.newline());
 		return null;
 	}
@@ -356,18 +354,18 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		this.indentString();
 		this.em.printout("do" + this.newline());
-		if (ast.o instanceof CompStmtAST) {
-			ast.o.visit(this, o);
+		if (ast.oneStmtAST instanceof CompStmtAST) {
+			ast.oneStmtAST.visit(this, o);
 		} else {
 			this.inScope();
-			ast.o.visit(this, o);
+			ast.oneStmtAST.visit(this, o);
 			this.outScope();
 		}
 		ast.line = this.line;
 		this.indentString();
 		this.em.printout("while (");
 		this.em.setFilter(true);
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		ast.line_str = this.em.setFilter(false);
 		this.em.printout(");" + this.newline());
 		return null;
@@ -388,7 +386,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	public Object visitEleExprAST(EleExprAST ast, Object o)
 			throws CompilationException {
 		this.em.printout(ast.name.getText());
-		ast.e.visit(this, "arraytype");
+		ast.exprListAST.visit(this, "arraytype");
 		return null;
 	}
 
@@ -425,34 +423,34 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		if ((check != null) && check.equals("for")) {
 			ast.line = this.line;
 			this.em.setFilter(true);
-			ast.e.visit(this, o);
+			ast.exprAST.visit(this, o);
 			ast.line_str = this.em.setFilter(false);
 			ast.line_str += ";\r\n";
-			ast.l.visit(this, "for2");
+			ast.exprListAST.visit(this, "for2");
 		}
 		if ((check != null) && check.equals("for2")) {
 			this.em.printout(", ");
 			ast.line = this.line;
 			this.em.setFilter(true);
-			ast.e.visit(this, o);
+			ast.exprAST.visit(this, o);
 			ast.line_str = this.em.setFilter(false);
 			ast.line_str += ";\r\n";
-			ast.l.visit(this, "for2");
+			ast.exprListAST.visit(this, "for2");
 		}
 		if ((check != null) && check.equals("arraytype")) {
 			this.em.printout("[");
-			ast.e.visit(this, o);
+			ast.exprAST.visit(this, o);
 			this.em.printout("]");
-			ast.l.visit(this, o);
+			ast.exprListAST.visit(this, o);
 		}
 		if ((check != null) && check.equals("CallExpr")) {
-			ast.e.visit(this, o);
-			ast.l.visit(this, "CallExpr2");
+			ast.exprAST.visit(this, o);
+			ast.exprListAST.visit(this, "CallExpr2");
 		}
 		if ((check != null) && check.equals("CallExpr2")) {
 			this.em.printout(", ");
-			ast.e.visit(this, o);
-			ast.l.visit(this, o);
+			ast.exprAST.visit(this, o);
+			ast.exprListAST.visit(this, o);
 		}
 		return null;
 	}
@@ -462,16 +460,16 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
 		this.indentString();
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			ast.line = this.line;
 			this.em.setFilter(true);
 		}
-		String short_if = (String) ast.e.visit(this, o);
+		String short_if = (String) ast.exprAST.visit(this, o);
 		if ((short_if != null) && short_if.equals("short_if")) {
 			return null;
 		}
 		this.em.printout(";" + this.newline());
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			ast.line_str = this.em.setFilter(false);
 		}
 		return null;
@@ -501,10 +499,10 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	public Object visitForInitAST(ForInitAST ast, Object o)
 			throws CompilationException {
 		if (ast.type == 1) {
-			ast.d.visit(this, o);
+			ast.declarationListAST.visit(this, o);
 		}
 		if (ast.type == 2) {
-			ast.e.visit(this, o);
+			ast.exprListAST.visit(this, o);
 		}
 		return null;
 	}
@@ -516,29 +514,29 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitForStmtAST(ForStmtAST ast, Object o)
 			throws CompilationException {
-		if (ast.e1.type == 2) {
+		if (ast.forInitAST.type == 2) {
 			// for (i=1,j=1; ... ; ...)
 			ast.line = this.line;
 			this.indentString();
 			this.em.printout("for (");
-			ast.e1.visit(this, "for");
+			ast.forInitAST.visit(this, "for");
 			this.em.printout("; ");
-			if (ast.e2 != null) {
+			if (ast.exprAST != null) {
 				this.em.setFilter(true);
-				ast.e2.visit(this, o);
+				ast.exprAST.visit(this, o);
 				ast.s2 = this.em.setFilter(false);
 			}
 			this.em.printout("; ");
-			ast.e3.visit(this, "for");
+			ast.exprListAST.visit(this, "for");
 			this.em.printout(")" + this.newline());
 		} else {
 			ast.line = this.line;
 			this.indentString();
-			if (ast.e1.type == 1) {
+			if (ast.forInitAST.type == 1) {
 				// for (int i=1; ... ; ...)
 				// em.setForInit(true);
 				this.em.printout("for (");
-				ast.e1.visit(this, "forinit");
+				ast.forInitAST.visit(this, "forinit");
 				this.em.printout("; ");
 				// String for_init = em.setForInit(false);
 				/*
@@ -553,21 +551,21 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 				// this.indentString();
 				this.em.printout("for ( ; ");
 			}
-			if (ast.e2 != null) {
+			if (ast.exprAST != null) {
 				this.em.setFilter(true);
-				ast.e2.visit(this, o);
+				ast.exprAST.visit(this, o);
 				ast.s2 = this.em.setFilter(false);
 			}
 			this.em.printout("; ");
-			ast.e3.visit(this, "for");
+			ast.exprListAST.visit(this, "for");
 			this.em.printout(")" + this.newline());
 		}
 
-		if (ast.o instanceof CompStmtAST) {
-			ast.o.visit(this, o);
+		if (ast.oneStmtAST instanceof CompStmtAST) {
+			ast.oneStmtAST.visit(this, o);
 		} else {
 			this.inScope();
-			ast.o.visit(this, o);
+			ast.oneStmtAST.visit(this, o);
 			this.outScope();
 		}
 		return null;
@@ -579,12 +577,12 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		fAst.line = this.line;
 		this.indentString();
-		fAst.retType.visit(this, o);
+		fAst.typeAST.visit(this, o);
 		this.em.printout(fAst.name.getText());
 		this.em.printout("(");
-		fAst.para.visit(this, o);
+		fAst.paraListAST.visit(this, o);
 		this.em.printout(")" + this.newline());
-		fAst.c.visit(this, o);
+		fAst.compStmtAST.visit(this, o);
 		return null;
 	}
 
@@ -597,15 +595,15 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.em.printout("if (");
 
 		this.em.setFilter(true);
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		ast.line_str = this.em.setFilter(false);
 
 		this.em.printout(")" + this.newline());
-		if (ast.s1 instanceof CompStmtAST) {
-			ast.s1.visit(this, o);
+		if (ast.oneStmtAST1 instanceof CompStmtAST) {
+			ast.oneStmtAST1.visit(this, o);
 		} else {
 			this.inScope();
-			ast.s1.visit(this, o);
+			ast.oneStmtAST1.visit(this, o);
 			this.outScope();
 		}
 		this.indentString();
@@ -613,11 +611,11 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		ast.line_else = this.line;
 
 		this.em.printout("else" + this.newline());
-		if (ast.s2 instanceof CompStmtAST) {
-			ast.s2.visit(this, o);
+		if (ast.oneStmtAST2 instanceof CompStmtAST) {
+			ast.oneStmtAST2.visit(this, o);
 		} else {
 			this.inScope();
-			ast.s2.visit(this, o);
+			ast.oneStmtAST2.visit(this, o);
 			this.outScope();
 		}
 		return null;
@@ -632,15 +630,15 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.em.printout("if (");
 
 		this.em.setFilter(true);
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		ast.line_str = this.em.setFilter(false);
 
 		this.em.printout(")" + this.newline());
-		if (ast.s instanceof CompStmtAST) {
-			ast.s.visit(this, o);
+		if (ast.oneStmtAST instanceof CompStmtAST) {
+			ast.oneStmtAST.visit(this, o);
 		} else {
 			this.inScope();
-			ast.s.visit(this, o);
+			ast.oneStmtAST.visit(this, o);
 			this.outScope();
 		}
 		return null;
@@ -674,12 +672,12 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitParaAST(ParaAST ast, Object o)
 			throws CompilationException {
-		ast.t.visit(this, null);
-		this.em.printout(ast.id.getText());
-		if (ast.t instanceof ArrayTypeAST) { // an error here
+		ast.typeAST.visit(this, null);
+		this.em.printout(ast.op.getText());
+		if (ast.typeAST instanceof ArrayTypeAST) { // an error here
 			this.em.printout("[]");
 		}
-		return ast.id.getText();
+		return ast.op.getText();
 	}
 
 	// ParaListAST
@@ -690,13 +688,13 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		if ((checkMorePara != null) && checkMorePara.equals("morePara")) {
 			this.em.printout(", ");
 		}
-		ast.v.visit(this, o);
+		ast.paraAST.visit(this, o);
 
-		if (ast.p.v != null) {
+		if (ast.paraListAST.paraAST != null) {
 			String morePara = "morePara";
-			ast.p.visit(this, morePara);
+			ast.paraListAST.visit(this, morePara);
 		} else {
-			ast.p.visit(this, o);
+			ast.paraListAST.visit(this, o);
 		}
 
 		return null;
@@ -706,7 +704,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitPointerTypeAST(PointerTypeAST ast, Object o)
 			throws CompilationException {
-		ast.t.visit(this, o);
+		ast.typeAST.visit(this, o);
 		this.em.printout("*"); // day chi la giai phap tam thoi, can tim hieu
 								// them
 		return null;
@@ -724,7 +722,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 				this.setModeOutputLine(false);
 			}
 		}
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		this.em.printToC();
 		return null;
 	}
@@ -737,7 +735,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.indentString();
 		this.em.setFilter(true);
 		this.em.printout("return ");
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		this.em.printout(";" + this.newline());
 		ast.line_str = this.em.setFilter(false);
 		return null;
@@ -768,12 +766,12 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 				&& (checkBlock.equals("block") || checkBlock.equals("switch"))) {
 			this.inScope();
 		}
-		ast.o.visit(this, null);
+		ast.oneStmtAST.visit(this, null);
 		if ((checkBlock != null)
 				&& (checkBlock.equals("case") || checkBlock.equals("switch"))) {
-			ast.s.visit(this, o);
+			ast.stmtListAST.visit(this, o);
 		} else {
-			ast.s.visit(this, "statement");
+			ast.stmtListAST.visit(this, "statement");
 		}
 		return null;
 	}
@@ -812,7 +810,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.em.printout("if (");
 
 		this.em.setFilter(true);
-		ast.e1.visit(this, o);
+		ast.exprAST1.visit(this, o);
 		ast.s1 = this.em.setFilter(false);
 
 		this.em.printout(")" + this.newline());
@@ -820,7 +818,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		ast.l2 = this.line;
 		this.indentString();
 		this.em.setFilter(true);
-		ast.e2.visit(this, o);
+		ast.exprAST2.visit(this, o);
 		this.outScope();
 		this.em.printout(";" + this.newline());
 		ast.s2 = this.em.setFilter(false);
@@ -830,7 +828,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		ast.l3 = this.line;
 		this.indentString();
 		this.em.setFilter(true);
-		ast.e3.visit(this, o);
+		ast.exprAST3.visit(this, o);
 		this.outScope();
 		this.em.printout(";" + this.newline());
 		ast.s3 = this.em.setFilter(false);
@@ -848,9 +846,9 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitTypeListAST(TypeListAST ast, Object o)
 			throws CompilationException {
-		ast.t.visit(this, o);
+		ast.typeAST.visit(this, o);
 		this.em.printout(" ");
-		ast.tl.visit(this, o);
+		ast.typeListAST.visit(this, o);
 		return null;
 	}
 
@@ -860,16 +858,16 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		if ((ast.opType == 4) || (ast.opType == 5)) {
 			// dau x++, x--
-			ast.e.visit(this, o);
+			ast.exprAST.visit(this, o);
 			this.em.printout(" = ");
-			ast.e.visit(this, o);
+			ast.exprAST.visit(this, o);
 			if (ast.opType == 4)
 				this.em.printout(" + 1");
 			else
 				this.em.printout(" - 1");
 		} else {
 			this.em.printout(ast.op.getText());
-			ast.e.visit(this, o);
+			ast.exprAST.visit(this, o);
 		}
 		return null;
 	}
@@ -888,8 +886,8 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		String checkForInit = (String) o;
 		if ((checkForInit != null) && checkForInit.equals("forinit")) {
-			ast.t.visit(this, o);
-			this.em.printout(ast.id.getText());
+			ast.typeAST.visit(this, o);
+			this.em.printout(ast.op.getText());
 			if (ast.init != null) {
 				this.em.printout(" = ");
 				ast.init.visit(this, o);
@@ -898,13 +896,13 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		}
 
 		this.indentString();
-		if (ast.t instanceof ArrayTypeAST) {
-			ast.t.visit(this, ast.id.getText());
+		if (ast.typeAST instanceof ArrayTypeAST) {
+			ast.typeAST.visit(this, ast.op.getText());
 			return null;
 		}
-		ast.t.visit(this, o);
+		ast.typeAST.visit(this, o);
 		// em.printout(" ");
-		this.em.printout(ast.id.getText());
+		this.em.printout(ast.op.getText());
 		if (ast.init != null) {
 			this.em.printout(" = ");
 			ast.init.visit(this, o);
@@ -917,16 +915,16 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
-		this.em.printout(ast.name.getText());
-		return ast.name.getText();
+		this.em.printout(ast.op.getText());
+		return ast.op.getText();
 	}
 
 	// initializer
 	@Override
 	public Object visitVarInitializerAST(VarInitializerAST ast, Object o)
 			throws CompilationException {
-		if (ast.e != null) {
-			ast.e.visit(this, o);
+		if (ast.exprAST != null) {
+			ast.exprAST.visit(this, o);
 		}
 		return null;
 	}
@@ -955,14 +953,14 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		this.indentString();
 		this.em.printout("while (");
 		this.em.setFilter(true);
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		ast.line_str = this.em.setFilter(false);
 		this.em.printout(")" + this.newline());
-		if (ast.o instanceof CompStmtAST) {
-			ast.o.visit(this, o);
+		if (ast.oneStmtAST instanceof CompStmtAST) {
+			ast.oneStmtAST.visit(this, o);
 		} else {
 			this.inScope();
-			ast.o.visit(this, o);
+			ast.oneStmtAST.visit(this, o);
 			this.outScope();
 		}
 		return null;

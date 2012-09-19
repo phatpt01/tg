@@ -279,7 +279,7 @@ public class Temp2Visitor extends DoNothingVisitor {
 			break;
 		case "pow":
 			value = (int) Math.pow((Integer) ast.exprListAST.visit(this, o),
-					(Integer) ast.exprListAST.l.visit(this, o));
+					(Integer) ast.exprListAST.exprListAST.visit(this, o));
 			System.out.println("POW " + value);
 			break;
 		case "sqrt":
@@ -331,7 +331,7 @@ public class Temp2Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitExprListAST(ExprListAST ast, Object o)
 			throws CompilationException {
-		Object value = ast.e.visit(this, o);
+		Object value = ast.exprAST.visit(this, o);
 		if (value instanceof Integer)
 			return (Integer) value;
 		return 0;
@@ -341,11 +341,11 @@ public class Temp2Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
-		if (!(ast.e instanceof TernaryExprAST)) {
+		if (!(ast.exprAST instanceof TernaryExprAST)) {
 			// ast.line = this.line;
 			// this.em.setFilter(true);
 		}
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		return 0;
 	}
 
@@ -368,9 +368,9 @@ public class Temp2Visitor extends DoNothingVisitor {
 		int value = 0;
 		if (ast.opType == UnaryExprAST.LOGICAL_NOT) {
 			if ((Integer) o == 0) {
-				value = (Integer) ast.e.visit(this, null);
+				value = (Integer) ast.exprAST.visit(this, null);
 			} else {
-				if ((Integer) ast.e.visit(this, null) == 0) {
+				if ((Integer) ast.exprAST.visit(this, null) == 0) {
 					value = 1;
 				} else {
 					value = 0;
@@ -384,19 +384,19 @@ public class Temp2Visitor extends DoNothingVisitor {
 	public Object visitVarDeclAST(VarDeclAST ast, Object o)
 			throws CompilationException {
 		int value;
-		int i = this.findVar(ast.id.getText());
+		int i = this.findVar(ast.op.getText());
 		if (i >= 0) {
 			value = (Integer) ast.init.visit(this, o);
 			this.var.set(i, value);
 		} else {
-			i = this.findPara(ast.id.toString());
+			i = this.findPara(ast.op.toString());
 			if (i >= 0) {
 				value = (Integer) ast.init.visit(this, o);
 				this.para.set(i, value);
 			}
 		}
 		if (o == "c")
-			return ast.id.getText();
+			return ast.op.getText();
 		return 0;
 		// return null;
 	}
@@ -406,17 +406,17 @@ public class Temp2Visitor extends DoNothingVisitor {
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
 		int val = 0;
-		int i = this.findVar(ast.name.getText());
+		int i = this.findVar(ast.op.getText());
 		if (i >= 0) {
 			val = this.var.get(i);
 		} else {
-			i = this.findPara(ast.name.getText());
+			i = this.findPara(ast.op.getText());
 			if (i >= 0) {
 				val = this.para.get(i);
 			}
 		}
 		if (o == "c") {
-			return ast.name.getText();
+			return ast.op.getText();
 		}
 		return val;
 	}
@@ -424,6 +424,6 @@ public class Temp2Visitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarInitializerAST(VarInitializerAST ast, Object o)
 			throws CompilationException {
-		return (Integer) ast.e.visit(this, o);
+		return (Integer) ast.exprAST.visit(this, o);
 	}
 }

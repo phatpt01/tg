@@ -3,14 +3,16 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class WhileStmtAST extends OneStmtAST {
-	public ExprAST e;
-	public OneStmtAST o;
+	public ExprAST exprAST;
+	public OneStmtAST oneStmtAST;
 	public String line_str;
 
-	public WhileStmtAST(ExprAST exp, OneStmtAST stmt) {
-		this.e = exp;
-		this.o = stmt;
-		this.e.parentAST = this.o.parentAST = this;
+	public WhileStmtAST(ExprAST exprAST, OneStmtAST oneStmtAST) {
+		
+		this.exprAST = exprAST;
+		this.oneStmtAST = oneStmtAST;
+		
+		this.exprAST.parentAST = this.oneStmtAST.parentAST = this;
 	}
 
 	@Override

@@ -3,18 +3,19 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class VarInitializerListAST extends InitializerAST {
-	public VarInitializerAST v;
-	public VarInitializerListAST vl;
+	public VarInitializerAST varInitializerAST;
+	public VarInitializerListAST varInitializerListAST;
 
 	public VarInitializerListAST() {
-		this.v = null;
-		this.vl = null;
+		this.varInitializerAST = null;
+		this.varInitializerListAST = null;
 	}
 
 	public VarInitializerListAST(VarInitializerAST vx, VarInitializerListAST vlx) {
-		this.v = vx;
-		this.vl = vlx;
-		this.v.parentAST = this.vl.parentAST = this;
+		this.varInitializerAST = vx;
+		this.varInitializerListAST = vlx;
+
+		this.varInitializerAST.parentAST = this.varInitializerListAST.parentAST = this;
 	}
 
 	@Override

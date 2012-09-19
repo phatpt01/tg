@@ -15,15 +15,6 @@ import transform.AST.CompilationException;
 
 public class View {
 
-	public static void main(String[] args) {
-		try {
-			View window = new View();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	Control control;
 	String sourceFile;
 	protected Shell shell;
@@ -48,6 +39,15 @@ public class View {
 	private Button btnShow;
 	private Button btnPrev;
 	private Button btnNext;
+	
+	public static void main(String[] args) {
+		try {
+			View window = new View();
+			window.open();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
 
 	private void changeSourceText(String source) {
 		txtSourceCode.setText(source);
@@ -130,6 +130,7 @@ public class View {
 	}
 
 	private void addSelectionListener() {
+	
 		btnOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -150,12 +151,14 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 				String standardSource = control.standardSource(sourceFile);
 				changeSourceText(standardSource);
+
 				printParameterList();
 				try {
 					printConditionsList();
 				} catch (CompilationException e) {
 					e.printStackTrace();
 				}
+
 				btnStandard.setEnabled(false);
 				btnScan.setEnabled(true);
 			}

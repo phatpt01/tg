@@ -3,18 +3,20 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class StmtListAST extends AST {
-	public OneStmtAST o;
-	public StmtListAST s;
+	
+	public OneStmtAST oneStmtAST;
+	public StmtListAST stmtListAST;
 
 	public StmtListAST() {
-		o = null;
-		s = null;
+		oneStmtAST = null;
+		stmtListAST = null;
 	}
 
 	public StmtListAST(OneStmtAST one, StmtListAST stmt) {
-		o = one;
-		s = stmt;
-		s.parentAST = o.parentAST = this;
+		oneStmtAST = one;
+		stmtListAST = stmt;
+		
+		stmtListAST.parentAST = oneStmtAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

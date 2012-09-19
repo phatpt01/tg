@@ -5,15 +5,17 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class ProcDeclAST extends OneProcDeclAST {
-	public Token name;
-	public ParaListAST para;
-	public CompStmtAST c;
+	
+	public Token op;
+	public ParaListAST paraListAST;
+	public CompStmtAST compStmtAST;
 
-	public ProcDeclAST(Token n, ParaListAST pl, CompStmtAST comp) {
-		this.name = n;
-		this.para = pl;
-		this.c = comp;
-		this.para.parentAST = this.c.parentAST = this;
+	public ProcDeclAST(Token op, ParaListAST pl, CompStmtAST comp) {
+		this.op = op;
+		this.paraListAST = pl;
+		this.compStmtAST = comp;
+		
+		this.paraListAST.parentAST = this.compStmtAST.parentAST = this;
 	}
 
 	@Override

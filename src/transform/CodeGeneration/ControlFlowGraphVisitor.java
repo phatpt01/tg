@@ -123,7 +123,7 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitFuncDeclAST(FuncDeclAST fAst, Object o)
 			throws CompilationException {
-		fAst.c.visit(this, o);
+		fAst.compStmtAST.visit(this, o);
 		return null;
 	}
 
@@ -134,9 +134,9 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 		try {
 			ExprAST mAst;
 			try {
-				mAst = (BinExprAST) iAst.e.visit(this, o);
+				mAst = (BinExprAST) iAst.exprAST.visit(this, o);
 			} catch (ClassCastException e) {
-				mAst = (UnaryExprAST) iAst.e.visit(this, o);
+				mAst = (UnaryExprAST) iAst.exprAST.visit(this, o);
 			}
 			Node node = mPdg.findNodeAtLine(iAst.line);
 			int conditionline = node.getConDep().getNode().getID();
@@ -167,8 +167,8 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 					this.listBranch.add(temp2);
 				}
 			}
-			iAst.s1.visit(this, o);
-			iAst.s2.visit(this, o);
+			iAst.oneStmtAST1.visit(this, o);
+			iAst.oneStmtAST2.visit(this, o);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -181,9 +181,9 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		ExprAST mAst;
 		try {
-			mAst = (BinExprAST) iAst.e.visit(this, o);
+			mAst = (BinExprAST) iAst.exprAST.visit(this, o);
 		} catch (ClassCastException e) {
-			mAst = (UnaryExprAST) iAst.e.visit(this, o);
+			mAst = (UnaryExprAST) iAst.exprAST.visit(this, o);
 		}
 		Node node = mPdg.findNodeAtLine(iAst.line);
 		int conditionline = node.getConDep().getNode().getID();
@@ -215,7 +215,7 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 
 			}
 		}
-		iAst.s.visit(this, o);
+		iAst.oneStmtAST.visit(this, o);
 		return null;
 	}
 
@@ -232,7 +232,7 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 		ArrayList<Integer> temp2 = new ArrayList<Integer>();
 		temp2.add(0);
 		this.listBranch.add(temp2);
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 
@@ -258,8 +258,8 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitStmtListAST(StmtListAST sAst, Object o)
 			throws CompilationException {
-		sAst.o.visit(this, o);
-		sAst.s.visit(this, o);
+		sAst.oneStmtAST.visit(this, o);
+		sAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -286,9 +286,9 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 		try {
 			ExprAST mAst;
 			try {
-				mAst = (BinExprAST) wAst.e.visit(this, o);
+				mAst = (BinExprAST) wAst.exprAST.visit(this, o);
 			} catch (ClassCastException e) {
-				mAst = (UnaryExprAST) wAst.e.visit(this, o);
+				mAst = (UnaryExprAST) wAst.exprAST.visit(this, o);
 			}
 			Node node = mPdg.findNodeAtLine(wAst.line);
 			int conditionline = node.getConDep().getNode().getID();
@@ -319,7 +319,7 @@ public class ControlFlowGraphVisitor extends DoNothingVisitor {
 					this.listBranch.add(temp2);
 				}
 			}
-			wAst.o.visit(this, o);
+			wAst.oneStmtAST.visit(this, o);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -99,7 +99,7 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitDefaultStmtAST(DefaultStmtAST dAst, Object o)
 			throws CompilationException {
 		this.println("DefaultStmtAST: " + dAst.line);
-		dAst.s.visit(this, o);
+		dAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -111,8 +111,8 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitDoStmtAST(DoStmtAST wAst, Object o)
 			throws CompilationException {
 		this.mapTable.addMappingNode(new MappingNode(wAst.line, wAst));
-		wAst.o.visit(this, o);
-		wAst.e.visit(this, o);
+		wAst.oneStmtAST.visit(this, o);
+		wAst.exprAST.visit(this, o);
 		return null;
 	}
 
@@ -121,7 +121,7 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
 		this.mapTable.addMappingNode(new MappingNode(ast.line, ast));
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		return null;
 	}
 
@@ -130,16 +130,16 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitForStmtAST(ForStmtAST fAst, Object o)
 			throws CompilationException {
 		this.mapTable.addMappingNode(new MappingNode(fAst.line, fAst));
-		if (fAst.e1 != null) {
-			fAst.e1.visit(this, o);
+		if (fAst.forInitAST != null) {
+			fAst.forInitAST.visit(this, o);
 		}
-		if (fAst.e2 != null) {
-			fAst.e2.visit(this, o);
+		if (fAst.exprAST != null) {
+			fAst.exprAST.visit(this, o);
 		}
-		if (fAst.e3 != null) {
-			fAst.e3.visit(this, o);
+		if (fAst.exprListAST != null) {
+			fAst.exprListAST.visit(this, o);
 		}
-		fAst.o.visit(this, o);
+		fAst.oneStmtAST.visit(this, o);
 		return null;
 	}
 
@@ -147,7 +147,7 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitFuncDeclAST(FuncDeclAST fAst, Object o)
 			throws CompilationException {
-		fAst.c.visit(this, o);
+		fAst.compStmtAST.visit(this, o);
 		return null;
 	}
 
@@ -156,9 +156,9 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitIfThenElseStmtAST(IfThenElseStmtAST iAst, Object o)
 			throws CompilationException {
 		this.mapTable.addMappingNode(new MappingNode(iAst.line, iAst));
-		iAst.e.visit(this, o);
-		iAst.s1.visit(this, o);
-		iAst.s2.visit(this, o);
+		iAst.exprAST.visit(this, o);
+		iAst.oneStmtAST1.visit(this, o);
+		iAst.oneStmtAST2.visit(this, o);
 		return null;
 	}
 
@@ -167,8 +167,8 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitIfThenStmtAST(IfThenStmtAST iAst, Object o)
 			throws CompilationException {
 		this.mapTable.addMappingNode(new MappingNode(iAst.line, iAst));
-		iAst.e.visit(this, o);
-		iAst.s.visit(this, o);
+		iAst.exprAST.visit(this, o);
+		iAst.oneStmtAST.visit(this, o);
 		return null;
 	}
 
@@ -176,7 +176,7 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitProgramAST(ProgramAST ast, Object o)
 			throws CompilationException {
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 
@@ -184,9 +184,9 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitRetStmtAST(RetStmtAST rAst, Object o)
 			throws CompilationException {
-		if (rAst.e != null) {
+		if (rAst.exprAST != null) {
 			this.mapTable.addMappingNode(new MappingNode(rAst.line, rAst));
-			rAst.e.visit(this, o);
+			rAst.exprAST.visit(this, o);
 		}
 		return null;
 	}
@@ -195,8 +195,8 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitStmtListAST(StmtListAST sAst, Object o)
 			throws CompilationException {
-		sAst.o.visit(this, o);
-		sAst.s.visit(this, o);
+		sAst.oneStmtAST.visit(this, o);
+		sAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -215,8 +215,8 @@ public class Ast2MappingTableVisitor extends DoNothingVisitor {
 	public Object visitWhileStmtAST(WhileStmtAST wAst, Object o)
 			throws CompilationException {
 		this.mapTable.addMappingNode(new MappingNode(wAst.line, wAst));
-		wAst.e.visit(this, o);
-		wAst.o.visit(this, o);
+		wAst.exprAST.visit(this, o);
+		wAst.oneStmtAST.visit(this, o);
 		return null;
 	}
 }

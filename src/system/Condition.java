@@ -6,27 +6,28 @@ import transform.AST.*;
 
 public class Condition {
 	int stmtID;
-	boolean hastc;
+	boolean hasTestCase;
 	AST ast;
 	String condition;
-	ArrayList<String> truepath;
-	ArrayList<String> falsepath;
-	ArrayList<Integer> truecon;
-	ArrayList<Integer> falsecon;
-	String truetc;
-	public boolean hastruetc;
-	String falsetc;
-	public boolean hasfalsetc;
+	ArrayList<String> lstTruePath;
+	ArrayList<String> lstFalsePath;
+	ArrayList<Integer> lstTrueCondition;
+	ArrayList<Integer> lstFalseCondition;
+	
+	String trueTestCase;
+	public boolean hasTrueTestCase;
+	String falseTestCase;
+	public boolean hasFalseTestCase;
 
 	public Condition() {
 		stmtID = 0;
 		ast = null;
-		truepath = new ArrayList<String>();
-		falsepath = new ArrayList<String>();
-		truecon = new ArrayList<Integer>();
-		falsecon = new ArrayList<Integer>();
-		truetc = "";
-		falsetc = "";
+		lstTruePath = new ArrayList<String>();
+		lstFalsePath = new ArrayList<String>();
+		lstTrueCondition = new ArrayList<Integer>();
+		lstFalseCondition = new ArrayList<Integer>();
+		trueTestCase = "";
+		falseTestCase = "";
 	}
 
 	public AST getAst() {
@@ -37,39 +38,39 @@ public class Condition {
 		return condition;
 	}
 
-	public ArrayList<Integer> getFalsecon() {
-		return falsecon;
+	public ArrayList<Integer> getFalseConditions() {
+		return lstFalseCondition;
 	}
 
-	public ArrayList<String> getFalsepath() {
-		return falsepath;
+	public ArrayList<String> getFalsePaths() {
+		return lstFalsePath;
 	}
 
-	public String getFalsetc() {
-		return falsetc;
+	public String getFalseTestCase() {
+		return falseTestCase;
 	}
 
 	public int getStmtID() {
 		return stmtID;
 	}
 
-	public ArrayList<Integer> getTruecon() {
-		return truecon;
+	public ArrayList<Integer> getTrueConditions() {
+		return lstTrueCondition;
 	}
 
-	public ArrayList<String> getTruepath() {
-		return truepath;
+	public ArrayList<String> getTruePaths() {
+		return lstTruePath;
 	}
 
-	public String getTruetc() {
-		return truetc;
+	public String getTrueTestCase() {
+		return trueTestCase;
 	}
 
-	public boolean isHastc() {
-		return hastc;
+	public boolean isHasTestcase() {
+		return hasTestCase;
 	}
 
-	public void setAst(AST ast) {
+	public void setAST(AST ast) {
 		this.ast = ast;
 	}
 
@@ -77,35 +78,35 @@ public class Condition {
 		this.condition = condition;
 	}
 
-	public void setFalsecon(ArrayList<Integer> falsecon) {
-		this.falsecon = falsecon;
+	public void setFalseConditions(ArrayList<Integer> falseConditions) {
+		this.lstFalseCondition = falseConditions;
 	}
 
-	public void setFalsepath(ArrayList<String> falsepath) {
-		this.falsepath = falsepath;
+	public void setFalsePaths(ArrayList<String> falsepaths) {
+		this.lstFalsePath = falsepaths;
 	}
 
-	public void setFalsetc(String falsetc) {
-		this.falsetc = falsetc;
+	public void setFalseTestcase(String falseTestcase) {
+		this.falseTestCase = falseTestcase;
 	}
 
-	public void setHastc(boolean hastc) {
-		this.hastc = hastc;
+	public void setHasTestcase(boolean hasTestcase) {
+		this.hasTestCase = hasTestcase;
 	}
 
 	public void setStmtID(int stmtID) {
 		this.stmtID = stmtID;
 	}
 
-	public void setTruecon(ArrayList<Integer> truecon) {
-		this.truecon = truecon;
+	public void setTrueConditions(ArrayList<Integer> trueConditions) {
+		this.lstTrueCondition = trueConditions;
 	}
 
-	public void setTruepath(ArrayList<String> truepath) {
-		this.truepath = truepath;
+	public void setTruePaths(ArrayList<String> truePaths) {
+		this.lstTruePath = truePaths;
 	}
 
-	public void setTruetc(String truetc) {
-		this.truetc = truetc;
+	public void setTrueTestcase(String trueTestcase) {
+		this.trueTestCase = trueTestcase;
 	}
 }

@@ -3,14 +3,15 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class DoStmtAST extends OneStmtAST {
-	public ExprAST e;
-	public OneStmtAST o;
+	public ExprAST exprAST;
+	public OneStmtAST oneStmtAST;
 	public String line_str;
 
-	public DoStmtAST(ExprAST exp, OneStmtAST stmt) {
-		e = exp;
-		o = stmt;
-		e.parentAST = o.parentAST = this;
+	public DoStmtAST(ExprAST exprAST, OneStmtAST oneStmtAST) {
+		this.exprAST = exprAST;
+		this.oneStmtAST = oneStmtAST;
+		
+		this.exprAST.parentAST = this.oneStmtAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

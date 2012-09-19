@@ -73,7 +73,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitArrayInitializerAST(ArrayInitializerAST ast, Object o)
 			throws CompilationException {
-		ast.v.visit(this, o);
+		ast.varInitializerListAST.visit(this, o);
 		return null;
 	}
 
@@ -148,7 +148,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 
 			String varName = "";
 			if (ast.exprAST1 instanceof VarExprAST) {
-				varName = ((VarExprAST) ast.exprAST1).name.getText();
+				varName = ((VarExprAST) ast.exprAST1).op.getText();
 			} else if (ast.exprAST1 instanceof EleExprAST) {
 				varName = ((EleExprAST) ast.exprAST1).name.getText();
 			} else if (ast.exprAST1 instanceof UnaryExprAST) {
@@ -467,7 +467,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	public Object visitCallExprAST(CallExprAST ast, Object o)
 			throws CompilationException {
 		if (ast.op.getText().equals("println")) {
-			Object value = ast.exprListAST.e.visit(this, o);
+			Object value = ast.exprListAST.exprAST.visit(this, o);
 			this.println(value);
 			return null;
 		}
@@ -532,7 +532,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	public Object visitDefaultStmtAST(DefaultStmtAST dAst, Object o)
 			throws CompilationException {
 		this.println("DefaultStmtAST: " + dAst.line);
-		dAst.s.visit(this, o);
+		dAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -543,10 +543,10 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 		boolean value;
 		do {
 			this.simulation.enterScope();
-			wAst.o.visit(this, o);
+			wAst.oneStmtAST.visit(this, o);
 			this.simulation.exitScope();
 
-			value = ((Boolean) wAst.e.visit(this, o)).booleanValue();
+			value = ((Boolean) wAst.exprAST.visit(this, o)).booleanValue();
 			if (value) {
 				this.execHistory.addExecNode(new ExecNode(wAst.line, 'T'));
 			} else {
@@ -563,7 +563,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		this.println("Simulation of Array manipulation is NOT SUPPORTED !!!");
 		// String varName = ast.name.getText();
-		ast.e.visit(this, o);
+		ast.exprListAST.visit(this, o);
 		return null;
 	}
 
@@ -571,8 +571,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitExprListAST(ExprListAST ast, Object o)
 			throws CompilationException {
-		ast.e.visit(this, o);
-		ast.l.visit(this, o);
+		ast.exprAST.visit(this, o);
+		ast.exprListAST.visit(this, o);
 		return null;
 	}
 
@@ -580,7 +580,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
-		ast.e.visit(this, o);
+		ast.exprAST.visit(this, o);
 		this.execHistory.addExecNode(new ExecNode(ast.line, 'N'));
 
 		return null;
@@ -597,13 +597,13 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitForInitAST(ForInitAST ast, Object o)
 			throws CompilationException {
-		if (ast.d != null) {
+		if (ast.declarationListAST != null) {
 			// for (int i = 1 ; ...)
-			ast.d.visit(this, o);
+			ast.declarationListAST.visit(this, o);
 		}
-		if (ast.e != null) {
+		if (ast.exprListAST != null) {
 			// for (i = 1, j = 2, k = 3 ; ...)
-			return ast.e.visit(this, o);
+			return ast.exprListAST.visit(this, o);
 		}
 		return null;
 	}
@@ -637,14 +637,14 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	public Object visitFuncDeclAST(FuncDeclAST fAst, Object o)
 			throws CompilationException {
 		this.simulation.enterScope();
-		fAst.para.visit(this, o);
-		fAst.retType.visit(this, o);
+		fAst.paraListAST.visit(this, o);
+		fAst.typeAST.visit(this, o);
 
-		TypeAST retType = ((TypeListAST) fAst.retType).t;
+		TypeAST retType = ((TypeListAST) fAst.typeAST).typeAST;
 		int scope = this.simulation.currentScope;
 		this.simulation.addNewVariable(retType, RET_VAR_NAME, scope);
 
-		fAst.c.visit(this, o);
+		fAst.compStmtAST.visit(this, o);
 
 		this.simulation.exitScope();
 		return null;
@@ -654,16 +654,16 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitIfThenElseStmtAST(IfThenElseStmtAST iAst, Object o)
 			throws CompilationException {
-		boolean value = ((Boolean) iAst.e.visit(this, o)).booleanValue();
+		boolean value = ((Boolean) iAst.exprAST.visit(this, o)).booleanValue();
 		if (value) {
 			this.execHistory.addExecNode(new ExecNode(iAst.line, 'T'));
 			this.simulation.enterScope();
-			iAst.s1.visit(this, o);
+			iAst.oneStmtAST1.visit(this, o);
 			this.simulation.exitScope();
 		} else {
 			this.execHistory.addExecNode(new ExecNode(iAst.line, 'F'));
 			this.simulation.enterScope();
-			iAst.s2.visit(this, o);
+			iAst.oneStmtAST2.visit(this, o);
 			this.simulation.exitScope();
 		}
 		return null;
@@ -673,11 +673,11 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitIfThenStmtAST(IfThenStmtAST iAst, Object o)
 			throws CompilationException {
-		boolean value = ((Boolean) iAst.e.visit(this, o)).booleanValue();
+		boolean value = ((Boolean) iAst.exprAST.visit(this, o)).booleanValue();
 		if (value) {
 			this.execHistory.addExecNode(new ExecNode(iAst.line, 'T'));
 			this.simulation.enterScope();
-			iAst.s.visit(this, o);
+			iAst.oneStmtAST.visit(this, o);
 			this.simulation.exitScope();
 		} else {
 			this.execHistory.addExecNode(new ExecNode(iAst.line, 'F'));
@@ -696,8 +696,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitParaAST(ParaAST pAst, Object o)
 			throws CompilationException {
-		pAst.t.visit(this, o);
-		TypeAST type = ((TypeListAST) pAst.t).t;
+		pAst.typeAST.visit(this, o);
+		TypeAST type = ((TypeListAST) pAst.typeAST).typeAST;
 		if (this.listInput.size() > 0) {
 			// get the input value from listInput
 			String input = this.listInput.remove(0);
@@ -710,7 +710,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 				value = Integer.parseInt(input);
 			}
 			int scope = this.simulation.currentScope;
-			this.simulation.addNewVariable(type, pAst.id.getText(), value,
+			this.simulation.addNewVariable(type, pAst.op.getText(), value,
 					scope);
 		} else {
 			// System.out.println("Error input");
@@ -722,8 +722,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitParaListAST(ParaListAST pAst, Object o)
 			throws CompilationException {
-		pAst.v.visit(this, o);
-		pAst.p.visit(this, o);
+		pAst.paraAST.visit(this, o);
+		pAst.paraListAST.visit(this, o);
 		return null;
 	}
 
@@ -731,7 +731,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitPointerTypeAST(PointerTypeAST ast, Object o)
 			throws CompilationException {
-		ast.t.visit(this, o);
+		ast.typeAST.visit(this, o);
 		return null;
 	}
 
@@ -739,7 +739,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitProgramAST(ProgramAST ast, Object o)
 			throws CompilationException {
-		ast.dl.visit(this, o);
+		ast.declarationListAST.visit(this, o);
 		return null;
 	}
 
@@ -747,9 +747,9 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitRetStmtAST(RetStmtAST ast, Object o)
 			throws CompilationException {
-		if (ast.e != null) {
+		if (ast.exprAST != null) {
 			this.execHistory.addExecNode(new ExecNode(ast.line, 'N'));
-			Object value = ast.e.visit(this, "get_pointer_value");
+			Object value = ast.exprAST.visit(this, "get_pointer_value");
 			// Object value = ast.e.visit(this, o);
 			this.simulation.updateValueOfVariable(RET_VAR_NAME, value);
 		}
@@ -760,8 +760,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitStmtListAST(StmtListAST sAst, Object o)
 			throws CompilationException {
-		sAst.o.visit(this, o);
-		sAst.s.visit(this, o);
+		sAst.oneStmtAST.visit(this, o);
+		sAst.stmtListAST.visit(this, o);
 		return null;
 	}
 
@@ -793,9 +793,9 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitTernaryExprAST(TernaryExprAST ast, Object o)
 			throws CompilationException {
-		ast.e1.visit(this, o);
-		ast.e2.visit(this, o);
-		ast.e3.visit(this, o);
+		ast.exprAST1.visit(this, o);
+		ast.exprAST2.visit(this, o);
+		ast.exprAST3.visit(this, o);
 		return null;
 	}
 
@@ -803,8 +803,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitTypeListAST(TypeListAST ast, Object o)
 			throws CompilationException {
-		ast.t.visit(this, o);
-		ast.tl.visit(this, o);
+		ast.typeAST.visit(this, o);
+		ast.typeListAST.visit(this, o);
 		return null;
 	}
 
@@ -815,18 +815,18 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 		Object val;
 		if (ast.opType == UnaryExprAST.ADDR_OF) {
 			if (o.equals(GET_VARIABLE_NAME)) {
-				return ast.e.visit(this, GET_VARIABLE_NAME);
+				return ast.exprAST.visit(this, GET_VARIABLE_NAME);
 			} else {
-				val = ast.e.visit(this, "address");
+				val = ast.exprAST.visit(this, "address");
 			}
 		} else if (ast.opType == UnaryExprAST.INDIRECTION) {
 			if (o.equals("get_pointer_value")) {
-				val = ast.e.visit(this, "get_pointer_value");
+				val = ast.exprAST.visit(this, "get_pointer_value");
 			} else {
-				val = ast.e.visit(this, "get_pointed_address");
+				val = ast.exprAST.visit(this, "get_pointed_address");
 			}
 		} else {
-			val = ast.e.visit(this, o);
+			val = ast.exprAST.visit(this, o);
 		}
 
 		if ((ast.opType >= UnaryExprAST.PRE_INC)
@@ -835,10 +835,10 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			boolean pre_increment; // true if (++i or --i), false if (i++ or
 									// i--)
 			String varName = "";
-			if (ast.e instanceof VarExprAST) {
-				varName = ((VarExprAST) ast.e).name.getText();
-			} else if (ast.e instanceof EleExprAST) {
-				varName = ((EleExprAST) ast.e).name.getText();
+			if (ast.exprAST instanceof VarExprAST) {
+				varName = ((VarExprAST) ast.exprAST).op.getText();
+			} else if (ast.exprAST instanceof EleExprAST) {
+				varName = ((EleExprAST) ast.exprAST).name.getText();
 			}
 
 			if (ast.opType == UnaryExprAST.PRE_INC) {
@@ -858,7 +858,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 				opType = BinExprAST.MINUS;
 				pre_increment = false;
 			}
-			ExprAST addingOneBinExpr = new BinExprAST(ast.e, opType, null,
+			ExprAST addingOneBinExpr = new BinExprAST(ast.exprAST, opType, null,
 					new NullExprAST());
 			Object new_value = addingOneBinExpr.visit(this, "increment");
 			this.simulation.updateValueOfVariable(varName, new_value);
@@ -872,7 +872,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 		} else if (ast.opType == UnaryExprAST.UNARY_MINUS) {
 			// -i
 			ExprAST zeroMinusBinExpr = new BinExprAST(new NullExprAST(),
-					BinExprAST.MINUS, null, ast.e);
+					BinExprAST.MINUS, null, ast.exprAST);
 			return zeroMinusBinExpr.visit(this, "zero_minus");
 		} else if (ast.opType == UnaryExprAST.LOGICAL_NOT) {
 			// !bool
@@ -891,15 +891,15 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		// ast.t.visit(this, o);
 		TypeAST type;
-		if (ast.t instanceof TypeListAST) {
-			type = ((TypeListAST) ast.t).t;
+		if (ast.typeAST instanceof TypeListAST) {
+			type = ((TypeListAST) ast.typeAST).typeAST;
 		} else {
-			type = ast.t;
+			type = ast.typeAST;
 		}
 
 		int scope = this.simulation.currentScope;
 		if (ast.init != null) {
-			this.simulation.addNewVariable(type, ast.id.getText(),
+			this.simulation.addNewVariable(type, ast.op.getText(),
 					ast.init.visit(this, o), scope);
 			// change in pdg
 			int line = ast.line;
@@ -909,7 +909,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			// add executed node
 			this.execHistory.addExecNode(new ExecNode(ast.line, 'N'));
 		} else {
-			this.simulation.addNewVariable(type, ast.id.getText(), scope);
+			this.simulation.addNewVariable(type, ast.op.getText(), scope);
 		}
 
 		return null;
@@ -924,7 +924,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		ast.line = ast.parentAST.line;
 
-		String name = ast.name.getText();
+		String name = ast.op.getText();
 		if (o.equals(GET_VARIABLE_NAME)) {
 			return name;
 		} else if (o.equals("address")) {
@@ -984,15 +984,15 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitVarInitializerAST(VarInitializerAST ast, Object o)
 			throws CompilationException {
-		return ast.e.visit(this, o);
+		return ast.exprAST.visit(this, o);
 	}
 
 	// VarInitializerList
 	@Override
 	public Object visitVarInitializerListAST(VarInitializerListAST ast, Object o)
 			throws CompilationException {
-		ast.v.visit(this, o);
-		ast.vl.visit(this, o);
+		ast.varInitializerAST.visit(this, o);
+		ast.varInitializerListAST.visit(this, o);
 		return null;
 	}
 
@@ -1001,13 +1001,13 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	public Object visitWhileStmtAST(WhileStmtAST wAst, Object o)
 			throws CompilationException {
 		int count = 0;
-		boolean value = ((Boolean) wAst.e.visit(this, o)).booleanValue();
+		boolean value = ((Boolean) wAst.exprAST.visit(this, o)).booleanValue();
 		while (value) {
 			count++;
 			this.execHistory.addExecNode(new ExecNode(wAst.line, 'T'));
 			this.simulation.enterScope();
-			wAst.o.visit(this, o);
-			value = ((Boolean) wAst.e.visit(this, o)).booleanValue();
+			wAst.oneStmtAST.visit(this, o);
+			value = ((Boolean) wAst.exprAST.visit(this, o)).booleanValue();
 			this.simulation.exitScope();
 		}
 		if (count == 0)

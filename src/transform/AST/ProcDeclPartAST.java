@@ -3,18 +3,20 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class ProcDeclPartAST extends AST {
-	public OneProcDeclAST o;
-	public ProcDeclPartAST p;
+	
+	public OneProcDeclAST oneProcDeclAST;
+	public ProcDeclPartAST procDeclPartAST;
 
 	public ProcDeclPartAST() {
-		this.o = null;
-		this.p = null;
+		this.oneProcDeclAST = null;
+		this.procDeclPartAST = null;
 	}
 
 	public ProcDeclPartAST(OneProcDeclAST one, ProcDeclPartAST pro) {
-		this.o = one;
-		this.p = pro;
-		this.o.parentAST = this.p.parentAST = this;
+		this.oneProcDeclAST = one;
+		this.procDeclPartAST = pro;
+		
+		this.oneProcDeclAST.parentAST = this.procDeclPartAST.parentAST = this;
 	}
 
 	@Override

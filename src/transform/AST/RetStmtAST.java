@@ -3,16 +3,18 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class RetStmtAST extends OneStmtAST {
-	public ExprAST e;
+	
+	public ExprAST exprAST;
 	public String line_str;
 
 	public RetStmtAST() {
-		e = null;
+		exprAST = null;
 	}
 
 	public RetStmtAST(ExprAST exp) {
-		e = exp;
-		e.parentAST = this;
+		exprAST = exp;
+	
+		exprAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

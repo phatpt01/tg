@@ -3,28 +3,29 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class ForStmtAST extends OneStmtAST {
-	// public Token name;
-	public ForInitAST e1;
-	public ExprAST e2;
-	public ExprListAST e3;
-	public OneStmtAST o;
+
+	public ForInitAST forInitAST;
+	public ExprAST exprAST;
+	public ExprListAST exprListAST;
+	public OneStmtAST oneStmtAST;
 	public String s2 = "";
 
-	public ForStmtAST(ForInitAST fi, ExprAST exp2, ExprListAST exp3,
-			OneStmtAST one) {
-		// name=t;
-		this.e1 = fi;
-		this.e2 = exp2;
-		this.e3 = exp3;
-		this.o = one;
-		if (this.e1 != null) {
-			this.e1.parentAST = this;
+	public ForStmtAST(ForInitAST forInitAST, ExprAST exprAST, ExprListAST exprListAST,
+			OneStmtAST oneStmtAST) {
+
+		this.forInitAST = forInitAST;
+		this.exprAST = exprAST;
+		this.exprListAST = exprListAST;
+		this.oneStmtAST = oneStmtAST;
+		
+		if (this.forInitAST != null) {
+			this.forInitAST.parentAST = this;
 		}
-		if (this.e2 != null) {
-			this.e2.parentAST = this;
+		if (this.exprAST != null) {
+			this.exprAST.parentAST = this;
 		}
-		if (this.e3 != null) {
-			this.e3.parentAST = this;
+		if (this.exprListAST != null) {
+			this.exprListAST.parentAST = this;
 		}
 	}
 

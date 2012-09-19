@@ -3,11 +3,13 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class ProgramAST extends AST {
-	public DeclarationListAST dl;
+	
+	public DeclarationListAST declarationListAST;
 
-	public ProgramAST(DeclarationListAST decll) {
-		this.dl = decll;
-		this.dl.parentAST = this;
+	public ProgramAST(DeclarationListAST declarationListAST) {
+		this.declarationListAST = declarationListAST;
+	
+		this.declarationListAST.parentAST = this;
 	}
 
 	@Override

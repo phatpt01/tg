@@ -3,14 +3,16 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class IfThenStmtAST extends OneStmtAST {
-	public ExprAST e;
-	public OneStmtAST s;
+
+	public ExprAST exprAST;
+	public OneStmtAST oneStmtAST;
 	public String line_str = "";
 
-	public IfThenStmtAST(ExprAST exp, OneStmtAST one) {
-		e = exp;
-		s = one;
-		e.parentAST = s.parentAST = this;
+	public IfThenStmtAST(ExprAST exprAST, OneStmtAST oneStmtAST) {
+		this.exprAST = exprAST;
+		this.oneStmtAST = oneStmtAST;
+
+		this.exprAST.parentAST = this.oneStmtAST.parentAST = this;
 	}
 
 	public Object visit(Visitor v, Object o) throws CompilationException {

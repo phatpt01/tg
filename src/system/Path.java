@@ -28,16 +28,16 @@ public class Path {
 					.visit(visitor, null);
 
 			if (ast instanceof IfThenStmtAST) {
-				ast = ((IfThenStmtAST) ast).e;
+				ast = ((IfThenStmtAST) ast).exprAST;
 			}
 			if (ast instanceof IfThenElseStmtAST) {
-				ast = ((IfThenElseStmtAST) ast).e;
+				ast = ((IfThenElseStmtAST) ast).exprAST;
 			}
 			if (ast instanceof WhileStmtAST) {
-				ast = ((WhileStmtAST) ast).e;
+				ast = ((WhileStmtAST) ast).exprAST;
 			}
 			if (ast instanceof DoStmtAST) {
-				ast = ((DoStmtAST) ast).e;
+				ast = ((DoStmtAST) ast).exprAST;
 			}
 			// not put return statement to path
 			if ((ast != null)) // !(ast instanceof RetStmtAST) &&

@@ -6,12 +6,13 @@ import transform.CodeGeneration.Visitor;
 
 public class DefineDirectiveAST extends DirectiveAST {
 	public Token id;
-	public ExprAST l;
+	public ExprAST exprAST;
 
-	public DefineDirectiveAST(Token tk, ExprAST e) {
-		id = tk;
-		l = e;
-		l.parentAST = this;
+	public DefineDirectiveAST(Token tk, ExprAST exprAST) {
+		this.id = tk;
+		this.exprAST = exprAST;
+		
+		this.exprAST.parentAST = this;
 	}
 
 	@Override

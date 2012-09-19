@@ -97,39 +97,35 @@ public class VariableVisitor implements Visitor {
 		this.listVar = new ArrayList<Variable>();
 	}
 
-	public ArrayList<Parameter> getListPara() {
+	public ArrayList<Parameter> getListParameters() {
 		return this.listPara;
 	}
 
-	public ArrayList<Variable> getListVar() {
+	public ArrayList<Variable> getListVariables() {
 		return this.listVar;
 	}
 
 	@Override
 	public Object visitArrayInitializerAST(ArrayInitializerAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitArrayInitializerListAST(ArrayInitializerListAST ast,
 			Object o) throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitArrayTypeAST(ArrayTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitAssiStmtAST(AssiStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -143,70 +139,62 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitBoolLiteralAST(BoolLiteralAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitBoolTypeAST(BoolTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
+
 		return "Bool";
 	}
 
 	@Override
 	public Object visitBreakStmtAST(BreakStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Object visitCallExprAST(CallExprAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitCallStmtAST(CallStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitCaseStmtAST(CaseStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitCastExprAST(CastExprAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitCastInt2FloatAST(CastInt2FloatAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitCharLiteralAST(CharLiteralAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitCharTypeAST(CharTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -220,7 +208,6 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitContStmtAST(ContStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -246,43 +233,38 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitDefaultStmtAST(DefaultStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitDefineDirectiveAST(DefineDirectiveAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitDoStmtAST(DoStmtAST ast, Object o)
 			throws CompilationException {
-		ast.e.visit(this, null);
-		ast.o.visit(this, null);
+		ast.exprAST.visit(this, null);
+		ast.oneStmtAST.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitDoubleTypeAST(DoubleTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return "Double";
 	}
 
 	@Override
 	public Object visitEleExprAST(EleExprAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyArrayInitializerAST(EmptyArrayInitializerAST ast,
 			Object o) throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -290,64 +272,56 @@ public class VariableVisitor implements Visitor {
 	public Object visitEmptyArrayInitializerListAST(
 			EmptyArrayInitializerListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyDeclarationListAST(EmptyDeclarationListAST ast,
 			Object o) throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyExprListAST(EmptyExprListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyIntLiteralListAST(EmptyIntLiteralListAST ast,
 			Object o) throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyParaListAST(EmptyParaListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyProcDeclPartAST(EmptyProcDeclPartAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyStmtListAST(EmptyStmtListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyTypeListAST(EmptyTypeListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitEmptyVarDeclPartAST(EmptyVarDeclPartAST ast, Object o)
 			throws CompilationException {
-		ast.v.visit(this, null);
-		ast.vp.visit(this, null);
+		ast.varDeclAST.visit(this, null);
+		ast.varDeclPartAST.visit(this, null);
 		return null;
 	}
 
@@ -355,28 +329,25 @@ public class VariableVisitor implements Visitor {
 	public Object visitEmptyVarInitializerListAST(
 			EmptyVarInitializerListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitExprListAST(ExprListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
-		ast.e.visit(this, null);
+		ast.exprAST.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitFloatLiteralAST(FloatLiteralAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -389,60 +360,55 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitForInitAST(ForInitAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitForStmtAST(ForStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitFuncDeclAST(FuncDeclAST ast, Object o)
 			throws CompilationException {
-		ast.para.visit(this, null);
-		ast.c.visit(this, null);
+		ast.paraListAST.visit(this, null);
+		ast.compStmtAST.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitGlobalVarDeclPartAST(GlobalVarDeclPartAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitIfThenElseStmtAST(IfThenElseStmtAST ast, Object o)
 			throws CompilationException {
-		ast.e.visit(this, null);
-		ast.s1.visit(this, null);
-		ast.s2.visit(this, null);
+		ast.exprAST.visit(this, null);
+		ast.oneStmtAST1.visit(this, null);
+		ast.oneStmtAST2.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitIfThenStmtAST(IfThenStmtAST ast, Object o)
 			throws CompilationException {
-		ast.e.visit(this, null);
-		ast.s.visit(this, null);
+		ast.exprAST.visit(this, null);
+		ast.oneStmtAST.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitIntLiteralAST(IntLiteralAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitIntLiteralListAST(IntLiteralListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -455,22 +421,20 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitLongTypeAST(LongTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitNullExprAST(NullExprAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitParaAST(ParaAST ast, Object o)
 			throws CompilationException {
-		String type = (String) ast.t.visit(this, null);
-		String paraName = ast.id.getText();
+		String type = (String) ast.typeAST.visit(this, null);
+		String paraName = ast.op.getText();
 		Parameter p = new Parameter(type, paraName);
 		this.listPara.add(p);
 
@@ -480,11 +444,11 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitParaListAST(ParaListAST ast, Object o)
 			throws CompilationException {
-		if (ast.v != null) {
-			ast.v.visit(this, null);
+		if (ast.paraAST != null) {
+			ast.paraAST.visit(this, null);
 		}
-		if (ast.p != null) {
-			ast.p.visit(this, null);
+		if (ast.paraListAST != null) {
+			ast.paraListAST.visit(this, null);
 		}
 		return null;
 	}
@@ -492,113 +456,102 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitPointerTypeAST(PointerTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitProcDeclAST(ProcDeclAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitProcDeclPartAST(ProcDeclPartAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitProgramAST(ProgramAST ast, Object o)
 			throws CompilationException {
-		ast.dl.visit(this, null);
+		ast.declarationListAST.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitRepeatStmtAST(RepeatStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitRetStmtAST(RetStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitShortTypeAST(ShortTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitSignedTypeAST(SignedTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitStmtListAST(StmtListAST ast, Object o)
 			throws CompilationException {
-		ast.o.visit(this, null);
-		ast.s.visit(this, null);
+		ast.oneStmtAST.visit(this, null);
+		ast.stmtListAST.visit(this, null);
 		return null;
 	}
 
 	@Override
 	public Object visitStringLiteralAST(StringLiteralAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitSwitchStmtAST(SwitchStmtAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitTernaryExprAST(TernaryExprAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Object visitTypeListAST(TypeListAST ast, Object o)
 			throws CompilationException {
-		return ast.t.visit(this, null);
+		return ast.typeAST.visit(this, null);
 	}
 
 	@Override
 	public Object visitUnaryExprAST(UnaryExprAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitUnsignedTypeAST(UnsignedTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitVarDeclAST(VarDeclAST ast, Object o)
 			throws CompilationException {
-		String type = (String) ast.t.visit(this, null);
-		String varName = ast.id.getText();
+		String type = (String) ast.typeAST.visit(this, null);
+		String varName = ast.op.getText();
 		Variable v = new Variable(type, varName);
 		this.listVar.add(v);
 		return null;
@@ -607,9 +560,9 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitVarDeclPartAST(VarDeclPartAST ast, Object o)
 			throws CompilationException {
-		ast.v.visit(this, null);
-		if (ast.vp != null) {
-			ast.vp.visit(this, null);
+		ast.varDeclAST.visit(this, null);
+		if (ast.varDeclPartAST != null) {
+			ast.varDeclPartAST.visit(this, null);
 		}
 		return null;
 	}
@@ -617,43 +570,40 @@ public class VariableVisitor implements Visitor {
 	@Override
 	public Object visitVarExprAST(VarExprAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitVarInitializerAST(VarInitializerAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitVarInitializerListAST(VarInitializerListAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Object visitVoidTypeAST(VoidTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Object visitWCharTTypeAST(WCharTTypeAST ast, Object o)
 			throws CompilationException {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Object visitWhileStmtAST(WhileStmtAST ast, Object o)
 			throws CompilationException {
-		ast.e.visit(this, null);
-		ast.o.visit(this, null);
+		ast.exprAST.visit(this, null);
+		ast.oneStmtAST.visit(this, null);
 		return null;
 	}
 

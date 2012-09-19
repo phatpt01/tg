@@ -3,10 +3,13 @@ package system;
 import java.io.*;
 
 public class InOut {
+	
 	public InOut() {
+	
 	}
 
 	public String readFile(String filename) {
+	
 		String result = "";
 		try {
 			FileReader fstream = new FileReader(filename);
@@ -20,10 +23,12 @@ public class InOut {
 		} catch (Exception e) {
 			System.err.println("Error occur when read file" + filename);
 		}
+		
 		return result;
 	}
 
 	public void writeFile(String filename, String content) {
+		
 		try {
 			FileWriter fstream = new FileWriter(filename);
 			BufferedWriter out = new BufferedWriter(fstream);
@@ -34,5 +39,4 @@ public class InOut {
 			e.printStackTrace();
 		}
 	}
-
 }

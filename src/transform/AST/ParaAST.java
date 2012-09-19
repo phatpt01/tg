@@ -5,15 +5,17 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class ParaAST extends AST {
-	public Token id;
-	public TypeAST t;
-	public boolean ref; // true if pass by reference, false otherwise
 
-	public ParaAST(Token i, TypeAST type, boolean r) {
-		this.id = i;
-		this.t = type;
-		this.ref = r;
-		this.t.parentAST = this;
+	public Token op;
+	public TypeAST typeAST;
+	public boolean isRef; // true if pass by reference, false otherwise
+
+	public ParaAST(Token op, TypeAST typeAST, boolean isRef) {
+		this.op = op;
+		this.typeAST = typeAST;
+		this.isRef = isRef;
+		
+		this.typeAST.parentAST = this;
 	}
 
 	@Override

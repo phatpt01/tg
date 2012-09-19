@@ -102,15 +102,15 @@ public class Z3PathPrintVisitor extends FormalPathPrintVisitor {
 	public Object visitVarDeclAST(VarDeclAST ast, Object o)
 			throws CompilationException {
 		this.indentString();
-		if (ast.t instanceof ArrayTypeAST) {
-			ast.t.visit(this, ast.id.getText());
+		if (ast.typeAST instanceof ArrayTypeAST) {
+			ast.typeAST.visit(this, ast.op.getText());
 			return null;
 		}
 		// ast.t.visit(this, o); not print type in path
 		if (ast.init != null) {
 			this.get_EM().printout("(");
 			this.get_EM().printout("= ");
-			this.get_EM().printout(ast.id.getText());
+			this.get_EM().printout(ast.op.getText());
 			this.get_EM().printout(" ");
 			ast.init.visit(this, o);
 			this.get_EM().printout(")");

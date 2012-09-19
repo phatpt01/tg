@@ -3,6 +3,7 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class DeclarationListAST extends AST {
+	
 	public DeclarationAST declarationAST;
 	public DeclarationListAST declarationListAST;
 

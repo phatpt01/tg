@@ -21,26 +21,14 @@ public class CodeAnalyzer {
 
 	private PDG pdg;
 
-	// Mapping Table
 	private MappingTable mapTable;
-
-	// Transform
 	private Transform transform;
-
-	// List path
-	private ArrayList<ArrayList<AST>> listPath;
-
-	// List Branch
-	private ArrayList<ArrayList<Integer>> listBranch;
-
-	// List Variable
-	private ArrayList<Variable> listVariable;
-
-	// List Parameter
-	private ArrayList<Parameter> listParameter;
-
-	// List Condition
-	private ArrayList<Condition> listCondition;
+	
+	private ArrayList<ArrayList<AST>> lstPath;
+	private ArrayList<ArrayList<Integer>> lstBranch;
+	private ArrayList<Variable> lstVariable;
+	private ArrayList<Parameter> lstParameter;
+	private ArrayList<Condition> lstCondition;
 
 	private int currentTestCase = 0;
 
@@ -54,23 +42,26 @@ public class CodeAnalyzer {
 	}
 
 	public CodeAnalyzer(String strSourceFile) {
-		this.listCondition = new ArrayList<Condition>();
+		
+		this.lstCondition = new ArrayList<Condition>();
+		
 		transform = new Transform(strSourceFile);
+		
 		this.mapTable = transform.getMapTable();
 		this.pdg = transform.getPdg();
 		this.astTree = transform.getAstree();
-		this.listParameter = transform.getListParameters();
-		this.listVariable = transform.getListVariables();
+		this.lstParameter = transform.getListParameters();
+		this.lstVariable = transform.getListVariables();
 	}
 
 	public int[] check(int[][] testcase) {
-		int numCon = this.listCondition.size();
-		int numPar = this.listParameter.size();
+		int numCon = this.lstCondition.size();
+		int numPar = this.lstParameter.size();
 		int[] result = new int[numUnSolvableCondition * 2];
 		int count = 0;
 
 		for (int i = 0; i < numCon; i++) {
-			if (this.listCondition.get(i).isHastc() == false) {
+			if (this.lstCondition.get(i).isHasTestcase() == false) {
 				ArrayList<String> temp = new ArrayList<String>();
 				ArrayList<String> temp1 = new ArrayList<String>();
 				for (int j = 0; j < numPar; j++) {
@@ -89,22 +80,22 @@ public class CodeAnalyzer {
 		int result = 100;
 		int temp;
 		int count = 0;
-		Temp2Visitor visitor = new Temp2Visitor(this.listParameter,
-				this.listVariable, testcase);
+		Temp2Visitor visitor = new Temp2Visitor(this.lstParameter,
+				this.lstVariable, testcase);
 		try {
 			boolean check;
 			if (branch == 0) {
-				for (int i = 0; i < this.listCondition.get(con).getTruecon()
-						.size(); i++) {
+				for (int i = 0; i < this.lstCondition.get(con)
+						.getTrueConditions().size(); i++) {
 					temp = 0;
 					check = false;
 					int j;
-					ArrayList<AST> path = this.listPath.get(this.listCondition
-							.get(con).getTruecon().get(i));
-					ArrayList<Integer> lbranch = this.listBranch
-							.get(this.listCondition.get(con).getTruecon()
+					ArrayList<AST> path = this.lstPath.get(this.lstCondition
+							.get(con).getTrueConditions().get(i));
+					ArrayList<Integer> lbranch = this.lstBranch
+							.get(this.lstCondition.get(con).getTrueConditions()
 									.get(i));
-					for (j = 0; path.get(j).line < this.listCondition.get(con)
+					for (j = 0; path.get(j).line < this.lstCondition.get(con)
 							.getStmtID(); j++) {
 						count++;
 						int res = (Integer) path.get(j).visit(visitor,
@@ -128,17 +119,17 @@ public class CodeAnalyzer {
 					visitor.clear();
 				}
 			} else {
-				for (int i = 0; i < this.listCondition.get(con).getFalsecon()
-						.size(); i++) {
+				for (int i = 0; i < this.lstCondition.get(con)
+						.getFalseConditions().size(); i++) {
 					temp = 0;
 					check = false;
 					int j;
-					ArrayList<AST> path = this.listPath.get(this.listCondition
-							.get(con).getFalsecon().get(i));
-					ArrayList<Integer> lbranch = this.listBranch
-							.get(this.listCondition.get(con).getFalsecon()
-									.get(i));
-					for (j = 0; path.get(j).line < this.listCondition.get(con)
+					ArrayList<AST> path = this.lstPath.get(this.lstCondition
+							.get(con).getFalseConditions().get(i));
+					ArrayList<Integer> lbranch = this.lstBranch
+							.get(this.lstCondition.get(con)
+									.getFalseConditions().get(i));
+					for (j = 0; path.get(j).line < this.lstCondition.get(con)
 							.getStmtID(); j++) {
 						count++;
 						int res = (Integer) path.get(j).visit(visitor,
@@ -176,19 +167,19 @@ public class CodeAnalyzer {
 	public String generateSolvable() {
 		int count = 0;
 		String output = "";
-		for (int i = 0; i < this.listCondition.size(); i++) {
+		for (int i = 0; i < this.lstCondition.size(); i++) {
 			generateNextTestCase(i);
 		}
 
-		for (int i = 0; i < this.listCondition.size(); i++) {
-			Condition temp = this.listCondition.get(i);
-			if (temp.isHastc()) {
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			Condition condition = this.lstCondition.get(i);
+			if (condition.isHasTestcase()) {
 				count++;
-				output += "Condition: " + temp.getCondition() + "\n";
-				output += "\tTrue: " + temp.getTruetc() + "\t" + temp.hastruetc
-						+ "\n";
-				output += "\tFalse: " + temp.getFalsetc() + "\t"
-						+ temp.hasfalsetc + "\n";
+				output += "Condition: " + condition.getCondition() + "\n";
+				output += "\tTrue: " + condition.getTrueTestCase() + "\t"
+						+ condition.hasTrueTestCase + "\n";
+				output += "\tFalse: " + condition.getFalseTestCase() + "\t"
+						+ condition.hasFalseTestCase + "\n";
 			}
 		}
 		output = "Number of solvable condition: " + count + "\n" + output;
@@ -197,29 +188,29 @@ public class CodeAnalyzer {
 
 	private void generateNextTestCase(int i) {
 		boolean check = false;
-		for (int j = 0; j < this.listCondition.get(i).getTruepath().size(); j++) {
-			String res = generateTestCase(this.listCondition.get(i).getTruepath()
-					.get(j));
+		for (int j = 0; j < this.lstCondition.get(i).getTruePaths().size(); j++) {
+			String res = generateTestCase(this.lstCondition.get(i)
+					.getTruePaths().get(j));
 			if (!res.equals("")) {
-				this.listCondition.get(i).setTruetc(res);
-				this.listCondition.get(i).hastruetc = true;
+				this.lstCondition.get(i).setTrueTestcase(res);
+				this.lstCondition.get(i).hasTrueTestCase = true;
 				check = true;
 				break;
 			}
 		}
-		for (int k = 0; k < this.listCondition.get(i).getFalsepath().size(); k++) {
-			String res = generateTestCase(this.listCondition.get(i).getFalsepath()
-					.get(k));
+		for (int k = 0; k < this.lstCondition.get(i).getFalsePaths().size(); k++) {
+			String res = generateTestCase(this.lstCondition.get(i)
+					.getFalsePaths().get(k));
 			if (!res.equals("")) {
 
-				this.listCondition.get(i).setFalsetc(res);
-				this.listCondition.get(i).hasfalsetc = true;
+				this.lstCondition.get(i).setFalseTestcase(res);
+				this.lstCondition.get(i).hasFalseTestCase = true;
 				check = true;
 				break;
 			}
 
 		}
-		this.listCondition.get(i).setHastc(check);
+		this.lstCondition.get(i).setHasTestcase(check);
 	}
 
 	private String generateTestCase(String con) {
@@ -237,8 +228,8 @@ public class CodeAnalyzer {
 			BufferedWriter out = new BufferedWriter(fw);
 
 			// Print the parameters of program
-			for (int i = 0; i < this.listParameter.size(); i++) {
-				Parameter p = this.listParameter.get(i);
+			for (int i = 0; i < this.lstParameter.size(); i++) {
+				Parameter p = this.lstParameter.get(i);
 				out.write("(declare-const ");
 				out.write(p.getName() + " ");
 				switch (p.getType()) {
@@ -253,8 +244,8 @@ public class CodeAnalyzer {
 				out.write("\n");
 			}
 			// Print variables of program
-			for (int i = 0; i < this.listVariable.size(); i++) {
-				Variable v = this.listVariable.get(i);
+			for (int i = 0; i < this.lstVariable.size(); i++) {
+				Variable v = this.lstVariable.get(i);
 				out.write("(declare-const ");
 				out.write(v.getName() + " ");
 				switch (v.getType()) {
@@ -297,23 +288,23 @@ public class CodeAnalyzer {
 			AST ast = (AST) mapTable.get(i).getStatementAST();
 			if (!(ast instanceof RetStmtAST)) {
 				if (ast instanceof IfThenStmtAST) {
-					ast = ((IfThenStmtAST) ast).e;
+					ast = ((IfThenStmtAST) ast).exprAST;
 				} else if (ast instanceof IfThenElseStmtAST) {
-					ast = ((IfThenElseStmtAST) ast).e;
+					ast = ((IfThenElseStmtAST) ast).exprAST;
 				} else if (ast instanceof WhileStmtAST) {
-					ast = ((WhileStmtAST) ast).e;
+					ast = ((WhileStmtAST) ast).exprAST;
 				} else if (ast instanceof DoStmtAST) {
-					ast = ((DoStmtAST) ast).e;
+					ast = ((DoStmtAST) ast).exprAST;
 				} else {
 					ast = null;
 				}
 				if (ast != null) {
 					Condition con = new Condition();
 					con.setStmtID(ast.line);
-					con.setAst(ast);
+					con.setAST(ast);
 					String conExp = visitor.print(ast);
 					con.setCondition(conExp);
-					listCondition.add(con);
+					lstCondition.add(con);
 					listConditionExpr.add(conExp);
 				}
 			}
@@ -323,8 +314,8 @@ public class CodeAnalyzer {
 
 	public ArrayList<Boolean> getFalseList() {
 		ArrayList<Boolean> result = new ArrayList<Boolean>();
-		for (int i = 0; i < this.listCondition.size(); i++) {
-			if (this.listCondition.get(i).hasfalsetc == true) {
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			if (this.lstCondition.get(i).hasFalseTestCase == true) {
 				result.add(true);
 			} else {
 				result.add(false);
@@ -362,10 +353,10 @@ public class CodeAnalyzer {
 					}
 				}
 				// process z3result
-				for (int i = 0; i < this.listParameter.size(); i++) {
+				for (int i = 0; i < this.lstParameter.size(); i++) {
 					for (int j = 0; j < z3result.size(); j += 2) {
 						if (z3result.get(j).equals(
-								this.listParameter.get(i).getName())) {
+								this.lstParameter.get(i).getName())) {
 							testcase.add(z3result.get(j + 1)); // add new value
 																// to testcase
 							break;
@@ -375,7 +366,7 @@ public class CodeAnalyzer {
 						Object result = 0;
 						Random ran1 = new Random();
 						double n = ran1.nextDouble() * 100;
-						switch (this.listParameter.get(i).getType()) {
+						switch (this.lstParameter.get(i).getType()) {
 						case "Int":
 							result = (int) n;
 							break;
@@ -389,13 +380,13 @@ public class CodeAnalyzer {
 						testcase.add(result.toString());
 					}
 				}
-				if (testcase.size() < this.listParameter.size()) {
-					int num = this.listParameter.size() - testcase.size();
+				if (testcase.size() < this.lstParameter.size()) {
+					int num = this.lstParameter.size() - testcase.size();
 					Random ran1 = new Random();
 					for (int i = 0; i < num; i++) {
 						Object result = 0;
 						double n = ran1.nextDouble() * 100;
-						switch (this.listParameter.get(i).getType()) {
+						switch (this.lstParameter.get(i).getType()) {
 						case "Int":
 							result = (int) n;
 							break;
@@ -423,12 +414,14 @@ public class CodeAnalyzer {
 
 	public ArrayList<Integer> getNextTestCase() {
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		if (currentTestCase < this.listCondition.size() * 2 - 1)
+		if (currentTestCase < this.lstCondition.size() * 2 - 1)
 			currentTestCase++;
 		if (currentTestCase % 2 == 0) {
-			testcase = this.listCondition.get(currentTestCase / 2).getTruetc();
+			testcase = this.lstCondition.get(currentTestCase / 2)
+					.getTrueTestCase();
 		} else {
-			testcase = this.listCondition.get(currentTestCase / 2).getFalsetc();
+			testcase = this.lstCondition.get(currentTestCase / 2)
+					.getFalseTestCase();
 		}
 		StringTokenizer st = new StringTokenizer(testcase, "[, ]");
 		while (st.hasMoreTokens()) {
@@ -465,21 +458,21 @@ public class CodeAnalyzer {
 
 	public int getNumCon() {
 		numUnSolvableCondition = 0;
-		for (int i = 0; i < this.listCondition.size(); i++) {
-			if (this.listCondition.get(i).isHastc() == false)
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			if (this.lstCondition.get(i).isHasTestcase() == false)
 				numUnSolvableCondition++;
 		}
 		return numUnSolvableCondition;
 	}
 
 	public int getNumPar() {
-		return this.listParameter.size();
+		return this.lstParameter.size();
 	}
 
 	public ArrayList<String> getParameterNameList() {
 		ArrayList<String> listParaName = new ArrayList<String>();
-		for (int i = 0; i < listParameter.size(); i++) {
-			listParaName.add(listParameter.get(i).getName());
+		for (int i = 0; i < lstParameter.size(); i++) {
+			listParaName.add(lstParameter.get(i).getName());
 		}
 		return listParaName;
 	}
@@ -489,9 +482,11 @@ public class CodeAnalyzer {
 		if (currentTestCase > 0)
 			currentTestCase--;
 		if (currentTestCase % 2 == 0) {
-			testcase = this.listCondition.get(currentTestCase / 2).getTruetc();
+			testcase = this.lstCondition.get(currentTestCase / 2)
+					.getTrueTestCase();
 		} else {
-			testcase = this.listCondition.get(currentTestCase / 2).getFalsetc();
+			testcase = this.lstCondition.get(currentTestCase / 2)
+					.getFalseTestCase();
 		}
 		StringTokenizer st = new StringTokenizer(testcase, "[, ]");
 		while (st.hasMoreTokens()) {
@@ -532,8 +527,8 @@ public class CodeAnalyzer {
 
 	public ArrayList<Boolean> getTrueList() {
 		ArrayList<Boolean> result = new ArrayList<Boolean>();
-		for (int i = 0; i < this.listCondition.size(); i++) {
-			if (this.listCondition.get(i).hastruetc == true) {
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			if (this.lstCondition.get(i).hasTrueTestCase == true) {
 				result.add(true);
 			} else {
 				result.add(false);
@@ -544,39 +539,39 @@ public class CodeAnalyzer {
 
 	public ArrayList<String> getVarNameList() {
 		ArrayList<String> listVarName = new ArrayList<String>();
-		for (int i = 0; i < listVariable.size(); i++) {
-			listVarName.add(listVariable.get(i).getName());
+		for (int i = 0; i < lstVariable.size(); i++) {
+			listVarName.add(lstVariable.get(i).getName());
 		}
 		return listVarName;
 	}
 
 	public void loadFile(String strSourceFile) {
-		listCondition = new ArrayList<Condition>();
+		lstCondition = new ArrayList<Condition>();
 		transform = new Transform(strSourceFile);
 		mapTable = transform.getMapTable();
 		astTree = transform.getAstree();
 		pdg = transform.getPdg();
-		listParameter = transform.getListParameters();
-		listVariable = transform.getListVariables(); 
-		listPath = transform.getListPath();
-		listBranch = transform.getListBranch();
+		lstParameter = transform.getListParameters();
+		lstVariable = transform.getListVariables();
+		lstPath = transform.getListPath();
+		lstBranch = transform.getListBranch();
 	}
 
 	public String scanCondition() {
 
 		String output = "";
-		listCondition = transform.updateConditionList(listCondition);
+		lstCondition = transform.updateConditionList(lstCondition);
 
-		for (int i = 0; i < this.listCondition.size(); i++) {
+		for (int i = 0; i < this.lstCondition.size(); i++) {
 			output += "Condition " + (i + 1) + ":"
-					+ this.listCondition.get(i).getCondition() + "\n";
+					+ this.lstCondition.get(i).getCondition() + "\n";
 			output += "True:\n";
-			for (int j = 0; j < this.listCondition.get(i).getTruepath().size(); j++) {
-				output += this.listCondition.get(i).getTruepath().get(j) + "\n";
+			for (int j = 0; j < this.lstCondition.get(i).getTruePaths().size(); j++) {
+				output += this.lstCondition.get(i).getTruePaths().get(j) + "\n";
 			}
 			output += "False:\n";
-			for (int j = 0; j < this.listCondition.get(i).getFalsepath().size(); j++) {
-				output += this.listCondition.get(i).getFalsepath().get(j)
+			for (int j = 0; j < this.lstCondition.get(i).getFalsePaths().size(); j++) {
+				output += this.lstCondition.get(i).getFalsePaths().get(j)
 						+ "\n";
 			}
 		}
@@ -585,14 +580,14 @@ public class CodeAnalyzer {
 
 	public String showAllTestCase() {
 		String output = "";
-		for (int i = 0; i < this.listCondition.size(); i++) {
-			Condition temp = this.listCondition.get(i);
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			Condition temp = this.lstCondition.get(i);
 			output += "Condition " + (i + 1) + ": " + temp.getCondition()
 					+ "\n";
-			output += "\tTrue: " + temp.getTruetc() + "\t" + (temp.hastruetc)
-					+ "\n";
-			output += "\tFalse: " + temp.getFalsetc() + "\t"
-					+ (temp.hasfalsetc) + "\n";
+			output += "\tTrue: " + temp.getTrueTestCase() + "\t"
+					+ (temp.hasTrueTestCase) + "\n";
+			output += "\tFalse: " + temp.getFalseTestCase() + "\t"
+					+ (temp.hasFalseTestCase) + "\n";
 		}
 		return output;
 	}
@@ -600,10 +595,10 @@ public class CodeAnalyzer {
 	public String update(int[][] res) {
 		String output = "";
 		int count = 0;
-		int numCon = this.listCondition.size();
-		int numPar = this.listParameter.size();
+		int numCon = this.lstCondition.size();
+		int numPar = this.lstParameter.size();
 		for (int i = 0; i < numCon; i++) {
-			if (this.listCondition.get(i).isHastc() == false) {
+			if (this.lstCondition.get(i).isHasTestcase() == false) {
 				int j;
 				String truetc = "[";
 				String falsetc = "[";
@@ -616,27 +611,29 @@ public class CodeAnalyzer {
 					}
 				}
 				truetc += "]";
-				this.listCondition.get(i).setTruetc(truetc);
+				this.lstCondition.get(i).setTrueTestcase(truetc);
 				falsetc += "]";
-				this.listCondition.get(i).setFalsetc(falsetc);
+				this.lstCondition.get(i).setFalseTestcase(falsetc);
 				if (res[count][j] == 0) {
-					this.listCondition.get(i).hastruetc = true;
+					this.lstCondition.get(i).hasTrueTestCase = true;
 				} else {
-					this.listCondition.get(i).hastruetc = false;
+					this.lstCondition.get(i).hasTrueTestCase = false;
 				}
 
 				if (res[count + 1][j] == 0) {
-					this.listCondition.get(i).hasfalsetc = true;
+					this.lstCondition.get(i).hasFalseTestCase = true;
 				} else {
-					this.listCondition.get(i).hasfalsetc = false;
+					this.lstCondition.get(i).hasFalseTestCase = false;
 				}
 
 				output += "Condition: "
-						+ this.listCondition.get(i).getCondition() + "\n";
-				output += "\tTrue: " + this.listCondition.get(i).getTruetc()
-						+ "\t" + this.listCondition.get(i).hastruetc + "\n";
-				output += "\tFalse: " + this.listCondition.get(i).getFalsetc()
-						+ "\t" + this.listCondition.get(i).hasfalsetc + "\n";
+						+ this.lstCondition.get(i).getCondition() + "\n";
+				output += "\tTrue: "
+						+ this.lstCondition.get(i).getTrueTestCase() + "\t"
+						+ this.lstCondition.get(i).hasTrueTestCase + "\n";
+				output += "\tFalse: "
+						+ this.lstCondition.get(i).getFalseTestCase() + "\t"
+						+ this.lstCondition.get(i).hasFalseTestCase + "\n";
 				count += 2;
 			}
 		}

@@ -5,13 +5,15 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class EleExprAST extends LvalueAST {
+	
 	public Token name;
-	public ExprListAST e;
+	public ExprListAST exprListAST;
 
-	public EleExprAST(Token t, ExprListAST exp) {
+	public EleExprAST(Token t, ExprListAST exprListAST) {
 		this.name = t;
-		this.e = exp;
-		this.e.parentAST = this;
+		this.exprListAST = exprListAST;
+	
+		this.exprListAST.parentAST = this;
 	}
 
 	@Override

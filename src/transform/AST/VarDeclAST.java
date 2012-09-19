@@ -5,18 +5,20 @@ import org.antlr.runtime.Token;
 import transform.CodeGeneration.Visitor;
 
 public class VarDeclAST extends DeclarationAST {
-	public Token id;
-	public TypeAST t;
+	
+	public Token op;
+	public TypeAST typeAST;
 	public InitializerAST init;
 
 	public VarDeclAST() {
 	}
 
 	public VarDeclAST(Token tk, TypeAST type, InitializerAST i) {
-		this.id = tk;
-		this.t = type;
+		this.op = tk;
+		this.typeAST = type;
 		this.init = i;
-		this.t.parentAST = this;
+		
+		this.typeAST.parentAST = this;
 		if (this.init != null) {
 			this.init.parentAST = this;
 		}

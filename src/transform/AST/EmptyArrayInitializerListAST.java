@@ -3,6 +3,7 @@ package transform.AST;
 import transform.CodeGeneration.Visitor;
 
 public class EmptyArrayInitializerListAST extends ArrayInitializerListAST {
+	
 	public EmptyArrayInitializerListAST() {
 		super();
 	}
