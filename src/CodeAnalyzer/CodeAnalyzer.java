@@ -23,7 +23,7 @@ public class CodeAnalyzer {
 
 	private MappingTable mapTable;
 	private Transform transform;
-	
+
 	private ArrayList<ArrayList<AST>> lstPath;
 	private ArrayList<ArrayList<Integer>> lstBranch;
 	private ArrayList<Variable> lstVariable;
@@ -42,11 +42,10 @@ public class CodeAnalyzer {
 	}
 
 	public CodeAnalyzer(String strSourceFile) {
-		
-		this.lstCondition = new ArrayList<Condition>();
-		
+
 		transform = new Transform(strSourceFile);
-		
+
+		this.lstCondition = new ArrayList<Condition>();
 		this.mapTable = transform.getMapTable();
 		this.pdg = transform.getPdg();
 		this.astTree = transform.getAstree();
@@ -55,28 +54,28 @@ public class CodeAnalyzer {
 	}
 
 	public int[] check(int[][] testcase) {
-		int numCon = this.lstCondition.size();
-		int numPar = this.lstParameter.size();
+		int numberConditions = this.lstCondition.size();
+		int numberParameters = this.lstParameter.size();
 		int[] result = new int[numUnSolvableCondition * 2];
 		int count = 0;
 
-		for (int i = 0; i < numCon; i++) {
+		for (int i = 0; i < numberConditions; i++) {
 			if (this.lstCondition.get(i).isHasTestcase() == false) {
 				ArrayList<String> temp = new ArrayList<String>();
 				ArrayList<String> temp1 = new ArrayList<String>();
-				for (int j = 0; j < numPar; j++) {
+				for (int j = 0; j < numberParameters; j++) {
 					temp.add(String.valueOf(testcase[count][j]));
 					temp1.add(String.valueOf(testcase[count + 1][j]));
 				}
-				result[count] = checkCon(temp, i, 0);
-				result[count + 1] = checkCon(temp1, i, 1);
+				result[count] = checkCondition(temp, i, 0);
+				result[count + 1] = checkCondition(temp1, i, 1);
 				count += 2;
 			}
 		}
 		return result;
 	}
 
-	private int checkCon(ArrayList<String> testcase, int con, int branch) {
+	private int checkCondition(ArrayList<String> testcase, int con, int branch) {
 		int result = 100;
 		int temp;
 		int count = 0;
@@ -164,28 +163,6 @@ public class CodeAnalyzer {
 		return result;
 	}
 
-	public String generateSolvable() {
-		int count = 0;
-		String output = "";
-		for (int i = 0; i < this.lstCondition.size(); i++) {
-			generateNextTestCase(i);
-		}
-
-		for (int i = 0; i < this.lstCondition.size(); i++) {
-			Condition condition = this.lstCondition.get(i);
-			if (condition.isHasTestcase()) {
-				count++;
-				output += "Condition: " + condition.getCondition() + "\n";
-				output += "\tTrue: " + condition.getTrueTestCase() + "\t"
-						+ condition.hasTrueTestCase + "\n";
-				output += "\tFalse: " + condition.getFalseTestCase() + "\t"
-						+ condition.hasFalseTestCase + "\n";
-			}
-		}
-		output = "Number of solvable condition: " + count + "\n" + output;
-		return output;
-	}
-
 	private void generateNextTestCase(int i) {
 		boolean check = false;
 		for (int j = 0; j < this.lstCondition.get(i).getTruePaths().size(); j++) {
@@ -213,16 +190,47 @@ public class CodeAnalyzer {
 		this.lstCondition.get(i).setHasTestcase(check);
 	}
 
+	public String generateSolvable() {
+		int count = 0;
+		String output = "";
+
+		// Generate testcaee by Z3 for all condition in list
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			generateNextTestCase(i);
+		}
+
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			Condition condition = this.lstCondition.get(i);
+			// If Z3 can solve this condition
+			if (condition.isHasTestcase()) {
+				count++;
+				output += "Condition: " + condition.getCondition() + "\n";
+				output += "\t True: " + condition.getTrueTestCase() + "\t"
+						+ condition.hasTrueTestCase + "\n";
+				output += "\t False: " + condition.getFalseTestCase() + "\t"
+						+ condition.hasFalseTestCase + "\n";
+			}
+		}
+		output = "Number of solvable condition: " + count + "\n" + output;
+
+		printAllUnsolvableTestCase();
+
+		return output;
+	}
+
 	private String generateTestCase(String con) {
+
 		String z3output = "Z3OUTPUT";
 		File z3outFolder = new File(z3output);
+
 		if (!z3outFolder.exists()) {
 			z3outFolder.mkdirs();
 		}
 
 		String z3FilePath = z3outFolder.getAbsolutePath() + File.separatorChar
 				+ "Z3Formula.smt2";
-		// Print the parameters, variables, and reindexed variables
+
+		// Print the parameters, variables, and reindexed variables to stmt file
 		try {
 			FileWriter fw = new FileWriter(z3FilePath);
 			BufferedWriter out = new BufferedWriter(fw);
@@ -243,6 +251,7 @@ public class CodeAnalyzer {
 				}
 				out.write("\n");
 			}
+
 			// Print variables of program
 			for (int i = 0; i < this.lstVariable.size(); i++) {
 				Variable v = this.lstVariable.get(i);
@@ -259,23 +268,28 @@ public class CodeAnalyzer {
 				}
 				out.write("\n");
 			}
+
 			out.write(con);
 			out.write("(check-sat)\n");
 			out.write("(model)\n");
+
 			out.close();
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		ArrayList<String> testcase = this.getNewTestcase(z3FilePath);
 		if (testcase != null) {
 			ArrayList<String> temp = new ArrayList<String>();
-			StringBuffer tc = new StringBuffer();
+			StringBuffer strTestcase = new StringBuffer();
+
 			for (int i = 0; i < testcase.size(); i++) {
-				tc.append(testcase.get(i));
-				tc.append("\n");
+				strTestcase.append(testcase.get(i));
+				strTestcase.append("\n");
 				temp.add(testcase.get(i));
 			}
+
 			return temp.toString();
 		} else
 			return "";
@@ -430,6 +444,10 @@ public class CodeAnalyzer {
 		return result;
 	}
 
+	public int getNumParameter() {
+		return this.lstParameter.size();
+	}
+
 	/*
 	 * private void printSMT2(String z3FormulaFilename, Path pathCondition)
 	 * throws CompilationException { // Print the parameters, variables, and
@@ -456,17 +474,13 @@ public class CodeAnalyzer {
 	 * z3Visitor.printSMT2(pathCondition); }
 	 */
 
-	public int getNumCon() {
+	public int getNumUnSolvableCondition() {
 		numUnSolvableCondition = 0;
 		for (int i = 0; i < this.lstCondition.size(); i++) {
 			if (this.lstCondition.get(i).isHasTestcase() == false)
 				numUnSolvableCondition++;
 		}
 		return numUnSolvableCondition;
-	}
-
-	public int getNumPar() {
-		return this.lstParameter.size();
 	}
 
 	public ArrayList<String> getParameterNameList() {
@@ -557,24 +571,88 @@ public class CodeAnalyzer {
 		lstBranch = transform.getListBranch();
 	}
 
+	private void printAllData() {
+		// Print all parameter
+		for (Parameter parameter : this.lstParameter) {
+			System.out.println("Parameter: " + " name: " + parameter.getName()
+					+ " type: " + parameter.getType());
+		}
+		System.out.println();
+
+		// Print all variable
+		for (Variable variable : this.lstVariable) {
+			System.out.println("Variable: " + " name: " + variable.getName()
+					+ " type: " + variable.getType());
+		}
+		System.out.println();
+
+		// Print all condition
+		for (Condition condition : this.lstCondition) {
+			System.out.println("Condition: " + " name: "
+					+ condition.getCondition() + ", " + "True testcase: "
+					+ condition.getTrueTestCase() + ", " + "False testcase: "
+					+ condition.getFalseTestCase() + ", " + "Has testcase: "
+					+ condition.isHasTestcase());
+		}
+	}
+
+	private void printAllUnsolvableTestCase() {
+		// Print all unsolvable condition
+		System.out.println("\n Print all unsolvable condition");
+
+		for (int i = 0; i < this.lstCondition.size(); i++) {
+			Condition condition = this.lstCondition.get(i);
+			if (!condition.isHasTestcase()) {
+				System.out.print("Condition: " + condition.getCondition());
+
+				BinExprAST binExprAST = (BinExprAST) condition.getAst();
+				String expression1 = "";
+				String operation = "";
+				String expression2 = "";
+
+				try {
+					expression1 = (String) binExprAST.exprAST1.visit(
+							new Temp1Visitor(lstParameter, lstVariable,
+									lstCondition), "c");
+					operation = (String) binExprAST.op.getText();
+					expression2 = (String) binExprAST.exprAST2.visit(
+							new Temp1Visitor(lstParameter, lstVariable,
+									lstCondition), "c");
+				} catch (CompilationException e1) {
+					e1.printStackTrace();
+				}
+
+				System.out.print(". Expr1: " + expression1 + ", " + "op: "
+						+ operation + ", " + "Expr2: " + expression2);
+				System.out.print(", convert to AST: ");
+				System.out.println(operation + " " + expression1 + " "
+						+ expression2);
+			}
+		}
+
+	}
+
 	public String scanCondition() {
 
 		String output = "";
 		lstCondition = transform.updateConditionList(lstCondition);
 
-		for (int i = 0; i < this.lstCondition.size(); i++) {
+		for (int i = 0; i < lstCondition.size(); i++) {
 			output += "Condition " + (i + 1) + ":"
 					+ this.lstCondition.get(i).getCondition() + "\n";
 			output += "True:\n";
-			for (int j = 0; j < this.lstCondition.get(i).getTruePaths().size(); j++) {
-				output += this.lstCondition.get(i).getTruePaths().get(j) + "\n";
+			for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
+				output += lstCondition.get(i).getTruePaths().get(j) + "\n";
 			}
 			output += "False:\n";
-			for (int j = 0; j < this.lstCondition.get(i).getFalsePaths().size(); j++) {
-				output += this.lstCondition.get(i).getFalsePaths().get(j)
-						+ "\n";
+			for (int j = 0; j < lstCondition.get(i).getFalsePaths().size(); j++) {
+				output += lstCondition.get(i).getFalsePaths().get(j) + "\n";
 			}
 		}
+
+		// Phat 20120920, Print all condition
+		printAllData();
+
 		return output;
 	}
 
@@ -595,25 +673,29 @@ public class CodeAnalyzer {
 	public String update(int[][] res) {
 		String output = "";
 		int count = 0;
-		int numCon = this.lstCondition.size();
-		int numPar = this.lstParameter.size();
-		for (int i = 0; i < numCon; i++) {
+		int numCondition = this.lstCondition.size();
+		int numParameter = this.lstParameter.size();
+
+		for (int i = 0; i < numCondition; i++) {
 			if (this.lstCondition.get(i).isHasTestcase() == false) {
 				int j;
 				String truetc = "[";
 				String falsetc = "[";
-				for (j = 0; j < numPar; j++) {
+
+				for (j = 0; j < numParameter; j++) {
 					truetc += res[count][j];
 					falsetc += res[count + 1][j];
-					if (j < numPar - 1) {
+					if (j < numParameter - 1) {
 						truetc += ", ";
 						falsetc += ", ";
 					}
 				}
 				truetc += "]";
 				this.lstCondition.get(i).setTrueTestcase(truetc);
+
 				falsetc += "]";
 				this.lstCondition.get(i).setFalseTestcase(falsetc);
+
 				if (res[count][j] == 0) {
 					this.lstCondition.get(i).hasTrueTestCase = true;
 				} else {
@@ -628,17 +710,17 @@ public class CodeAnalyzer {
 
 				output += "Condition: "
 						+ this.lstCondition.get(i).getCondition() + "\n";
-				output += "\tTrue: "
+				output += "\t True: "
 						+ this.lstCondition.get(i).getTrueTestCase() + "\t"
 						+ this.lstCondition.get(i).hasTrueTestCase + "\n";
-				output += "\tFalse: "
+				output += "\t False: "
 						+ this.lstCondition.get(i).getFalseTestCase() + "\t"
 						+ this.lstCondition.get(i).hasFalseTestCase + "\n";
 				count += 2;
 			}
 		}
-		output = "Number of unsolvable condition: "
-				+ this.numUnSolvableCondition + "\n" + output;
+		output = "Number of unsolvable condition: " + numUnSolvableCondition
+				+ "\n" + output;
 		return output;
 	}
 }

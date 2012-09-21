@@ -5423,7 +5423,7 @@ public class CPPParser
                                 return;
                             }
                             if (this.state.backtracking == 0) {
-                                type = BinExprAST.STAR;
+                                type = BinExprAST.MULTIP;
                             }
                             
                         }

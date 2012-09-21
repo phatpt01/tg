@@ -114,7 +114,7 @@ public class Temp2Visitor extends DoNothingVisitor {
 			case BinExprAST.MINUS:
 				value = (int) val1 - (int) val2;
 				break;
-			case BinExprAST.STAR:
+			case BinExprAST.MULTIP:
 				value = (int) val1 * (int) val2;
 				break;
 			case BinExprAST.DIV:

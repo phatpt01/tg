@@ -5,25 +5,26 @@ import java.util.ArrayList;
 import CodeAnalyzer.CodeAnalyzer;
 
 public class GA implements Cons {
-	public static final int k_iPOPULATION_SIZE = 10;
+	public static final int POPULATION_SIZE = 10;
+	public static final int MAX_RUN_TIMES = 1000;
+	
+	public ArrayList<Testcase> lstPopulation;
 
-	public ArrayList<Testcase> m_Population;
-
-	public ArrayList<Testcase> m_ChildPopulation;
+	public ArrayList<Testcase> lstChildPopulation;
 
 	public Testcase m_AllTimeBestTestcase;
 
 	private void generateRandomPopulation(CodeAnalyzer codeAnalyzer) {
-		m_Population = new ArrayList<Testcase>();
-		for (int i = 0; i < k_iPOPULATION_SIZE; i++) {
-			m_Population.add(new Testcase(codeAnalyzer));
+		lstPopulation = new ArrayList<Testcase>();
+		for (int i = 0; i < POPULATION_SIZE; i++) {
+			lstPopulation.add(new Testcase(codeAnalyzer));
 		}
 	}
 
 	private Testcase getBestTestCase() {
-		Testcase bestTestCase = m_Population.get(0);
+		Testcase bestTestCase = lstPopulation.get(0);
 		int maxAccessedBranchNum = bestTestCase.getAcessedBranchNum();
-		for (Testcase t : m_Population) {
+		for (Testcase t : lstPopulation) {
 			if (t.getAcessedBranchNum() > maxAccessedBranchNum) {
 				bestTestCase = t;
 				maxAccessedBranchNum = bestTestCase.getAcessedBranchNum();
@@ -54,24 +55,27 @@ public class GA implements Cons {
 	private boolean isDone() {
 		if (m_AllTimeBestTestcase.isAcesssAllBranch()) {
 			for (int i = 0; i < m_AllTimeBestTestcase.m_iBranchNum; i += 2) {
-				System.out.println(m_AllTimeBestTestcase.m_CanAcessBranch[i]);
+				System.out.println("BBBBBBBB " + m_AllTimeBestTestcase.m_CanAcessBranch[i]);
 				System.out
-						.println(m_AllTimeBestTestcase.m_CanAcessBranch[i + 1]);
+						.println("CCCCCCCCC " + m_AllTimeBestTestcase.m_CanAcessBranch[i + 1]);
 				int j;
-				String truetc = "[";
-				String falsetc = "[";
+				
+				String trueTestcase = "[";
+				String falseTestcase = "[";
+				
 				for (j = 0; j < m_AllTimeBestTestcase.m_iParamNum; j++) {
-					truetc += m_AllTimeBestTestcase.m_aiParams[i][j];
-					falsetc += m_AllTimeBestTestcase.m_aiParams[i + 1][j];
+					trueTestcase += m_AllTimeBestTestcase.m_aiParams[i][j];
+					falseTestcase += m_AllTimeBestTestcase.m_aiParams[i + 1][j];
+				
 					if (j < m_AllTimeBestTestcase.m_iParamNum - 1) {
-						truetc += ", ";
-						falsetc += ", ";
+						trueTestcase += ", ";
+						falseTestcase += ", ";
 					}
 				}
-				truetc += "]";
-				falsetc += "]";
-				System.out.println(truetc);
-				System.out.println(falsetc);
+				trueTestcase += "]";
+				falseTestcase += "]";
+				System.out.println("True testcase: " + trueTestcase);
+				System.out.println("False testcase: " + falseTestcase);
 			}
 
 			return true;
@@ -80,24 +84,24 @@ public class GA implements Cons {
 	}
 
 	public void reset() {
-		if (m_Population != null) {
-			m_Population.clear();
-			m_ChildPopulation.clear();
+		if (lstPopulation != null) {
+			lstPopulation.clear();
+			lstChildPopulation.clear();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public void run(CodeAnalyzer codeAnalyzer) {
-		if (codeAnalyzer.getNumCon() != 0) {
+		if (codeAnalyzer.getNumUnSolvableCondition() != 0) {
 			generateRandomPopulation(codeAnalyzer);
 
-			m_ChildPopulation = new ArrayList<Testcase>();
+			lstChildPopulation = new ArrayList<Testcase>();
 
 			m_AllTimeBestTestcase = getBestTestCase();
 
 			int count = 0;
 
-			while (!isDone() && count < 1000) {
+			while (!isDone() && count < MAX_RUN_TIMES) {
 				Testcase bestTestCase = getBestTestCase();
 				
 				if (m_AllTimeBestTestcase.getAcessedBranchNum() < bestTestCase
@@ -105,21 +109,21 @@ public class GA implements Cons {
 					m_AllTimeBestTestcase = bestTestCase;
 				}
 
-				for (int i = 0; i < k_iPOPULATION_SIZE; i++) {
-					Testcase t = m_Population.get(i);
+				for (int i = 0; i < POPULATION_SIZE; i++) {
+					Testcase t = lstPopulation.get(i);
 					if (t != bestTestCase) {
 						Testcase child = bestTestCase.Clone();
 						int res = child.hybrid(t);
 						if (res != 0) {
 							child.mutate(codeAnalyzer, res);
 						}
-						m_ChildPopulation.add(child);
+						lstChildPopulation.add(child);
 					}
 				}
-				m_ChildPopulation.add(m_AllTimeBestTestcase);
+				lstChildPopulation.add(m_AllTimeBestTestcase);
 
-				m_Population = (ArrayList<Testcase>) m_ChildPopulation.clone();
-				m_ChildPopulation = new ArrayList<Testcase>();
+				lstPopulation = (ArrayList<Testcase>) lstChildPopulation.clone();
+				lstChildPopulation = new ArrayList<Testcase>();
 				count++;
 			}
 		}

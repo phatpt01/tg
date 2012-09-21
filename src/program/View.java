@@ -35,8 +35,8 @@ public class View {
 	private Button btnGenerateUnsolvable;
 	private Button btnExit;
 	private Button btnGenerateSolvable;
-	private Button btnScan;
-	private Button btnShow;
+	private Button btnScanCondition;
+	private Button btnShowAllTC;
 	private Button btnPrev;
 	private Button btnNext;
 	
@@ -106,12 +106,12 @@ public class View {
 
 		btnOpen = createButton("Open Source", true, 800, 10, 100, 20);
 		btnStandard = createButton("Standard Source", false, 800, 35, 100, 20);
-		btnScan = createButton("Scan Condition", false, 800, 60, 100, 20);
+		btnScanCondition = createButton("Scan Condition", false, 800, 60, 100, 20);
 		btnGenerateSolvable = createButton("Generate Solvable", false, 800, 85,
 				100, 20);
 		btnGenerateUnsolvable = createButton("Generate Unsolvable", false, 800,
 				110, 100, 20);
-		btnShow = createButton("Show all test case", false, 800, 135, 100, 20);
+		btnShowAllTC = createButton("Show all test case", false, 800, 135, 100, 20);
 		btnExit = createButton("Exit", false, 800, 187, 100, 20);
 		btnPrev = createButton("Prev", false, 800, 161, 50, 20);
 		btnNext = createButton("Next", false, 850, 161, 50, 20);
@@ -160,15 +160,15 @@ public class View {
 				}
 
 				btnStandard.setEnabled(false);
-				btnScan.setEnabled(true);
+				btnScanCondition.setEnabled(true);
 			}
 		});
 
-		btnScan.addSelectionListener(new SelectionAdapter() {
+		btnScanCondition.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.scanCondition());
-				btnScan.setEnabled(false);
+				btnScanCondition.setEnabled(false);
 				btnGenerateSolvable.setEnabled(true);
 			}
 		});
@@ -188,17 +188,17 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.runGA());
 				btnGenerateUnsolvable.setEnabled(false);
-				btnShow.setEnabled(true);
+				btnShowAllTC.setEnabled(true);
 			}
 
 		});
 
-		btnShow.addSelectionListener(new SelectionAdapter() {
+		btnShowAllTC.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.showAllTestCase());
 				updateConditionList();
-				btnShow.setEnabled(false);
+				btnShowAllTC.setEnabled(false);
 			}
 		});
 

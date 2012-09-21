@@ -20,8 +20,8 @@ public class Testcase {
 	}
 
 	public Testcase(CodeAnalyzer codeAnalyzer) {
-		m_iParamNum = codeAnalyzer.getNumPar();
-		m_iBranchNum = codeAnalyzer.getNumCon() * 2;
+		m_iParamNum = codeAnalyzer.getNumParameter();
+		m_iBranchNum = codeAnalyzer.getNumUnSolvableCondition() * 2;
 		m_aiParams = new int[m_iBranchNum][m_iParamNum];
 		for (int i = 0; i < m_iBranchNum; i++) {
 			m_aiParams[i] = Util.Random(m_iParamNum);

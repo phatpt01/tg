@@ -35,7 +35,7 @@ public class BinExprAST extends ExprAST {
 
 	public static final int PLUS = 24;
 	public static final int MINUS = 25;
-	public static final int STAR = 26;
+	public static final int MULTIP = 26;
 	public static final int DIV = 27;
 	public static final int MOD = 28;
 
@@ -50,6 +50,7 @@ public class BinExprAST extends ExprAST {
 		this.op = token;
 		this.opType = o;
 		this.exprAST2 = exp2;
+		
 		this.exprAST1.parentAST = this.exprAST2.parentAST = this;
 	}
 

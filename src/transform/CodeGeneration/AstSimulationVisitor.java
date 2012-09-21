@@ -388,7 +388,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 				int v2 = ((Integer) val2).intValue();
 				return new Float(v1 - v2);
 			}
-		} else if (ast.opType == BinExprAST.STAR) {
+		} else if (ast.opType == BinExprAST.MULTIP) {
 			// phep toan *
 			// 1. nhan giua 2 so nguyen => return so nguyen
 			// 2. nhan giua 2 so thuc => return so thuc

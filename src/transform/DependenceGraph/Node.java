@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import system.VariableUsed;
 
 public class Node {
+	
 	int StatementID;
 	TYPE StatementTYPE;
 	VariableUsed definedVar = null;
+	
 	ArrayList<VariableUsed> usedVars = null;
 	ArrayList<DataDependence> dataDep = null;
-	ControlDependence conDep = null;
+	ControlDependence controlDependence = null;
 	ArrayList<Node> potDep = null;
 
 	protected int indexInPDG = -1;
@@ -21,7 +23,7 @@ public class Node {
 		this.definedVar = null;
 		this.usedVars = null;
 		this.dataDep = null;
-		this.conDep = null;
+		this.controlDependence = null;
 		this.potDep = null;
 	}
 
@@ -30,7 +32,7 @@ public class Node {
 		this.StatementID = id;
 		this.StatementTYPE = type;
 		this.dataDep = data;
-		this.conDep = control;
+		this.controlDependence = control;
 		this.potDep = pot;
 		if (this.dataDep != null) {
 			this.usedVars = new ArrayList<VariableUsed>();
@@ -46,11 +48,11 @@ public class Node {
 		}
 	}
 
-	public void addControlDep(Node nodeY, boolean branch) {
-		this.conDep = new ControlDependence(nodeY, branch);
+	public void addControlDependence(Node nodeY, boolean branch) {
+		this.controlDependence = new ControlDependence(nodeY, branch);
 	}
 
-	public void addDataDep(Node nodeY, String varName) {
+	public void addDataDependence(Node nodeY, String varName) {
 		DataDependence ddTemp = new DataDependence(nodeY, varName);
 		if (this.dataDep == null) {
 			this.dataDep = new ArrayList<DataDependence>();
@@ -61,7 +63,7 @@ public class Node {
 		}
 	}
 
-	public void addPotDep(Node tmNode) {
+	public void addPotDependence(Node tmNode) {
 		if (this.potDep == null) {
 			this.potDep = new ArrayList<Node>();
 			this.potDep.add(tmNode);
@@ -102,7 +104,7 @@ public class Node {
 	}
 
 	public ControlDependence getConDep() {
-		return this.conDep;
+		return this.controlDependence;
 	}
 
 	public ArrayList<DataDependence> getDataDep() {
@@ -175,20 +177,14 @@ public class Node {
 			result += "\n";
 		}
 
-		// result += "dataDep = ";
 		if (this.dataDep != null) {
 			result += "dataDep = " + "\n" + this.toString(this.dataDep);
 		}
-		/*
-		 * else result += "null" + newline;
-		 */
-		// result += "conDep = ";
-		if (this.conDep != null) {
-			result += "conDep = " + this.conDep.toString() + "\n";
+
+		if (this.controlDependence != null) {
+			result += "conDep = " + this.controlDependence.toString() + "\n";
 		}
-		/*
-		 * else result += "null" + newline;
-		 */
+
 		return result;
 	}
 

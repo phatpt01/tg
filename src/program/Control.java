@@ -62,16 +62,16 @@ public class Control {
 	public String runGA() {
 		m_GA.run(codeAnalyzer);
 		m_GA.reset();
-		return this.codeAnalyzer.update(m_GA.getRes());
+		return codeAnalyzer.update(m_GA.getRes());
 
 	}
 
 	public String scanCondition() {
-		return this.codeAnalyzer.scanCondition();
+		return codeAnalyzer.scanCondition();
 	}
 
 	public String showAllTestCase() {
-		return this.codeAnalyzer.showAllTestCase();
+		return codeAnalyzer.showAllTestCase();
 	}
 
 	public String standardSource(String filename) {

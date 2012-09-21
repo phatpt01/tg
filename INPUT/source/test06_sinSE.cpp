@@ -1,8 +1,7 @@
 int foo(int n)
 {
-int X;
 if (X>0)
-return 1;
+return Y;
 else
-return 0;
+return Z;
 }

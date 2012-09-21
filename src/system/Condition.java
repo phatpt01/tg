@@ -5,18 +5,21 @@ import java.util.ArrayList;
 import transform.AST.*;
 
 public class Condition {
+	
 	int stmtID;
 	boolean hasTestCase;
 	AST ast;
 	String condition;
+	
 	ArrayList<String> lstTruePath;
 	ArrayList<String> lstFalsePath;
 	ArrayList<Integer> lstTrueCondition;
 	ArrayList<Integer> lstFalseCondition;
 	
 	String trueTestCase;
-	public boolean hasTrueTestCase;
 	String falseTestCase;
+	
+	public boolean hasTrueTestCase;
 	public boolean hasFalseTestCase;
 
 	public Condition() {

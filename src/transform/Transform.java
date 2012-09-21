@@ -175,6 +175,6 @@ public class Transform {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return tmp1Visitor.getArrayCondition();
+		return tmp1Visitor.getListCondition();
 	}
 }
