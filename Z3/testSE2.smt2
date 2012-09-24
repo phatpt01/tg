@@ -1,0 +1,7 @@
+(declare-sort A)
+(declare-const x A)
+(declare-const y A)
+(declare-fun f (A) A)
+(assert (= (f x) y))
+(check-sat)
+(model)

@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 import system.*;
+import system.Variable;
 import transform.CodeGeneration.AstSimulationVisitor;
 import transform.*;
 import transform.AST.*;
@@ -60,7 +61,7 @@ public class CodeAnalyzer {
 		int count = 0;
 
 		for (int i = 0; i < numberConditions; i++) {
-			if (this.lstCondition.get(i).isHasTestcase() == false) {
+			if (this.lstCondition.get(i).hasTestcase() == false) {
 				ArrayList<String> temp = new ArrayList<String>();
 				ArrayList<String> temp1 = new ArrayList<String>();
 				for (int j = 0; j < numberParameters; j++) {
@@ -202,7 +203,7 @@ public class CodeAnalyzer {
 		for (int i = 0; i < this.lstCondition.size(); i++) {
 			Condition condition = this.lstCondition.get(i);
 			// If Z3 can solve this condition
-			if (condition.isHasTestcase()) {
+			if (condition.hasTestcase()) {
 				count++;
 				output += "Condition: " + condition.getCondition() + "\n";
 				output += "\t True: " + condition.getTrueTestCase() + "\t"
@@ -213,7 +214,7 @@ public class CodeAnalyzer {
 		}
 		output = "Number of solvable condition: " + count + "\n" + output;
 
-		printAllUnsolvableTestCase();
+//		printAllUnsolvableTestCase();
 
 		return output;
 	}
@@ -326,6 +327,23 @@ public class CodeAnalyzer {
 		return listConditionExpr;
 	}
 
+	private String getConditions() {
+		String output = "";
+		for (int i = 0; i < lstCondition.size(); i++) {
+			output += "Condition " + (i + 1) + ":"
+					+ this.lstCondition.get(i).getCondition() + "\n";
+			output += "True:\n";
+			for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
+				output += lstCondition.get(i).getTruePaths().get(j) + "\n";
+			}
+			output += "False:\n";
+			for (int j = 0; j < lstCondition.get(i).getFalsePaths().size(); j++) {
+				output += lstCondition.get(i).getFalsePaths().get(j) + "\n";
+			}
+		}
+		return output;
+	}
+
 	public ArrayList<Boolean> getFalseList() {
 		ArrayList<Boolean> result = new ArrayList<Boolean>();
 		for (int i = 0; i < this.lstCondition.size(); i++) {
@@ -336,6 +354,26 @@ public class CodeAnalyzer {
 			}
 		}
 		return result;
+	}
+
+	public ArrayList<ArrayList<Integer>> getLstBranch() {
+		return lstBranch;
+	}
+
+	public ArrayList<Condition> getLstCondition() {
+		return lstCondition;
+	}
+
+	public ArrayList<Parameter> getLstParameter() {
+		return lstParameter;
+	}
+
+	public ArrayList<ArrayList<AST>> getLstPath() {
+		return lstPath;
+	}
+
+	public ArrayList<Variable> getLstVariable() {
+		return lstVariable;
 	}
 
 	private ArrayList<String> getNewTestcase(String z3FormulaFilename) {
@@ -448,36 +486,10 @@ public class CodeAnalyzer {
 		return this.lstParameter.size();
 	}
 
-	/*
-	 * private void printSMT2(String z3FormulaFilename, Path pathCondition)
-	 * throws CompilationException { // Print the parameters, variables, and
-	 * reindexed variables try { FileWriter fw = new
-	 * FileWriter(z3FormulaFilename); BufferedWriter out = new
-	 * BufferedWriter(fw);
-	 * 
-	 * // Print the parameters of program for (int i = 0; i <
-	 * this.listPara.size(); i++) { Parameter p = this.listPara.get(i);
-	 * out.write("(declare-const "); out.write(p.getName() + " ");
-	 * out.write(p.getType() + ")"); out.write("\n"); } // Print variables of
-	 * program for (int i = 0; i < this.listVar.size(); i++) { Variable v =
-	 * this.listVar.get(i); out.write("(declare-const "); out.write(v.getName()
-	 * + " "); out.write(v.getType() + ")"); out.write("\n"); } // Print
-	 * variables after reindexing for (int i = 0; i <
-	 * pathCondition.getListVariableReIndexed().size(); i++) { Variable v =
-	 * pathCondition.getListVariableReIndexed().get(i);
-	 * out.write("(declare-const "); out.write(v.getName() + " ");
-	 * out.write(v.getType() + ")"); out.write("\n"); } out.close(); } catch
-	 * (IOException e) { e.printStackTrace(); }
-	 * 
-	 * // Print the negated path condition in the SMT2 form Z3PathPrintVisitor
-	 * z3Visitor = new Z3PathPrintVisitor(z3FormulaFilename, false);
-	 * z3Visitor.printSMT2(pathCondition); }
-	 */
-
 	public int getNumUnSolvableCondition() {
 		numUnSolvableCondition = 0;
 		for (int i = 0; i < this.lstCondition.size(); i++) {
-			if (this.lstCondition.get(i).isHasTestcase() == false)
+			if (this.lstCondition.get(i).hasTestcase() == false)
 				numUnSolvableCondition++;
 		}
 		return numUnSolvableCondition;
@@ -534,6 +546,32 @@ public class CodeAnalyzer {
 		return result;
 	}
 
+	/*
+	 * private void printSMT2(String z3FormulaFilename, Path pathCondition)
+	 * throws CompilationException { // Print the parameters, variables, and
+	 * reindexed variables try { FileWriter fw = new
+	 * FileWriter(z3FormulaFilename); BufferedWriter out = new
+	 * BufferedWriter(fw);
+	 * 
+	 * // Print the parameters of program for (int i = 0; i <
+	 * this.listPara.size(); i++) { Parameter p = this.listPara.get(i);
+	 * out.write("(declare-const "); out.write(p.getName() + " ");
+	 * out.write(p.getType() + ")"); out.write("\n"); } // Print variables of
+	 * program for (int i = 0; i < this.listVar.size(); i++) { Variable v =
+	 * this.listVar.get(i); out.write("(declare-const "); out.write(v.getName()
+	 * + " "); out.write(v.getType() + ")"); out.write("\n"); } // Print
+	 * variables after reindexing for (int i = 0; i <
+	 * pathCondition.getListVariableReIndexed().size(); i++) { Variable v =
+	 * pathCondition.getListVariableReIndexed().get(i);
+	 * out.write("(declare-const "); out.write(v.getName() + " ");
+	 * out.write(v.getType() + ")"); out.write("\n"); } out.close(); } catch
+	 * (IOException e) { e.printStackTrace(); }
+	 * 
+	 * // Print the negated path condition in the SMT2 form Z3PathPrintVisitor
+	 * z3Visitor = new Z3PathPrintVisitor(z3FormulaFilename, false);
+	 * z3Visitor.printSMT2(pathCondition); }
+	 */
+
 	public String getStandardSource(String filename) {
 		this.loadFile(filename);
 		return transform.getStandardSourceFile();
@@ -557,6 +595,10 @@ public class CodeAnalyzer {
 			listVarName.add(lstVariable.get(i).getName());
 		}
 		return listVarName;
+	}
+
+	private boolean hasCondition() {
+		return lstCondition.size() > 0 ? true : false;
 	}
 
 	public void loadFile(String strSourceFile) {
@@ -592,43 +634,53 @@ public class CodeAnalyzer {
 					+ condition.getCondition() + ", " + "True testcase: "
 					+ condition.getTrueTestCase() + ", " + "False testcase: "
 					+ condition.getFalseTestCase() + ", " + "Has testcase: "
-					+ condition.isHasTestcase());
+					+ condition.hasTestcase());
 		}
 	}
 
-	private void printAllUnsolvableTestCase() {
-		System.out.println("\n Print all unsolvable condition");
+//	private void printAllUnsolvableTestCase() {
+//		System.out.println("\n Print all unsolvable condition");
+//
+//		for (int i = 0; i < this.lstCondition.size(); i++) {
+//			Condition condition = this.lstCondition.get(i);
+//			if (!condition.hasTestcase()) {
+//				System.out.print("Condition: " + condition.getCondition());
+//
+//				BinExprAST binExprAST = (BinExprAST) condition.getAst();
+//				String expression1 = "";
+//				String operation = "";
+//				String expression2 = "";
+//
+//				try {
+//					expression1 = (String) binExprAST.exprAST1.visit(
+//							new Temp1Visitor(lstParameter, lstVariable,
+//									lstCondition), "c");
+//					operation = (String) binExprAST.op.getText();
+//					expression2 = (String) binExprAST.exprAST2.visit(
+//							new Temp1Visitor(lstParameter, lstVariable,
+//									lstCondition), "c");
+//				} catch (CompilationException e1) {
+//					e1.printStackTrace();
+//				}
+//
+//				System.out.print(". Expr1: " + expression1 + ", " + "op: "
+//						+ operation + ", " + "Expr2: " + expression2);
+//				System.out.print(", convert to AST: ");
+//				System.out.println(operation + " " + expression1 + " "
+//						+ expression2);
+//			}
+//		}
+//
+//	}
 
-		for (int i = 0; i < this.lstCondition.size(); i++) {
-			Condition condition = this.lstCondition.get(i);
-			if (!condition.isHasTestcase()) {
-				System.out.print("Condition: " + condition.getCondition());
+	private void removeNullCondition() {
+		int sizeOfListCodition = lstCondition.size();
 
-				BinExprAST binExprAST = (BinExprAST) condition.getAst();
-				String expression1 = "";
-				String operation = "";
-				String expression2 = "";
-
-				try {
-					expression1 = (String) binExprAST.exprAST1.visit(
-							new Temp1Visitor(lstParameter, lstVariable,
-									lstCondition), "c");
-					operation = (String) binExprAST.op.getText();
-					expression2 = (String) binExprAST.exprAST2.visit(
-							new Temp1Visitor(lstParameter, lstVariable,
-									lstCondition), "c");
-				} catch (CompilationException e1) {
-					e1.printStackTrace();
-				}
-
-				System.out.print(". Expr1: " + expression1 + ", " + "op: "
-						+ operation + ", " + "Expr2: " + expression2);
-				System.out.print(", convert to AST: ");
-				System.out.println(operation + " " + expression1 + " "
-						+ expression2);
+		for (int j = sizeOfListCodition - 1; j >= 0; j--) {
+			if (lstCondition.get(j).getAst() == null) {
+				lstCondition.remove(j);
 			}
 		}
-
 	}
 
 	public String scanCondition() {
@@ -648,36 +700,24 @@ public class CodeAnalyzer {
 		return output;
 	}
 
-	private String getConditions() {
-		String output = "";
-		for (int i = 0; i < lstCondition.size(); i++) {
-			output += "Condition " + (i + 1) + ":"
-					+ this.lstCondition.get(i).getCondition() + "\n";
-			output += "True:\n";
-			for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
-				output += lstCondition.get(i).getTruePaths().get(j) + "\n";
-			}
-			output += "False:\n";
-			for (int j = 0; j < lstCondition.get(i).getFalsePaths().size(); j++) {
-				output += lstCondition.get(i).getFalsePaths().get(j) + "\n";
-			}
-		}
-		return output;
+	public void setLstBranch(ArrayList<ArrayList<Integer>> lstBranch) {
+		this.lstBranch = lstBranch;
 	}
 
-	private boolean hasCondition() {
-		return lstCondition.size() > 0 ? true : false;
+	public void setLstCondition(ArrayList<Condition> lstCondition) {
+		this.lstCondition = lstCondition;
 	}
 
-	private void removeNullCondition() {
-		int sizeOfListCodition = lstCondition.size();
+	public void setLstParameter(ArrayList<Parameter> lstParameter) {
+		this.lstParameter = lstParameter;
+	}
 
-		for (int j = sizeOfListCodition - 1; j >= 0; j--) {
-			if (lstCondition.get(j).getAst() == null) {
-				lstCondition.remove(j);
-			}
-		}
+	public void setLstPath(ArrayList<ArrayList<AST>> lstPath) {
+		this.lstPath = lstPath;
+	}
 
+	public void setLstVariable(ArrayList<Variable> lstVariable) {
+		this.lstVariable = lstVariable;
 	}
 
 	public String showAllTestCase() {
@@ -701,7 +741,7 @@ public class CodeAnalyzer {
 		int numParameter = this.lstParameter.size();
 
 		for (int i = 0; i < numCondition; i++) {
-			if (this.lstCondition.get(i).isHasTestcase() == false) {
+			if (this.lstCondition.get(i).hasTestcase() == false) {
 				int j;
 				String truetc = "[";
 				String falsetc = "[";

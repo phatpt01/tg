@@ -32,13 +32,16 @@ public class View {
 
 	private Button btnOpen;
 	private Button btnStandard;
-	private Button btnGenerateUnsolvable;
-	private Button btnExit;
-	private Button btnGenerateSolvable;
 	private Button btnScanCondition;
+	private Button btnGenerateSolvable;
+	
+	private Button btnSE;
+	
+	private Button btnGenerateUnsolvable;
 	private Button btnShowAllTC;
 	private Button btnPrev;
 	private Button btnNext;
+	private Button btnExit;
 	
 	public static void main(String[] args) {
 		try {
@@ -107,15 +110,20 @@ public class View {
 		btnOpen = createButton("Open Source", true, 800, 10, 100, 20);
 		btnStandard = createButton("Standard Source", false, 800, 35, 100, 20);
 		btnScanCondition = createButton("Scan Condition", false, 800, 60, 100, 20);
+//		btnGenerateSolvable = createButton("Generate Solvable", false, 800, 85,
+//				100, 20);
 		btnGenerateSolvable = createButton("Generate Solvable", false, 800, 85,
-				100, 20);
+				50, 20);
+		btnSE = createButton("SE", true, 850, 85, 50, 20);
+		
 		btnGenerateUnsolvable = createButton("Generate Unsolvable", false, 800,
 				110, 100, 20);
 		btnShowAllTC = createButton("Show all test case", false, 800, 135, 100, 20);
-		btnExit = createButton("Exit", false, 800, 187, 100, 20);
+		
 		btnPrev = createButton("Prev", false, 800, 161, 50, 20);
 		btnNext = createButton("Next", false, 850, 161, 50, 20);
-
+		btnExit = createButton("Exit", false, 800, 187, 100, 20);
+		
 		addSelectionListener();
 	}
 
@@ -182,6 +190,14 @@ public class View {
 			}
 
 		});
+		
+		btnSE.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+			control.runSE();
+			}
+		});
+
 
 		btnGenerateUnsolvable.addSelectionListener(new SelectionAdapter() {
 			@Override

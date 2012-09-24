@@ -69,7 +69,7 @@ public class Condition {
 		return trueTestCase;
 	}
 
-	public boolean isHasTestcase() {
+	public boolean hasTestcase() {
 		return hasTestCase;
 	}
 

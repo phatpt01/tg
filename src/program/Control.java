@@ -4,22 +4,27 @@ import java.util.ArrayList;
 
 import CodeAnalyzer.CodeAnalyzer;
 import GA.GA;
+import se.SymbolicExecution;
 import system.*;
 import transform.AST.CompilationException;
 
 public class Control {
-	
+
 	private InOut io;
 	private String standardFile;
 	private String standardSource;
 	private String originalSource;
 	private CodeAnalyzer codeAnalyzer;
-	private GA m_GA;
+	private GA ga;
+	
+	private SymbolicExecution se;
 
 	public Control() {
 		io = new InOut();
 		codeAnalyzer = new CodeAnalyzer();
-		m_GA = new GA();
+		ga = new GA();
+		
+		se = new SymbolicExecution();
 	}
 
 	public String generateSolvable() {
@@ -60,10 +65,14 @@ public class Control {
 	}
 
 	public String runGA() {
-		m_GA.run(codeAnalyzer);
-		m_GA.reset();
-		return codeAnalyzer.update(m_GA.getRes());
+		ga.run(codeAnalyzer);
+		ga.reset();
+		return codeAnalyzer.update(ga.getRes());
 
+	}
+
+	public void runSE() {
+		se.runSE(codeAnalyzer);
 	}
 
 	public String scanCondition() {

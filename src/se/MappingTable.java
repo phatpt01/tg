@@ -4,30 +4,31 @@ import java.util.ArrayList;
 
 public class MappingTable {
 
-	ArrayList<MappingRecord> mappingTable;
+	private ArrayList<MappingRecord> mappingRecords;
 
 	public MappingTable() {
 		super();
+		this.mappingRecords = new ArrayList<MappingRecord>();
 	}
 
-	public MappingTable(ArrayList<MappingRecord> mappingTable) {
+	public MappingTable(ArrayList<MappingRecord> mappingRecords) {
 		super();
-		this.mappingTable = mappingTable;
+		this.mappingRecords = mappingRecords;
 	}
 
-	public ArrayList<MappingRecord> getMappingTable() {
-		return mappingTable;
+	public ArrayList<MappingRecord> getMappingRecords() {
+		return mappingRecords;
 	}
 
-	public void setMappingTable(ArrayList<MappingRecord> mappingTable) {
-		this.mappingTable = mappingTable;
+	public void setMappingRecords(ArrayList<MappingRecord> mappingRecords) {
+		this.mappingRecords = mappingRecords;
 	}
 	
 	public void addMappingRecord(MappingRecord mappingRecord){
-		this.mappingTable.add(mappingRecord);
+		this.mappingRecords.add(mappingRecord);
 	}
 
 	public MappingRecord getMappingRecord(int index){
-		return this.mappingTable.get(index);
+		return this.mappingRecords.get(index);
 	}
 }
