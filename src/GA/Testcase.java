@@ -82,7 +82,7 @@ public class Testcase {
 		Random r = new Random();
 		// Phat 20120918: sua loi divide by zero
 //		int pos1 = Math.abs(r.nextInt() % (m_iParamNum - 1));
-		int pos1 = (m_iParamNum>1) ? Math.abs(r.nextInt() % (m_iParamNum - 1)) : Math.abs(r.nextInt());
+		int pos1 = (m_iParamNum>1) ? Math.abs(r.nextInt() % (m_iParamNum - 1)) : 0;
 		// End Phat
 		this.m_aiParams[pos][pos1] = r.nextInt() % 10;
 		this.m_CanAcessBranch = codeAnalyzer.check(m_aiParams);

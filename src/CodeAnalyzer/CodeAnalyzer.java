@@ -597,7 +597,6 @@ public class CodeAnalyzer {
 	}
 
 	private void printAllUnsolvableTestCase() {
-		// Print all unsolvable condition
 		System.out.println("\n Print all unsolvable condition");
 
 		for (int i = 0; i < this.lstCondition.size(); i++) {
@@ -637,6 +636,20 @@ public class CodeAnalyzer {
 		String output = "";
 		lstCondition = transform.updateConditionList(lstCondition);
 
+		removeNullCondition();
+
+		if (hasCondition()) {
+			output = getConditions();
+		} else
+			output = "Does not have condition";
+
+		printAllData();
+
+		return output;
+	}
+
+	private String getConditions() {
+		String output = "";
 		for (int i = 0; i < lstCondition.size(); i++) {
 			output += "Condition " + (i + 1) + ":"
 					+ this.lstCondition.get(i).getCondition() + "\n";
@@ -649,11 +662,22 @@ public class CodeAnalyzer {
 				output += lstCondition.get(i).getFalsePaths().get(j) + "\n";
 			}
 		}
-
-		// Phat 20120920, Print all condition
-		printAllData();
-
 		return output;
+	}
+
+	private boolean hasCondition() {
+		return lstCondition.size() > 0 ? true : false;
+	}
+
+	private void removeNullCondition() {
+		int sizeOfListCodition = lstCondition.size();
+
+		for (int j = sizeOfListCodition - 1; j >= 0; j--) {
+			if (lstCondition.get(j).getAst() == null) {
+				lstCondition.remove(j);
+			}
+		}
+
 	}
 
 	public String showAllTestCase() {

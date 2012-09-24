@@ -25,6 +25,8 @@ import transform.AST.VarInitializerAST;
 
 public class Temp1Visitor extends DoNothingVisitor {
 
+	boolean hasReal;
+	
 	ArrayList<Variable> lstVariable;
 	ArrayList<Parameter> lstParameter;
 	ArrayList<String> arrParameter; // lưu giá trị mới của tham số đầu vào sau
