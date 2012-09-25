@@ -94,14 +94,14 @@ public class Transform {
 			lstPath = controlFlowGraphVisitor.getListPath();
 			lstBranch = controlFlowGraphVisitor.getListBranch();
 
-			for (int i = 0; i < lstPath.size(); i++) {
-				for (int j = 0; j < lstPath.get(i).size(); j++) {
-					System.out.println("AAAAA - "
-							+ lstPath.get(i).get(j).getClass().toString()
-							+ ", branch:  " + lstBranch.get(i).get(j));
-				}
-				System.out.println("Next");
-			}
+//			for (int i = 0; i < lstPath.size(); i++) {
+//				for (int j = 0; j < lstPath.get(i).size(); j++) {
+//					System.out.println("AAAAA - "
+//							+ lstPath.get(i).get(j).getClass().toString()
+//							+ ", branch:  " + lstBranch.get(i).get(j));
+//				}
+//				System.out.println("Next");
+//			}
 
 			// Creating Mapping Table
 			Ast2MappingTableVisitor ast2Table = new Ast2MappingTableVisitor();
@@ -160,6 +160,7 @@ public class Transform {
 
 		Temp1Visitor tmp1Visitor = new Temp1Visitor(lstParameters,
 				lstVariables, lstCondition);
+		
 		Temp obj = new Temp();
 
 		try {

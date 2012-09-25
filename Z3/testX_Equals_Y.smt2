@@ -1,5 +1,0 @@
-(declare-const x Int)
-(declare-const y Int)
-(assert (not(= (+ x y) 5)))
-(check-sat)
-(model)

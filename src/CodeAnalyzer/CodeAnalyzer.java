@@ -297,10 +297,14 @@ public class CodeAnalyzer {
 	}
 
 	public ArrayList<String> getConditionList() throws CompilationException {
+		
 		ConditionPrintVisitor visitor = new ConditionPrintVisitor(null, true);
+		
 		ArrayList<String> listConditionExpr = new ArrayList<String>();
+		
 		for (int i = 0; i < this.mapTable.size(); i++) {
 			AST ast = (AST) mapTable.get(i).getStatementAST();
+		
 			if (!(ast instanceof RetStmtAST)) {
 				if (ast instanceof IfThenStmtAST) {
 					ast = ((IfThenStmtAST) ast).exprAST;
@@ -313,6 +317,7 @@ public class CodeAnalyzer {
 				} else {
 					ast = null;
 				}
+			
 				if (ast != null) {
 					Condition con = new Condition();
 					con.setStmtID(ast.line);
@@ -615,18 +620,18 @@ public class CodeAnalyzer {
 
 	private void printAllData() {
 		// Print all parameter
-		for (Parameter parameter : this.lstParameter) {
-			System.out.println("Parameter: " + " name: " + parameter.getName()
-					+ " type: " + parameter.getType());
-		}
-		System.out.println();
-
-		// Print all variable
-		for (Variable variable : this.lstVariable) {
-			System.out.println("Variable: " + " name: " + variable.getName()
-					+ " type: " + variable.getType());
-		}
-		System.out.println();
+//		for (Parameter parameter : this.lstParameter) {
+//			System.out.println("Parameter: " + " name: " + parameter.getName()
+//					+ " type: " + parameter.getType());
+//		}
+//		System.out.println();
+//
+//		// Print all variable
+//		for (Variable variable : this.lstVariable) {
+//			System.out.println("Variable: " + " name: " + variable.getName()
+//					+ " type: " + variable.getType());
+//		}
+//		System.out.println();
 
 		// Print all condition
 		for (Condition condition : this.lstCondition) {

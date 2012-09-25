@@ -435,7 +435,7 @@ public class VariableVisitor implements Visitor {
 			throws CompilationException {
 		String type = (String) ast.typeAST.visit(this, null);
 		String paraName = ast.op.getText();
-		Parameter p = new Parameter(type, paraName);
+		Parameter p = new Parameter(paraName, type);
 		this.listPara.add(p);
 
 		return null;
@@ -552,7 +552,8 @@ public class VariableVisitor implements Visitor {
 			throws CompilationException {
 		String type = (String) ast.typeAST.visit(this, null);
 		String varName = ast.op.getText();
-		Variable v = new Variable(type, varName);
+//		Variable v = new Variable(type, varName);
+		Variable v = new Variable(varName, type);
 		this.listVar.add(v);
 		return null;
 	}

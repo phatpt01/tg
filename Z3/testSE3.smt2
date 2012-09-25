@@ -1,5 +1,0 @@
-(declare-sort A)
-(declare-const X A)
-(assert (> X 0)
-(check-sat)
-(model)

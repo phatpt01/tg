@@ -1,7 +1,8 @@
-(declare-const Int 
+(declare-const n Int)
 (declare-const x Int)
 (declare-const i Int)
-(assert (< 0 ))
-(assert (not 0))
+(assert (not (= (mod n 2) 1)))
+(assert (not (< (mod n 2) 5)))
+(assert (not (not (= (mod n 2) 7))))
 (check-sat)
 (model)

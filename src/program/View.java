@@ -34,15 +34,15 @@ public class View {
 	private Button btnStandard;
 	private Button btnScanCondition;
 	private Button btnGenerateSolvable;
-	
+
 	private Button btnSE;
-	
+
 	private Button btnGenerateUnsolvable;
 	private Button btnShowAllTC;
 	private Button btnPrev;
 	private Button btnNext;
 	private Button btnExit;
-	
+
 	public static void main(String[] args) {
 		try {
 			View window = new View();
@@ -50,7 +50,7 @@ public class View {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 
 	private void changeSourceText(String source) {
 		txtSourceCode.setText(source);
@@ -109,21 +109,24 @@ public class View {
 
 		btnOpen = createButton("Open Source", true, 800, 10, 100, 20);
 		btnStandard = createButton("Standard Source", false, 800, 35, 100, 20);
-		btnScanCondition = createButton("Scan Condition", false, 800, 60, 100, 20);
-//		btnGenerateSolvable = createButton("Generate Solvable", false, 800, 85,
-//				100, 20);
+		btnScanCondition = createButton("Scan Condition", false, 800, 60, 100,
+				20);
+		// btnGenerateSolvable = createButton("Generate Solvable", false, 800,
+		// 85,
+		// 100, 20);
 		btnGenerateSolvable = createButton("Generate Solvable", false, 800, 85,
 				50, 20);
 		btnSE = createButton("SE", true, 850, 85, 50, 20);
-		
+
 		btnGenerateUnsolvable = createButton("Generate Unsolvable", false, 800,
 				110, 100, 20);
-		btnShowAllTC = createButton("Show all test case", false, 800, 135, 100, 20);
-		
+		btnShowAllTC = createButton("Show all test case", false, 800, 135, 100,
+				20);
+
 		btnPrev = createButton("Prev", false, 800, 161, 50, 20);
 		btnNext = createButton("Next", false, 850, 161, 50, 20);
 		btnExit = createButton("Exit", false, 800, 187, 100, 20);
-		
+
 		addSelectionListener();
 	}
 
@@ -138,7 +141,7 @@ public class View {
 	}
 
 	private void addSelectionListener() {
-	
+
 		btnOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -161,6 +164,7 @@ public class View {
 				changeSourceText(standardSource);
 
 				printParameterList();
+
 				try {
 					printConditionsList();
 				} catch (CompilationException e) {
@@ -190,14 +194,13 @@ public class View {
 			}
 
 		});
-		
+
 		btnSE.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-			control.runSE();
+				control.runSE(txtSourceCode.getText());
 			}
 		});
-
 
 		btnGenerateUnsolvable.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -257,22 +260,23 @@ public class View {
 
 	protected void printConditionsList() throws CompilationException {
 		tblCondition.removeAll();
+
 		ArrayList<String> lstCondition = control.getConditionList();
-		// int c = 0;
+
 		for (int i = 0; i < lstCondition.size(); i++) {
 			TableItem tblItem = new TableItem(tblCondition, SWT.CENTER);
-			// tblItem.setText (c, lstCondition.get(i));
 			tblItem.setText(lstCondition.get(i));
 		}
 	}
 
 	protected void printParameterList() {
 		tblParameter.removeAll();
+
 		ArrayList<String> lstParameter = control.getParameterList();
-		// int c = 0;
+
 		for (int i = 0; i < lstParameter.size(); i++) {
 			TableItem tblItem = new TableItem(tblParameter, SWT.CENTER);
-			// item.setText(c, lstParameter.get(i));
+
 			tblItem.setText(lstParameter.get(i));
 		}
 	}

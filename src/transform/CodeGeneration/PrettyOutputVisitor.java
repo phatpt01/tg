@@ -84,7 +84,7 @@ public class PrettyOutputVisitor extends DoNothingVisitor {
 		if (debug == false) {
 			this.em.print_to_console = false;
 		} else {
-			System.out.println("\n\nOUTPUT_C: (" + outputVerify_c + ")");
+//			System.out.println("\n\nOUTPUT_C: (" + outputVerify_c + ")");
 		}
 	}
 

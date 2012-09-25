@@ -2,19 +2,31 @@ package se;
 
 public class MappingRecord {
 
-	// Symbol which is represent for expression
-	String symbol;
+	// Condition
+	String condition;
+	
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
 
 	// Expression which is symbolic
 	String expression;
+	
+	// Symbol which is represent for expression
+	String symbol;
 
 	// Return type of expression
 	String returnType;
 
-	public MappingRecord(String symbol, String expression, String returnType) {
+	public MappingRecord(String condition, String expression, String symbol, String returnType) {
 		super();
-		this.symbol = symbol;
+		this.condition = condition;
 		this.expression = expression;
+		this.symbol = symbol;
 		this.returnType = returnType;
 	}
 

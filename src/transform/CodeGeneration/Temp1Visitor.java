@@ -206,8 +206,8 @@ public class Temp1Visitor extends DoNothingVisitor {
 
 				if (!output.equals("(  )")) {
 					int conditionStmt = findCondition(binExprAST.parentAST.line);
-					System.out.println("Parent line: "
-							+ "binExprAST.parentAST.line: " + binExprAST.parentAST.line + " , findCondition(binExprAST.parentAST.line): " + conditionStmt);
+//					System.out.println("Parent line: "
+//							+ "binExprAST.parentAST.line: " + binExprAST.parentAST.line + " , findCondition(binExprAST.parentAST.line): " + conditionStmt);
 
 					boolean check = true;
 
@@ -344,7 +344,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 			throws CompilationException {
 
 		int constmt = findCondition(ast.parentAST.line);
-		System.out.println("Parent line " + ast.parentAST.line + " " + constmt);
+//		System.out.println("Parent line " + ast.parentAST.line + " " + constmt);
 		
 		String res = "";
 		

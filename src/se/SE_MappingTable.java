@@ -2,16 +2,16 @@ package se;
 
 import java.util.ArrayList;
 
-public class MappingTable {
+public class SE_MappingTable {
 
 	private ArrayList<MappingRecord> mappingRecords;
 
-	public MappingTable() {
+	public SE_MappingTable() {
 		super();
 		this.mappingRecords = new ArrayList<MappingRecord>();
 	}
 
-	public MappingTable(ArrayList<MappingRecord> mappingRecords) {
+	public SE_MappingTable(ArrayList<MappingRecord> mappingRecords) {
 		super();
 		this.mappingRecords = mappingRecords;
 	}

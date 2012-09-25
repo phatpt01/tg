@@ -71,8 +71,8 @@ public class Control {
 
 	}
 
-	public void runSE() {
-		se.runSE(codeAnalyzer);
+	public void runSE(String txtSourceCode) {
+		se.runSE(codeAnalyzer, txtSourceCode);
 	}
 
 	public String scanCondition() {

@@ -88,8 +88,10 @@ public class ReIndexVisitor extends DoNothingVisitor {
 							int in = this.getIndex(name);
 							if (in >= 0) {
 								Variable v = this.listVar.get(in);
-								this.reIndexVar.add(new Variable(v.getType(),
-										token.getText()));
+//								this.reIndexVar.add(new Variable(v.getType(),
+//										token.getText()));
+//							
+								this.reIndexVar.add(new Variable(token.getText(),v.getType()));
 							}
 						}
 					}
