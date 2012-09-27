@@ -2,6 +2,8 @@ package program;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -11,37 +13,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 
+import se.MappingRecord;
+import system.Variable;
 import transform.AST.CompilationException;
 
 public class View {
 
-	Control control;
-	String sourceFile;
-	protected Shell shell;
-
-	private StyledText txtLog;
-	private StyledText txtSourceCode;
-
-	private Table tblParameter;
-	private Table tblCondition;
-	private TableColumn columnPara;
-	private TableColumn columnValue;
-	private TableColumn columnCondition;
-	private TableColumn columnTrue;
-	private TableColumn columnFalse;
-
-	private Button btnOpen;
-	private Button btnStandard;
-	private Button btnScanCondition;
-	private Button btnGenerateSolvable;
-
-	private Button btnSE;
-
-	private Button btnGenerateUnsolvable;
-	private Button btnShowAllTC;
-	private Button btnPrev;
-	private Button btnNext;
-	private Button btnExit;
+	private static int BUTTON_WIDTH = 120;
+	private static int BUTTON_HEIGHT = 30;
 
 	public static void main(String[] args) {
 		try {
@@ -52,93 +31,47 @@ public class View {
 		}
 	}
 
-	private void changeSourceText(String source) {
-		txtSourceCode.setText(source);
-	}
+	Control control;
+	String sourceFile;
 
-	protected void createContents() {
-		shell = new Shell();
-		shell.setSize(940, 750);
-		shell.setText("Test Case Generation");
-		txtLog = new StyledText(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		txtLog.setEditable(false);
-		txtLog.setBounds(10, 423, 912, 284);
-		Font font = new Font(Display.getCurrent(), "Courier New", 12, SWT.NONE);
-		txtLog.setFont(font);
+	protected Shell shell;
+	private StyledText txtLog;
 
-		txtSourceCode = new StyledText(shell, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL);
-		txtSourceCode.setEditable(false);
-		txtSourceCode.setBounds(10, 10, 580, 407);
-		txtSourceCode.setFont(font);
+	private StyledText txtSourceCode;
 
-		tblParameter = new Table(shell, SWT.MULTI | SWT.BORDER
-				| SWT.FULL_SELECTION);
-		font = new Font(Display.getCurrent(), "Courier New", 10, SWT.NONE);
-		tblParameter.setFont(font);
-		tblParameter.setBounds(600, 10, 160, 197);
-		tblParameter.setHeaderVisible(true);
-		tblParameter.setLinesVisible(true);
+	private Table tblParameter;
+	private TableColumn colPara;
+	private TableColumn colValue;
 
-		columnPara = new TableColumn(tblParameter, SWT.CENTER);
-		columnPara.setWidth(100);
-		columnPara.setText("Parameters");
+	private Table tblCondition;
+	private TableColumn colCondition;
+	private TableColumn colTrue;
+	private TableColumn colFalse;
 
-		columnValue = new TableColumn(tblParameter, SWT.LEFT);
-		columnValue.setWidth(60);
-		columnValue.setText("Value");
+	private Table tblMappingTable;
+	private TableColumn colExpression;
+	private TableColumn colSymbol;
+	private TableColumn colReturnType;
 
-		tblCondition = new Table(shell, SWT.MULTI | SWT.BORDER
-				| SWT.FULL_SELECTION);
-		tblCondition.setFont(font);
-		tblCondition.setBounds(602, 213, 320, 204);
-		tblCondition.setHeaderVisible(true);
-		tblCondition.setLinesVisible(true);
+	private Table tblVariable;
+	private TableColumn colVarName;
+	private TableColumn colVarType;
 
-		columnCondition = new TableColumn(tblCondition, SWT.RIGHT);
-		columnCondition.setWidth(180);
-		columnCondition.setText("Conditions");
+	private Button btnOpen;
+	private Button btnStandard;
+	private Button btnScanCondition;
+	private Button btnGenerateSolvableBeforeSE;
+	private Button btnSymbolicExecution;
 
-		columnTrue = new TableColumn(tblCondition, SWT.LEFT);
-		columnTrue.setWidth(70);
-		columnTrue.setText("True");
+	private Button btnGenerateSolvableAfterSE;
+	private Button btnGenerateUnsolvableByGA;
+	private Button btnShowAllTC;
 
-		columnFalse = new TableColumn(tblCondition, SWT.LEFT);
-		columnFalse.setWidth(70);
-		columnFalse.setText("False");
+	private Button btnPrev;
+	private Button btnNext;
+	private Button btnExit;
 
-		btnOpen = createButton("Open Source", true, 800, 10, 100, 20);
-		btnStandard = createButton("Standard Source", false, 800, 35, 100, 20);
-		btnScanCondition = createButton("Scan Condition", false, 800, 60, 100,
-				20);
-		// btnGenerateSolvable = createButton("Generate Solvable", false, 800,
-		// 85,
-		// 100, 20);
-		btnGenerateSolvable = createButton("Generate Solvable", false, 800, 85,
-				50, 20);
-		btnSE = createButton("SE", true, 850, 85, 50, 20);
-
-		btnGenerateUnsolvable = createButton("Generate Unsolvable", false, 800,
-				110, 100, 20);
-		btnShowAllTC = createButton("Show all test case", false, 800, 135, 100,
-				20);
-
-		btnPrev = createButton("Prev", false, 800, 161, 50, 20);
-		btnNext = createButton("Next", false, 850, 161, 50, 20);
-		btnExit = createButton("Exit", false, 800, 187, 100, 20);
-
-		addSelectionListener();
-	}
-
-	private Button createButton(String buttonCaption, boolean initEnable,
-			int x, int y, int w, int h) {
-		Button btnTemp = new Button(shell, SWT.NONE);
-		btnTemp.setBounds(x, y, w, h);
-		btnTemp.setText(buttonCaption);
-		btnTemp.setEnabled(initEnable);
-
-		return btnTemp;
-	}
+	String oldText = "";
 
 	private void addSelectionListener() {
 
@@ -152,7 +85,6 @@ public class View {
 					String source = control.readSourceFile(sourceFile);
 					changeSourceText(source);
 					txtLog.setText("");
-					btnStandard.setEnabled(true);
 				}
 			}
 		});
@@ -170,44 +102,57 @@ public class View {
 				} catch (CompilationException e) {
 					e.printStackTrace();
 				}
-
-				btnStandard.setEnabled(false);
-				btnScanCondition.setEnabled(true);
 			}
 		});
 
 		btnScanCondition.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				txtLog.setText(control.scanCondition());
-				btnScanCondition.setEnabled(false);
-				btnGenerateSolvable.setEnabled(true);
+				oldText = txtLog.getText();
+				txtLog.setText(oldText + "\n" + control.scanCondition());
 			}
 		});
 
-		btnGenerateSolvable.addSelectionListener(new SelectionAdapter() {
+		btnGenerateSolvableBeforeSE
+				.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						txtLog.setText(txtLog.getText() + "\n"
+								+ control.generateSolvable());
+						
+						txtLog.setText(txtLog.getText() + "\n"
+								+ "Number of unsolvable by Z3: " 
+								+ control.getNumUnSolvableCondition());
+					}
+
+				});
+
+		btnSymbolicExecution.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				txtLog.setText(control.generateSolvable());
-				btnGenerateSolvable.setEnabled(false);
-				btnGenerateUnsolvable.setEnabled(true);
-			}
-
-		});
-
-		btnSE.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
+			
 				control.runSE(txtSourceCode.getText());
+				printMappingTable();
+				printVariableTable();
 			}
 		});
 
-		btnGenerateUnsolvable.addSelectionListener(new SelectionAdapter() {
+		btnGenerateSolvableAfterSE.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				txtLog.setText(control.runGA());
-				btnGenerateUnsolvable.setEnabled(false);
-				btnShowAllTC.setEnabled(true);
+				// Use Z3 to solve code after SE
+				oldText = txtLog.getText();
+				txtLog.setText(oldText + "\n"
+						+ control.generateTestCaseWithSE());
+			}
+
+		});
+
+		btnGenerateUnsolvableByGA.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				oldText = txtLog.getText();
+				txtLog.setText(oldText + "\n" + control.runGA());
 			}
 
 		});
@@ -217,14 +162,17 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.showAllTestCase());
 				updateConditionList();
-				btnShowAllTC.setEnabled(false);
 			}
 		});
 
 		btnExit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				shell.dispose();
+				if (JOptionPane.showConfirmDialog(null, "Do you want to exit?",
+						"Confirm to exit", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					shell.dispose();
+					System.exit(0);
+				}
 			}
 		});
 
@@ -243,6 +191,175 @@ public class View {
 			}
 		});
 
+	}
+
+	protected void printVariableTable() {
+		tblVariable.removeAll();
+
+		ArrayList<Variable> lstVariable = control.getVariableList();
+
+		TableItem tblItem;
+		for (int i = 0; i < lstVariable.size(); i++) {
+			tblItem = new TableItem(tblVariable, SWT.CENTER);
+
+			tblItem.setText(0, lstVariable.get(i).getName());
+			tblItem.setText(1, lstVariable.get(i).getType());
+		}
+	}
+
+	private void changeSourceText(String source) {
+		txtSourceCode.setText(source);
+	}
+
+	private Button createButton(String buttonCaption, boolean initEnable,
+			int x, int y, int w, int h) {
+		Button btnTemp = new Button(shell, SWT.NONE);
+		btnTemp.setBounds(x, y, w, h);
+		btnTemp.setText(buttonCaption);
+		btnTemp.setEnabled(initEnable);
+
+		return btnTemp;
+	}
+
+	protected void createContents() {
+		Font font = new Font(Display.getCurrent(), "Arial", 11, SWT.NONE);
+
+		shell = new Shell();
+		shell.setText("Test Case Generation");
+		shell.setMaximized(true);
+
+		// int screenWidth = shell.getSize().x;
+		// int screenHeight = shell.getSize().y;
+
+		txtSourceCode = new StyledText(shell, SWT.BORDER | SWT.H_SCROLL
+				| SWT.V_SCROLL);
+		txtSourceCode.setEditable(false);
+		txtSourceCode.setBounds(10, 10, 480, 366);
+		txtSourceCode.setFont(font);
+
+		txtLog = new StyledText(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		txtLog.setEditable(false);
+		txtLog.setBounds(10, 387, 960, 300);
+		txtLog.setFont(font);
+
+		createTableParameter(font, 500, 10, 300, 90);
+		createTableCondition(font, 500, 110, 300, 90);
+		createTableMapping(font, 500, 210, 300, 90);
+		createTableVariable(font, 500, 310, 300, 90);
+
+		setButtonLocation();
+
+		addSelectionListener();
+	}
+
+	private void setButtonLocation() {
+		btnOpen = createButton("Open Source", true, 980, 10, BUTTON_WIDTH,
+				BUTTON_HEIGHT);
+		btnStandard = createButton("Standard Source", true, 980, 45,
+				BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnScanCondition = createButton("Scan Condition", true, 980, 80,
+				BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnGenerateSolvableBeforeSE = createButton("Generate Solvable", true,
+				980, 115, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnSymbolicExecution = createButton("Symbolic execution", true, 980,
+				150, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+		btnGenerateSolvableAfterSE = createButton("Generate TC after SE", true,
+				1110, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnGenerateUnsolvableByGA = createButton("Generate Unsolvable", true,
+				1110, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnShowAllTC = createButton("Show all test case", true, 1110, 80,
+				BUTTON_WIDTH, BUTTON_HEIGHT);
+
+		btnPrev = createButton("Prev", true, 1110, 115, BUTTON_WIDTH / 2,
+				BUTTON_HEIGHT);
+		btnNext = createButton("Next", true, 1170, 115, BUTTON_WIDTH / 2,
+				BUTTON_HEIGHT);
+
+		btnExit = createButton("Exit", true, 1110, 150, BUTTON_WIDTH,
+				BUTTON_HEIGHT);
+
+		btnOpen.setToolTipText("Open source file");
+	}
+
+	private void createTableVariable(Font font, int x, int y, int width,
+			int height) {
+		tblVariable = new Table(shell, SWT.MULTI | SWT.BORDER
+				| SWT.FULL_SELECTION);
+		tblVariable.setFont(font);
+		tblVariable.setBounds(x, y, width, height);
+		tblVariable.setHeaderVisible(true);
+		tblVariable.setLinesVisible(true);
+
+		colVarName = new TableColumn(tblVariable, SWT.LEFT);
+		colVarName.setWidth(150);
+		colVarName.setText("Variable name");
+
+		colVarType = new TableColumn(tblVariable, SWT.LEFT);
+		colVarType.setWidth(110);
+		colVarType.setText("Variable type");
+	}
+
+	private void createTableMapping(Font font, int x, int y, int width,
+			int height) {
+		tblMappingTable = new Table(shell, SWT.MULTI | SWT.BORDER
+				| SWT.FULL_SELECTION);
+		tblMappingTable.setFont(font);
+		tblMappingTable.setBounds(x, y, width, height);
+		tblMappingTable.setHeaderVisible(true);
+		tblMappingTable.setLinesVisible(true);
+
+		colExpression = new TableColumn(tblMappingTable, SWT.LEFT);
+		colExpression.setWidth(120);
+		colExpression.setText("Expression");
+
+		colSymbol = new TableColumn(tblMappingTable, SWT.LEFT);
+		colSymbol.setWidth(70);
+		colSymbol.setText("Symbol");
+
+		colReturnType = new TableColumn(tblMappingTable, SWT.LEFT);
+		colReturnType.setWidth(90);
+		colReturnType.setText("Return type");
+	}
+
+	private void createTableCondition(Font font, int x, int y, int width,
+			int height) {
+		tblCondition = new Table(shell, SWT.MULTI | SWT.BORDER
+				| SWT.FULL_SELECTION);
+		tblCondition.setFont(font);
+		tblCondition.setBounds(x, y, width, height);
+		tblCondition.setHeaderVisible(true);
+		tblCondition.setLinesVisible(true);
+
+		colCondition = new TableColumn(tblCondition, SWT.RIGHT);
+		colCondition.setWidth(150);
+		colCondition.setText("Conditions");
+
+		colTrue = new TableColumn(tblCondition, SWT.LEFT);
+		colTrue.setWidth(70);
+		colTrue.setText("True");
+
+		colFalse = new TableColumn(tblCondition, SWT.LEFT);
+		colFalse.setWidth(70);
+		colFalse.setText("False");
+	}
+
+	private void createTableParameter(Font font, int x, int y, int width,
+			int height) {
+		tblParameter = new Table(shell, SWT.MULTI | SWT.BORDER
+				| SWT.FULL_SELECTION);
+		tblParameter.setFont(font);
+		tblParameter.setBounds(x, y, width, height);
+		tblParameter.setHeaderVisible(true);
+		tblParameter.setLinesVisible(true);
+
+		colPara = new TableColumn(tblParameter, SWT.CENTER);
+		colPara.setWidth(100);
+		colPara.setText("Parameters");
+
+		colValue = new TableColumn(tblParameter, SWT.LEFT);
+		colValue.setWidth(60);
+		colValue.setText("Value");
 	}
 
 	public void open() {
@@ -269,25 +386,33 @@ public class View {
 		}
 	}
 
+	protected void printMappingTable() {
+		tblMappingTable.removeAll();
+
+		ArrayList<MappingRecord> lstMappingRecord = control
+				.getMappingRecordList();
+
+		TableItem tblItem;
+		for (int i = 0; i < lstMappingRecord.size(); i++) {
+			tblItem = new TableItem(tblMappingTable, SWT.CENTER);
+
+			tblItem.setText(0, lstMappingRecord.get(i).getExpression());
+			tblItem.setText(1, lstMappingRecord.get(i).getSymbol());
+			tblItem.setText(2, lstMappingRecord.get(i).getReturnType());
+		}
+	}
+
 	protected void printParameterList() {
 		tblParameter.removeAll();
 
 		ArrayList<String> lstParameter = control.getParameterList();
 
+		TableItem tblItem;
 		for (int i = 0; i < lstParameter.size(); i++) {
-			TableItem tblItem = new TableItem(tblParameter, SWT.CENTER);
-
+			tblItem = new TableItem(tblParameter, SWT.CENTER);
 			tblItem.setText(lstParameter.get(i));
 		}
 	}
-
-	// protected void setValue(ArrayList<String> testcase) {
-	// int c = 1;
-	// TableItem[] items = tblParameter.getItems();
-	// for (int i = 0; i < testcase.size(); i++) {
-	// items[i].setText(c, testcase.get(i));
-	// }
-	// }
 
 	protected void updateConditionList() {
 		ArrayList<Boolean> trueList = control.getTrueList();
@@ -321,10 +446,9 @@ public class View {
 			for (int i = 0; i < size; i++) {
 				int line = slide.get(i) - 1;
 				// find the offset of the beginning of the line
-				int offsetLine = this.txtSourceCode.getOffsetAtLine(line);
-				while (this.txtSourceCode.getTextRange(offsetLine, 1).equals(
-						"\t")
-						|| this.txtSourceCode.getTextRange(offsetLine, 1)
+				int offsetLine = txtSourceCode.getOffsetAtLine(line);
+				while (txtSourceCode.getTextRange(offsetLine, 1).equals("\t")
+						|| txtSourceCode.getTextRange(offsetLine, 1)
 								.equals(" ")) {
 					offsetLine++;
 				}
@@ -333,12 +457,11 @@ public class View {
 						- offsetLine;
 
 				// create new StyleRange
-
 				ranges[i] = new StyleRange(offsetLine, length, null,
 						highlightColor);
 
 			}
-			this.txtSourceCode.setStyleRanges(ranges);
+			txtSourceCode.setStyleRanges(ranges);
 		}
 	}
 

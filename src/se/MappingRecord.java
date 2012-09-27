@@ -5,29 +5,25 @@ public class MappingRecord {
 	// Condition
 	String condition;
 	
-	public String getCondition() {
-		return condition;
-	}
-
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
-
 	// Expression which is symbolic
 	String expression;
-	
+
 	// Symbol which is represent for expression
 	String symbol;
 
 	// Return type of expression
 	String returnType;
-
+	
 	public MappingRecord(String condition, String expression, String symbol, String returnType) {
 		super();
 		this.condition = condition;
 		this.expression = expression;
 		this.symbol = symbol;
 		this.returnType = returnType;
+	}
+
+	public String getCondition() {
+		return condition;
 	}
 
 	public String getExpression() {
@@ -40,6 +36,10 @@ public class MappingRecord {
 
 	public String getSymbol() {
 		return symbol;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
 	}
 
 	public void setExpression(String expression) {

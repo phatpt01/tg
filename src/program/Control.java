@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import CodeAnalyzer.CodeAnalyzer;
 import GA.GA;
+import se.MappingRecord;
 import se.SymbolicExecution;
 import system.*;
 import transform.AST.CompilationException;
@@ -15,10 +16,11 @@ public class Control {
 	private String standardSource;
 	private String originalSource;
 	private CodeAnalyzer codeAnalyzer;
-	private GA ga;
 	
 	private SymbolicExecution se;
+	private GA ga;
 
+	
 	public Control() {
 		io = new InOut();
 		codeAnalyzer = new CodeAnalyzer();
@@ -28,11 +30,15 @@ public class Control {
 	}
 
 	public String generateSolvable() {
-		return this.codeAnalyzer.generateSolvable();
+		return codeAnalyzer.generateSolvable();
+	}
+	
+	public int getNumUnSolvableCondition(){
+		return codeAnalyzer.getNumUnSolvableCondition();
 	}
 
 	public ArrayList<String> getConditionList() throws CompilationException {
-		return this.codeAnalyzer.getConditionList();
+		return codeAnalyzer.getConditionList();
 	}
 
 	public ArrayList<Boolean> getFalseList() {
@@ -44,7 +50,7 @@ public class Control {
 	}
 
 	public ArrayList<String> getParameterList() {
-		return this.codeAnalyzer.getParameterNameList();
+		return codeAnalyzer.getParameterNameList();
 	}
 
 	public ArrayList<Integer> getPrevTestCase() {
@@ -52,7 +58,7 @@ public class Control {
 	}
 
 	public ArrayList<Integer> getSlide() {
-		return this.codeAnalyzer.getSlide();
+		return codeAnalyzer.getSlide();
 	}
 
 	public ArrayList<Boolean> getTrueList() {
@@ -87,5 +93,17 @@ public class Control {
 		standardFile = codeAnalyzer.getStandardSource(filename);
 		standardSource = io.readFile(standardFile);
 		return standardSource;
+	}
+
+	public ArrayList<MappingRecord> getMappingRecordList() {
+		return se.getMappingRecordList();
+	}
+
+	public ArrayList<Variable> getVariableList() {
+		return se.getVariableList();
+	}
+
+	public ArrayList<String> generateTestCaseWithSE() {
+		return se.generateTestCaseWithSE();
 	}
 }

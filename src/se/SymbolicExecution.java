@@ -1,13 +1,9 @@
 package se;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import system.Condition;
-import system.Parameter;
 import system.Variable;
 import transform.AST.BinExprAST;
 import transform.AST.CompilationException;
@@ -88,30 +84,31 @@ public class SymbolicExecution {
 
 		String z3FilePath = z3outFolder.getAbsolutePath() + File.separatorChar
 				+ "Z3Formula.smt2";
-		String z3FilePathSE = z3outFolder.getAbsolutePath() + File.separatorChar
-				+ "Z3FormulaSE.smt2";
-		
-		SEFile.createBlankFile(z3FilePathSE);
-		
-		// Write new variable to SE file
-		SEFile.appendAtBeginning(z3FilePathSE, getListNewVariable());
+		String z3FilePathSE = z3outFolder.getAbsolutePath()
+				+ File.separatorChar + "Z3FormulaSE.smt2";
 
-		// Copy existing declare and assert from Z3Formula.smt2 to SE Z3FormulaSE.smt2
-		SEFile.copyfile(z3FilePath, z3FilePathSE,false);
-		
+		SymbolicExecutionFile.createBlankFile(z3FilePathSE);
+
+		// Write new variable to SE file
+		SymbolicExecutionFile.appendAtBeginning(z3FilePathSE,
+				getListNewVariable());
+
+		// Copy existing declare and assert from Z3Formula.smt2 to SE
+		// Z3FormulaSE.smt2
+		SymbolicExecutionFile.copyfile(z3FilePath, z3FilePathSE, false);
+
 		// Read details in z3FilePathSE.smt2
-		String smt2SEDetails = SEFile.readFile(z3FilePathSE);
+		String smt2SEDetails = SymbolicExecutionFile.readFile(z3FilePathSE);
 		System.out.println(smt2SEDetails);
-		
+
 		// Update assert to match with mapping table
-		for (MappingRecord mappingRecord : mappingTable.getMappingRecords()){
-			smt2SEDetails = smt2SEDetails.replace(mappingRecord.getExpression(),mappingRecord.getSymbol());
+		for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
+			smt2SEDetails = smt2SEDetails.replace(
+					mappingRecord.getExpression(), mappingRecord.getSymbol());
 		}
-		
+
 		// Write smt2SEDetails to file Z3FormulaSE.smt2
-		SEFile.writeFile(z3FilePathSE, smt2SEDetails);
-	
-		
+		SymbolicExecutionFile.writeFile(z3FilePathSE, smt2SEDetails);
 	}
 
 	public String getExpression1(Condition condition) {
@@ -158,14 +155,14 @@ public class SymbolicExecution {
 		return operation;
 	}
 
-//	private String getSymbolOfExpression(String expression1) {
-//		for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
-//			if (expression1.equals(mappingRecord.getExpression())) {
-//				return mappingRecord.getSymbol();
-//			}
-//		}
-//		return "";
-//	}
+	// private String getSymbolOfExpression(String expression1) {
+	// for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
+	// if (expression1.equals(mappingRecord.getExpression())) {
+	// return mappingRecord.getSymbol();
+	// }
+	// }
+	// return "";
+	// }
 
 	private boolean isExistsInMappingTable(String expression) {
 		for (int i = 0; i < mappingTable.getMappingRecords().size(); i++) {
@@ -184,42 +181,17 @@ public class SymbolicExecution {
 			return false;
 	}
 
-	private void printConditionList() {
-		for (Condition condition : codeAnalyzer.getLstCondition()) {
-			String expression1 = getExpression1(condition);
-			String operation = getOperation(condition);
-			String expression2 = getExpression2(condition);
-
-			System.out.println(expression1 + "\t\t" + operation + "\t\t"
-					+ expression2);
-		}
-
-	}
-
-	public void printMappingTable() {
-		System.out.println("\n Print mapping table");
-
-		ArrayList<MappingRecord> mappingRecords = null;
-		mappingRecords = mappingTable.getMappingRecords();
-
-		MappingRecord mappingRecord = null;
-
-		for (int i = 0; i < mappingRecords.size(); i++) {
-			mappingRecord = mappingRecords.get(i);
-			System.out.println("Mapping record: "
-					+ mappingRecord.getCondition() + "\t\t"
-					+ mappingRecord.getExpression() + "\t\t"
-					+ mappingRecord.getSymbol() + "\t\t"
-					+ mappingRecord.getReturnType());
-		}
-	}
-
-	private void printVariableList() {
-		for (Variable variable : codeAnalyzer.getLstVariable()) {
-			System.out
-					.println(variable.getName() + "\t\t" + variable.getType());
-		}
-	}
+	//
+	// private void printConditionList() {
+	// for (Condition condition : codeAnalyzer.getLstCondition()) {
+	// String expression1 = getExpression1(condition);
+	// String operation = getOperation(condition);
+	// String expression2 = getExpression2(condition);
+	//
+	// System.out.println(expression1 + "\t\t" + operation + "\t\t"
+	// + expression2);
+	// }
+	// }
 
 	public void runSE(CodeAnalyzer codeAnalyzer, String sourceCode) {
 		this.codeAnalyzer = codeAnalyzer;
@@ -229,47 +201,24 @@ public class SymbolicExecution {
 		createListOfUnsolvableCondition();
 		addUnsolvableConditionToMappingTable();
 
-		printMappingTable();
-
-//		System.out.println("\n Print variable before SE");
-		//printVariableList();
-
-		System.out.println("\n Print condition list before SE");
-		printConditionList();
-
-		getListNewVariable();
-		updateConditionList();
-
-//		System.out.println("\n Print variable after SE");
-		printVariableList();
-
-		printParamterList();
-		// change source code
-		// System.out.println(sourceCode);
-
+		updateListVariable();
+		
 		createSESmt2();
 		updateSourceCode();
 	}
 
-	private void printParamterList() {
-		for (Parameter parameter : codeAnalyzer.getLstParameter()){
-			System.out.println(parameter.getName() + "\t\t" + parameter.getType());
-		}
-		
-	}
-
-	public void updateConditionList() {
-		
-		
+	public ArrayList<String> generateTestCaseWithSE() {
+		String z3FormulaFile = "Z3FormulaSE.smt2";
+		return codeAnalyzer.getNewTestcase(codeAnalyzer.getAbsolutePathOfSmt2() + z3FormulaFile);
 	}
 
 	public void updateSourceCode() {
 
 	}
+	
+	public void updateListVariable() {
+		ArrayList<Variable> lstVariable = codeAnalyzer.getLstVariable();
 
-	public ArrayList<Variable> getListNewVariable() {
-		ArrayList<Variable> lstVariable = new ArrayList<Variable>();
-		
 		MappingRecord mappingRecord = null;
 		Variable variable = null;
 		for (int i = 0; i < mappingTable.getMappingRecords().size(); i++) {
@@ -281,7 +230,35 @@ public class SymbolicExecution {
 
 			lstVariable.add(variable);
 		}
-		
+		codeAnalyzer.setLstVariable(lstVariable);
+	}
+	
+	public ArrayList<Variable> getListNewVariable() {
+		ArrayList<Variable> lstVariable = new ArrayList<Variable>();
+
+		MappingRecord mappingRecord = null;
+		Variable variable = null;
+		for (int i = 0; i < mappingTable.getMappingRecords().size(); i++) {
+			mappingRecord = mappingTable.getMappingRecord(i);
+
+			String variableName = mappingRecord.getSymbol();
+			String variableType = mappingRecord.getReturnType();
+			variable = new Variable(variableName, variableType);
+
+			lstVariable.add(variable);
+		}
+
 		return lstVariable;
+	}
+
+	public ArrayList<MappingRecord> getMappingRecordList() {
+		return mappingTable.getMappingRecords();
+	}
+
+	public ArrayList<Variable> getVariableList() {
+		ArrayList<Variable> lstVariableFull = codeAnalyzer.getLstVariable();
+
+		lstVariableFull.addAll(getListNewVariable());
+		return lstVariableFull;
 	}
 }

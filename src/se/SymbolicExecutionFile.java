@@ -16,67 +16,67 @@ import java.util.ArrayList;
 
 import system.Variable;
 
-public class SEFile {
+public class SymbolicExecutionFile {
 
 	public static void writeFile(String filename, String content) {
 		try {
-			FileWriter fstream = new FileWriter(filename);
-			BufferedWriter out = new BufferedWriter(fstream);
-			out.write(content);
+			FileWriter fileWriter = new FileWriter(filename);
+			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write(content);
 
-			out.close();
+			bufferedWriter.close();
 		} catch (Exception e) {
-			System.err.println("Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
 	public static void createBlankFile(String filename) {
 		File file = new File(filename);
-		OutputStream out;
+		OutputStream outputStream;
+		
 		try {
-			out = new FileOutputStream(file);
-			out.close();
+			outputStream = new FileOutputStream(file);
+			outputStream.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public static void copyfile(String srFile, String dtFile, boolean overWrite) {
+	public static void copyfile(String sourceFile, String destinationFile, boolean overwrite) {
 		try {
-			File f1 = new File(srFile);
-			File f2 = new File(dtFile);
-			InputStream in = new FileInputStream(f1);
+			File source = new File(sourceFile);
+			File destination = new File(destinationFile);
+			InputStream inputStream = new FileInputStream(source);
 
-			OutputStream out;
-			if (overWrite) {
-				// For Overwrite the file.
-				out = new FileOutputStream(f2);
+			OutputStream outputStream;
+			if (overwrite) {
+				outputStream = new FileOutputStream(destination);
 			} else {
-				// For Append the file.
-				out = new FileOutputStream(f2, true);
+				outputStream = new FileOutputStream(destination, true);
 			}
 
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
+			byte[] buffer = new byte[1024];
+			int length;
+			
+			while ((length = inputStream.read(buffer)) > 0) {
+				outputStream.write(buffer, 0, length);
 			}
-			in.close();
-			out.close();
-		} catch (FileNotFoundException ex) {
-			System.out
-					.println(ex.getMessage() + " in the specified directory.");
+			
+			inputStream.close();
+			outputStream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 			System.exit(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void appendAtBeginning(String srFile,
+	public static void appendAtBeginning(String sourceFile,
 			ArrayList<Variable> lstNewVariable) {
 
-		File file = new File(srFile);
+		File file = new File(sourceFile);
 
 		try {
 			// if file does not exists, then create it
@@ -84,7 +84,7 @@ public class SEFile {
 				file.createNewFile();
 			}
 
-			FileWriter fileWritter = new FileWriter(srFile, true);
+			FileWriter fileWritter = new FileWriter(sourceFile, true);
 			BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
 
 			for (Variable variable : lstNewVariable) {
@@ -98,10 +98,10 @@ public class SEFile {
 		}
 	}
 
-	public static String readFile(String z3FilePathSE) {
+	public static String readFile(String filePath) {
 		String result = "";
 		try {
-			FileInputStream fstream = new FileInputStream(z3FilePathSE);
+			FileInputStream fstream = new FileInputStream(filePath);
 
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
