@@ -33,8 +33,8 @@ public class Control {
 		return codeAnalyzer.generateSolvable();
 	}
 	
-	public int getNumUnSolvableCondition(){
-		return codeAnalyzer.getNumUnSolvableCondition();
+	public ArrayList<String> generateTestCaseWithSE() {
+		return se.generateTestCaseWithSE();
 	}
 
 	public ArrayList<String> getConditionList() throws CompilationException {
@@ -45,8 +45,16 @@ public class Control {
 		return codeAnalyzer.getFalseList();
 	}
 
+	public ArrayList<MappingRecord> getMappingRecordList() {
+		return se.getMappingRecordList();
+	}
+
 	public ArrayList<Integer> getNextTestCase() {
 		return codeAnalyzer.getNextTestCase();
+	}
+
+	public int getNumUnSolvableCondition(){
+		return codeAnalyzer.getNumUnSolvableCondition();
 	}
 
 	public ArrayList<String> getParameterList() {
@@ -65,6 +73,10 @@ public class Control {
 		return codeAnalyzer.getTrueList();
 	}
 
+	public ArrayList<Variable> getVariableList() {
+		return codeAnalyzer.getLstVariable();
+	}
+
 	public String readSourceFile(String filename) {
 		originalSource = io.readFile(filename);
 		return originalSource;
@@ -75,10 +87,6 @@ public class Control {
 		ga.reset();
 		return codeAnalyzer.update(ga.getRes());
 
-	}
-
-	public void runSE(String txtSourceCode) {
-		se.runSE(codeAnalyzer, txtSourceCode);
 	}
 
 	public String scanCondition() {
@@ -95,15 +103,7 @@ public class Control {
 		return standardSource;
 	}
 
-	public ArrayList<MappingRecord> getMappingRecordList() {
-		return se.getMappingRecordList();
-	}
-
-	public ArrayList<Variable> getVariableList() {
-		return se.getVariableList();
-	}
-
-	public ArrayList<String> generateTestCaseWithSE() {
-		return se.generateTestCaseWithSE();
+	public void symbolicExecution(String txtSourceCode) {
+		se.symbolicExecution(codeAnalyzer, txtSourceCode);
 	}
 }

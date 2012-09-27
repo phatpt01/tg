@@ -1,1 +1,1 @@
-(declare-const X1 Int) (declare-const n Int)(declare-const x Int)(assert (not (< X1 5)))(check-sat)(model)
+(declare-const X1 Int) (declare-const X2 Int) (declare-const n Int)(declare-const x Int)(declare-const i Int)(assert (< 0 n))(assert (not 0))(check-sat)(model)

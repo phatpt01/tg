@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import se.SymbolicExecution;
+import se.SymbolicExecutionFile;
 import system.*;
 import system.Variable;
 import transform.CodeGeneration.AstSimulationVisitor;
@@ -197,6 +199,11 @@ public class CodeAnalyzer {
 		// Generate testcaee by Z3 for all condition in list
 		for (int i = 0; i < lstCondition.size(); i++) {
 			generateNextTestCase(i);
+			
+			// Mỗi testcase sẽ sinh một file smt2SE khác nhau
+			
+			SymbolicExecutionFile.copyfile(getAbsolutePathOfSmt2() + "Z3Formula.smt2", 
+					getAbsolutePathOfSmt2() + "Z3FormulaSE"+ i +".smt2", false);
 		}
 
 		for (int i = 0; i < lstCondition.size(); i++) {
@@ -508,51 +515,51 @@ public class CodeAnalyzer {
 				for (int i = 0; i < lstVariable.size(); i++) {
 					for (int j = 0; j < z3result.size(); j += 2) {
 						if (z3result.get(j).equals(
-								lstParameter.get(i).getName())) {
+								lstVariable.get(i).getName())) {
 							testcase.add(z3result.get(j + 1)); // add new value
 																// to testcase
 							break;
 						}
 					}
-					if (testcase.size() < i) {
-						Object result = 0;
-						Random ran1 = new Random();
-						double n = ran1.nextDouble() * 100;
-						switch (lstParameter.get(i).getType()) {
-						case "Int":
-							result = (int) n;
-							break;
-						case "Double":
-							result = (double) n;
-							break;
-						case "Float":
-							result = (float) n;
-							break;
-						}
-						testcase.add(result.toString());
-					}
+//					if (testcase.size() < i) {
+//						Object result = 0;
+//						Random ran1 = new Random();
+//						double n = ran1.nextDouble() * 100;
+//						switch (lstParameter.get(i).getType()) {
+//						case "Int":
+//							result = (int) n;
+//							break;
+//						case "Double":
+//							result = (double) n;
+//							break;
+//						case "Float":
+//							result = (float) n;
+//							break;
+//						}
+//						testcase.add(result.toString());
+//					}
 				}
 				
-				if (testcase.size() < lstParameter.size()) {
-					int num = lstParameter.size() - testcase.size();
-					Random ran1 = new Random();
-					for (int i = 0; i < num; i++) {
-						Object result = 0;
-						double n = ran1.nextDouble() * 100;
-						switch (lstParameter.get(i).getType()) {
-						case "Int":
-							result = (int) n;
-							break;
-						case "Double":
-							result = (double) n;
-							break;
-						case "Float":
-							result = (float) n;
-							break;
-						}
-						testcase.add(result.toString());
-					}
-				}
+//				if (testcase.size() < lstParameter.size()) {
+//					int num = lstParameter.size() - testcase.size();
+//					Random ran1 = new Random();
+//					for (int i = 0; i < num; i++) {
+//						Object result = 0;
+//						double n = ran1.nextDouble() * 100;
+//						switch (lstParameter.get(i).getType()) {
+//						case "Int":
+//							result = (int) n;
+//							break;
+//						case "Double":
+//							result = (double) n;
+//							break;
+//						case "Float":
+//							result = (float) n;
+//							break;
+//						}
+//						testcase.add(result.toString());
+//					}
+//				}
 			} else {
 				return null;
 			}

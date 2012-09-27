@@ -73,43 +73,43 @@ public class SymbolicExecution {
 		}
 	}
 
-	public void createSESmt2() {
-		// Copy Z3Formular.smt2 to Z3FormulaSE.smt2
-		String z3output = "Z3OUTPUT";
-		File z3outFolder = new File(z3output);
-
-		if (!z3outFolder.exists()) {
-			z3outFolder.mkdirs();
-		}
-
-		String z3FilePath = z3outFolder.getAbsolutePath() + File.separatorChar
-				+ "Z3Formula.smt2";
-		String z3FilePathSE = z3outFolder.getAbsolutePath()
-				+ File.separatorChar + "Z3FormulaSE.smt2";
-
-		SymbolicExecutionFile.createBlankFile(z3FilePathSE);
-
-		// Write new variable to SE file
-		SymbolicExecutionFile.appendAtBeginning(z3FilePathSE,
-				getListNewVariable());
-
-		// Copy existing declare and assert from Z3Formula.smt2 to SE
-		// Z3FormulaSE.smt2
-		SymbolicExecutionFile.copyfile(z3FilePath, z3FilePathSE, false);
-
-		// Read details in z3FilePathSE.smt2
-		String smt2SEDetails = SymbolicExecutionFile.readFile(z3FilePathSE);
-		System.out.println(smt2SEDetails);
-
-		// Update assert to match with mapping table
-		for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
-			smt2SEDetails = smt2SEDetails.replace(
-					mappingRecord.getExpression(), mappingRecord.getSymbol());
-		}
-
-		// Write smt2SEDetails to file Z3FormulaSE.smt2
-		SymbolicExecutionFile.writeFile(z3FilePathSE, smt2SEDetails);
-	}
+//	public void createSESmt2() {
+//		// Copy Z3Formular.smt2 to Z3FormulaSE.smt2
+//		String z3output = "Z3OUTPUT";
+//		File z3outFolder = new File(z3output);
+//
+//		if (!z3outFolder.exists()) {
+//			z3outFolder.mkdirs();
+//		}
+//
+//		String z3FilePath = z3outFolder.getAbsolutePath() + File.separatorChar
+//				+ "Z3Formula.smt2";
+//		String z3FilePathSE = z3outFolder.getAbsolutePath()
+//				+ File.separatorChar + "Z3FormulaSE.smt2";
+//
+//		SymbolicExecutionFile.createBlankFile(z3FilePathSE);
+//
+//		// Write new variable to SE file
+//		SymbolicExecutionFile.appendAtBeginning(z3FilePathSE,
+//				getListNewVariable());
+//
+//		// Copy existing declare and assert from Z3Formula.smt2 to SE
+//		// Z3FormulaSE.smt2
+//		SymbolicExecutionFile.copyfile(z3FilePath, z3FilePathSE, false);
+//
+//		// Read details in z3FilePathSE.smt2
+//		String smt2SEDetails = SymbolicExecutionFile.readFile(z3FilePathSE);
+//		System.out.println(smt2SEDetails);
+//
+//		// Update assert to match with mapping table
+//		for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
+//			smt2SEDetails = smt2SEDetails.replace(
+//					mappingRecord.getExpression(), mappingRecord.getSymbol());
+//		}
+//
+//		// Write smt2SEDetails to file Z3FormulaSE.smt2
+//		SymbolicExecutionFile.writeFile(z3FilePathSE, smt2SEDetails);
+//	}
 
 	public String getExpression1(Condition condition) {
 		String expression1 = "";
@@ -193,7 +193,7 @@ public class SymbolicExecution {
 	// }
 	// }
 
-	public void runSE(CodeAnalyzer codeAnalyzer, String sourceCode) {
+	public void symbolicExecution(CodeAnalyzer codeAnalyzer, String sourceCode) {
 		this.codeAnalyzer = codeAnalyzer;
 		this.sourceCode = sourceCode;
 
@@ -203,18 +203,18 @@ public class SymbolicExecution {
 
 		updateListVariable();
 		
-		createSESmt2();
-		updateSourceCode();
+//		createSESmt2();
+//		updateSourceCode();
 	}
 
 	public ArrayList<String> generateTestCaseWithSE() {
 		String z3FormulaFile = "Z3FormulaSE.smt2";
-		return codeAnalyzer.getNewTestcase(codeAnalyzer.getAbsolutePathOfSmt2() + z3FormulaFile);
+		return codeAnalyzer.getNewTestcaseAfterSE(codeAnalyzer.getAbsolutePathOfSmt2() + z3FormulaFile);
 	}
 
-	public void updateSourceCode() {
-
-	}
+//	public void updateSourceCode() {
+//
+//	}
 	
 	public void updateListVariable() {
 		ArrayList<Variable> lstVariable = codeAnalyzer.getLstVariable();
@@ -255,10 +255,10 @@ public class SymbolicExecution {
 		return mappingTable.getMappingRecords();
 	}
 
-	public ArrayList<Variable> getVariableList() {
-		ArrayList<Variable> lstVariableFull = codeAnalyzer.getLstVariable();
-
-		lstVariableFull.addAll(getListNewVariable());
-		return lstVariableFull;
-	}
+//	public ArrayList<Variable> getVariableList() {
+//		ArrayList<Variable> lstVariableFull = codeAnalyzer.getLstVariable();
+//
+//		lstVariableFull.addAll(getListNewVariable());
+//		return lstVariableFull;
+//	}
 }

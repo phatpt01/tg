@@ -33,7 +33,7 @@ public class SymbolicExecutionFile {
 	public static void createBlankFile(String filename) {
 		File file = new File(filename);
 		OutputStream outputStream;
-		
+
 		try {
 			outputStream = new FileOutputStream(file);
 			outputStream.close();
@@ -43,7 +43,8 @@ public class SymbolicExecutionFile {
 
 	}
 
-	public static void copyfile(String sourceFile, String destinationFile, boolean overwrite) {
+	public static void copyfile(String sourceFile, String destinationFile,
+			boolean overwrite) {
 		try {
 			File source = new File(sourceFile);
 			File destination = new File(destinationFile);
@@ -58,11 +59,11 @@ public class SymbolicExecutionFile {
 
 			byte[] buffer = new byte[1024];
 			int length;
-			
+
 			while ((length = inputStream.read(buffer)) > 0) {
 				outputStream.write(buffer, 0, length);
 			}
-			
+
 			inputStream.close();
 			outputStream.close();
 		} catch (FileNotFoundException e) {

@@ -85,6 +85,12 @@ public class View {
 					String source = control.readSourceFile(sourceFile);
 					changeSourceText(source);
 					txtLog.setText("");
+					
+					// If open new source file, clear all tables
+					tblParameter.removeAll();
+					tblCondition.removeAll();
+					tblMappingTable.removeAll();
+					tblVariable.removeAll();
 				}
 			}
 		});
@@ -131,7 +137,7 @@ public class View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 			
-				control.runSE(txtSourceCode.getText());
+				control.symbolicExecution(txtSourceCode.getText());
 				printMappingTable();
 				printVariableTable();
 			}
