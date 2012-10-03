@@ -26,7 +26,7 @@ import transform.AST.VarInitializerAST;
 public class Temp1Visitor extends DoNothingVisitor {
 
 	boolean hasReal;
-	
+
 	ArrayList<Variable> lstVariable;
 	ArrayList<Parameter> lstParameter;
 	ArrayList<String> arrParameter; // lưu giá trị mới của tham số đầu vào sau
@@ -120,7 +120,9 @@ public class Temp1Visitor extends DoNothingVisitor {
 			String var = (String) binExprAST.exprAST1.visit(this, o);
 			String temp = "";
 
-			int i = findVariable(var);
+			int i = 0;
+			
+			i = findVariable(var);
 			if (i >= 0) {
 				temp = (String) binExprAST.exprAST2.visit(this, "c");
 				arrVariable.set(i, temp);
@@ -192,11 +194,58 @@ public class Temp1Visitor extends DoNothingVisitor {
 						output += binExprAST.op.getText();
 				}
 
+				// Phat them ngay 3/10 de xu ly viec parameter hoac variable la so thuc
+				// TH1: them gia tri .0 vao val1, de duoc vi du: > 1.0 x, voi x la so Real
+				for (Parameter parameter : lstParameter){
+					if (val2.equals(parameter.getName())){
+						String parameterType = parameter.getType();
+						if ("Real".equals(parameterType) || "Float".equals(parameterType) || "Double".equals(parameterType)){
+							val1 += ".0";
+						}
+					}
+				}
+				
+				for (Variable variable : lstVariable){
+					if (val2.equals(variable.getName())){
+						String variableType = variable.getType();
+						if ("Real".equals(variableType) || "Float".equals(variableType) || "Double".equals(variableType)){
+							val1 += ".0";
+						}
+					}
+				}
+				
+				// TH2: xu ly tuong tu voi val2
+				for (Parameter parameter : lstParameter){
+					if (val1.equals(parameter.getName())){
+						String parameterType = parameter.getType();
+						if ("Real".equals(parameterType) || "Float".equals(parameterType) || "Double".equals(parameterType)){
+							val2 += ".0";
+						}
+					}
+				}
+				
+				for (Variable variable : lstVariable){
+					if (val1.equals(variable.getName())){
+						String variableType = variable.getType();
+						if ("Real".equals(variableType) || "Float".equals(variableType) || "Double".equals(variableType)){
+							val2 += ".0";
+						}
+					}
+				}
+				
 				output += " " + val1 + " ";
 				output += val2 + ")";
+				
 				if (check == true) {
 					output = "(not " + output + ")";
 				}
+				
+//				output += " " + val1 + " ";
+//				output += val2 + ")";
+//				if (check == true) {
+//					output = "(not " + output + ")";
+//				}
+				// End Phat 3/10
 			}
 			if (o == "c") {
 				return output;
@@ -206,15 +255,12 @@ public class Temp1Visitor extends DoNothingVisitor {
 
 				if (!output.equals("(  )")) {
 					int conditionStmt = findCondition(binExprAST.parentAST.line);
-//					System.out.println("Parent line: "
-//							+ "binExprAST.parentAST.line: " + binExprAST.parentAST.line + " , findCondition(binExprAST.parentAST.line): " + conditionStmt);
-
 					boolean check = true;
 
 					if (branch == 0) { // BRANCH TRUE
 						result += "(assert " + output + ")\n";
-						ArrayList<String> temp = lstCondition.get(conditionStmt)
-								.getTruePaths();
+						ArrayList<String> temp = lstCondition
+								.get(conditionStmt).getTruePaths();
 
 						for (int i = 0; i < temp.size(); i++)
 							if (temp.get(i).equals(result))
@@ -230,8 +276,8 @@ public class Temp1Visitor extends DoNothingVisitor {
 
 					if (branch == 1) { // BRANCH FALSE
 						result += "(assert (not " + output + "))\n";
-						ArrayList<String> temp = lstCondition.get(conditionStmt)
-								.getFalsePaths();
+						ArrayList<String> temp = lstCondition
+								.get(conditionStmt).getFalsePaths();
 
 						for (int i = 0; i < temp.size(); i++)
 							if (temp.get(i).equals(result))
@@ -240,8 +286,8 @@ public class Temp1Visitor extends DoNothingVisitor {
 						if (check == true) {
 							lstCondition.get(conditionStmt).getFalsePaths()
 									.add(result);
-							lstCondition.get(conditionStmt).getFalseConditions()
-									.add(obj.con);
+							lstCondition.get(conditionStmt)
+									.getFalseConditions().add(obj.con);
 						}
 					}
 				}
@@ -273,7 +319,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 		} else {
 			value = (String) declarationListAST.declarationListAST.visit(this,
 					o);
-			
+
 			int i = findVariable(var);
 			if (i >= 0) {
 				this.arrVariable.set(i, value);
@@ -306,7 +352,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 			throws CompilationException {
 
 		String text = (String) ast.exprAST.visit(this, "c");
-		
+
 		if (!(ast.exprListAST instanceof EmptyExprListAST)) {
 			text += " " + ast.exprListAST.visit(this, "c");
 		}
@@ -344,41 +390,42 @@ public class Temp1Visitor extends DoNothingVisitor {
 			throws CompilationException {
 
 		int constmt = findCondition(ast.parentAST.line);
-//		System.out.println("Parent line " + ast.parentAST.line + " " + constmt);
-		
-		String res = "";
-		
+		// System.out.println("Parent line " + ast.parentAST.line + " " +
+		// constmt);
+
+		String result = "";
+
 		if (ast.opType == UnaryExprAST.LOGICAL_NOT) {
 			if (o == "c") {
-				res += "(not " + ast.exprAST.visit(this, "c") + ")";
-				return res;
+				result += "(not " + ast.exprAST.visit(this, "c") + ")";
+				return result;
 			} else {
 				boolean check = true;
 				Temp obj = (Temp) o;
-				
+
 				int branch = obj.branch;
 				if (branch == 0) {
-					res += "(assert (not " + ast.exprAST.visit(this, "c")
+					result += "(assert (not " + ast.exprAST.visit(this, "c")
 							+ "))\n";
 					ArrayList<String> temp = lstCondition.get(constmt)
 							.getTruePaths();
 					for (int i = 0; i < temp.size(); i++)
-						if (temp.get(i).equals(res))
+						if (temp.get(i).equals(result))
 							check = false;
 					if (check == true) {
-						lstCondition.get(constmt).getTruePaths().add(res);
+						lstCondition.get(constmt).getTruePaths().add(result);
 						lstCondition.get(constmt).getTrueConditions()
 								.add(obj.con);
 					}
 				} else {
-					res += "(assert " + ast.exprAST.visit(this, "c") + ")\n";
+					result += "(assert " + ast.exprAST.visit(this, "c") + ")\n";
 					ArrayList<String> temp = lstCondition.get(constmt)
 							.getFalsePaths();
 					for (int i = 0; i < temp.size(); i++)
-						if (temp.get(i).equals(res))
+						if (temp.get(i).equals(result))
 							check = false;
 					if (check == true) {
-						lstCondition.get(constmt).getFalsePaths().add(res);
+						lstCondition.get(constmt).getFalsePaths().add(result);
 						lstCondition.get(constmt).getFalseConditions()
 								.add(obj.con);
 					}

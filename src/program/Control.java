@@ -25,7 +25,6 @@ public class Control {
 		io = new InOut();
 		codeAnalyzer = new CodeAnalyzer();
 		ga = new GA();
-		
 		se = new SymbolicExecution();
 	}
 
@@ -103,7 +102,7 @@ public class Control {
 		return standardSource;
 	}
 
-	public void symbolicExecution(String txtSourceCode) {
-		se.symbolicExecution(codeAnalyzer, txtSourceCode);
+	public void symbolicExecution() {
+		se.symbolicExecution(codeAnalyzer);
 	}
 }

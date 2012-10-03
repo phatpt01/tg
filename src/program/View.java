@@ -14,6 +14,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 
 import se.MappingRecord;
+import se.SymbolicExecutionFile;
 import system.Variable;
 import transform.AST.CompilationException;
 
@@ -58,7 +59,7 @@ public class View {
 	private TableColumn colVarType;
 
 	private Button btnOpen;
-	private Button btnStandard;
+	private Button btnStandardized;
 	private Button btnScanCondition;
 	private Button btnGenerateSolvableBeforeSE;
 	private Button btnSymbolicExecution;
@@ -71,7 +72,10 @@ public class View {
 	private Button btnNext;
 	private Button btnExit;
 
+	private Label lblFileName;
+
 	String oldText = "";
+	String newText = "";
 
 	private void addSelectionListener() {
 
@@ -84,18 +88,25 @@ public class View {
 				if (sourceFile != null) {
 					String source = control.readSourceFile(sourceFile);
 					changeSourceText(source);
-					txtLog.setText("");
-					
+
+					// update information about path of file
+					lblFileName.setText(sourceFile);
+
 					// If open new source file, clear all tables
 					tblParameter.removeAll();
 					tblCondition.removeAll();
 					tblMappingTable.removeAll();
 					tblVariable.removeAll();
+
+					txtLog.setText("");
+					btnStandardized.setEnabled(true);
+				} else {
+					btnStandardized.setEnabled(false);
 				}
 			}
 		});
 
-		btnStandard.addSelectionListener(new SelectionAdapter() {
+		btnStandardized.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				String standardSource = control.standardSource(sourceFile);
@@ -108,6 +119,11 @@ public class View {
 				} catch (CompilationException e) {
 					e.printStackTrace();
 				}
+
+				txtLog.setText("Source code is standardized");
+
+				btnStandardized.setEnabled(false);
+				btnScanCondition.setEnabled(true);
 			}
 		});
 
@@ -115,7 +131,14 @@ public class View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				oldText = txtLog.getText();
-				txtLog.setText(oldText + "\n" + control.scanCondition());
+				newText = control.scanCondition();
+
+				if (!newText.equals("Does not have condition")) {
+					btnGenerateSolvableBeforeSE.setEnabled(true);
+				}
+
+				txtLog.setText(newText + "\n" + oldText);
+				btnScanCondition.setEnabled(false);
 			}
 		});
 
@@ -123,12 +146,22 @@ public class View {
 				.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						txtLog.setText(txtLog.getText() + "\n"
-								+ control.generateSolvable());
-						
-						txtLog.setText(txtLog.getText() + "\n"
-								+ "Number of unsolvable by Z3: " 
-								+ control.getNumUnSolvableCondition());
+
+						SymbolicExecutionFile
+								.deleteAllFiles(SymbolicExecutionFile
+										.getAbsolutePathOfSmt2());
+
+						oldText = txtLog.getText();
+						newText = control.generateSolvable() + "\n"
+								+ "Number of unsolvable by Z3: "
+								+ control.getNumUnSolvableCondition() + "\n";
+
+						txtLog.setText(newText + "\n" + oldText + "\n");
+
+						if (control.getNumUnSolvableCondition() > 0) {
+							btnSymbolicExecution.setEnabled(true);
+						}
+						btnGenerateSolvableBeforeSE.setEnabled(false);
 					}
 
 				});
@@ -136,20 +169,30 @@ public class View {
 		btnSymbolicExecution.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-			
-				control.symbolicExecution(txtSourceCode.getText());
+
+				control.symbolicExecution();
 				printMappingTable();
 				printVariableTable();
+
+				btnSymbolicExecution.setEnabled(false);
+				btnGenerateSolvableAfterSE.setEnabled(true);
 			}
 		});
 
 		btnGenerateSolvableAfterSE.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				// Use Z3 to solve code after SE
+
+				ArrayList<String> testcaseAfterSE = control
+						.generateTestCaseWithSE();
+
 				oldText = txtLog.getText();
-				txtLog.setText(oldText + "\n"
-						+ control.generateTestCaseWithSE());
+				newText = testcaseAfterSE.toString();
+
+				txtLog.setText(newText + "\n" + oldText + "\n");
+
+				btnGenerateSolvableAfterSE.setEnabled(false);
+				btnGenerateUnsolvableByGA.setEnabled(true);
 			}
 
 		});
@@ -157,8 +200,12 @@ public class View {
 		btnGenerateUnsolvableByGA.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+
 				oldText = txtLog.getText();
-				txtLog.setText(oldText + "\n" + control.runGA());
+				newText = control.runGA();
+				txtLog.setText(newText + "\n" + oldText + "\n");
+
+				btnGenerateUnsolvableByGA.setEnabled(false);
 			}
 
 		});
@@ -234,9 +281,6 @@ public class View {
 		shell.setText("Test Case Generation");
 		shell.setMaximized(true);
 
-		// int screenWidth = shell.getSize().x;
-		// int screenHeight = shell.getSize().y;
-
 		txtSourceCode = new StyledText(shell, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL);
 		txtSourceCode.setEditable(false);
@@ -248,38 +292,41 @@ public class View {
 		txtLog.setBounds(10, 387, 960, 300);
 		txtLog.setFont(font);
 
+		lblFileName = new Label(shell, 0);
+		lblFileName.setBounds(10, 700, 900, 30);
+
 		createTableParameter(font, 500, 10, 300, 90);
 		createTableCondition(font, 500, 110, 300, 90);
 		createTableMapping(font, 500, 210, 300, 90);
 		createTableVariable(font, 500, 310, 300, 90);
 
-		setButtonLocation();
+		createButtons();
 
 		addSelectionListener();
 	}
 
-	private void setButtonLocation() {
+	private void createButtons() {
 		btnOpen = createButton("Open Source", true, 980, 10, BUTTON_WIDTH,
 				BUTTON_HEIGHT);
-		btnStandard = createButton("Standard Source", true, 980, 45,
+		btnStandardized = createButton("Standard Source", false, 980, 45,
 				BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnScanCondition = createButton("Scan Condition", true, 980, 80,
+		btnScanCondition = createButton("Scan Condition", false, 980, 80,
 				BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnGenerateSolvableBeforeSE = createButton("Generate Solvable", true,
+		btnGenerateSolvableBeforeSE = createButton("Generate Solvable", false,
 				980, 115, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnSymbolicExecution = createButton("Symbolic execution", true, 980,
+		btnSymbolicExecution = createButton("Symbolic execution", false, 980,
 				150, BUTTON_WIDTH, BUTTON_HEIGHT);
 
-		btnGenerateSolvableAfterSE = createButton("Generate TC after SE", true,
-				1110, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnGenerateUnsolvableByGA = createButton("Generate Unsolvable", true,
+		btnGenerateSolvableAfterSE = createButton("Generate TC after SE",
+				false, 1110, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnGenerateUnsolvableByGA = createButton("Generate Unsolvable", false,
 				1110, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnShowAllTC = createButton("Show all test case", true, 1110, 80,
+		btnShowAllTC = createButton("Show all test case", false, 1110, 80,
 				BUTTON_WIDTH, BUTTON_HEIGHT);
 
-		btnPrev = createButton("Prev", true, 1110, 115, BUTTON_WIDTH / 2,
+		btnPrev = createButton("Prev", false, 1110, 115, BUTTON_WIDTH / 2,
 				BUTTON_HEIGHT);
-		btnNext = createButton("Next", true, 1170, 115, BUTTON_WIDTH / 2,
+		btnNext = createButton("Next", false, 1170, 115, BUTTON_WIDTH / 2,
 				BUTTON_HEIGHT);
 
 		btnExit = createButton("Exit", true, 1110, 150, BUTTON_WIDTH,
@@ -379,6 +426,7 @@ public class View {
 				display.sleep();
 			}
 		}
+
 	}
 
 	protected void printConditionsList() throws CompilationException {
