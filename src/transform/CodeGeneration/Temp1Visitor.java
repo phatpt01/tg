@@ -390,8 +390,6 @@ public class Temp1Visitor extends DoNothingVisitor {
 			throws CompilationException {
 
 		int constmt = findCondition(ast.parentAST.line);
-		// System.out.println("Parent line " + ast.parentAST.line + " " +
-		// constmt);
 
 		String result = "";
 

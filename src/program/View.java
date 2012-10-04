@@ -441,7 +441,7 @@ public class View {
 	}
 
 	protected void printMappingTable() {
-		tblMappingTable.removeAll();
+		tblMappingTable.clearAll();
 
 		ArrayList<MappingRecord> lstMappingRecord = control
 				.getMappingRecordList();

@@ -1,6 +1,0 @@
-(declare-const x Real)
-(declare-const y Int)
-(declare-const z Real)
-(assert (not (= x 1.0)))
-(check-sat)
-(model)

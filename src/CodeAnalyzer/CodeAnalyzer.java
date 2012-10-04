@@ -310,8 +310,8 @@ public class CodeAnalyzer {
 
 			out.close();
 			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException | NullPointerException exception) {
+			exception.printStackTrace();
 		}
 
 		ArrayList<String> testcase = getNewTestcase(z3FilePath);
@@ -371,11 +371,15 @@ public class CodeAnalyzer {
 		for (int i = 0; i < lstCondition.size(); i++) {
 			output += "Condition " + (i + 1) + ":"
 					+ lstCondition.get(i).getCondition() + "\n";
+
 			output += "\t True:\n";
+
 			for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
 				output += lstCondition.get(i).getTruePaths().get(j) + "\n";
 			}
+
 			output += "\t False:\n";
+
 			for (int j = 0; j < lstCondition.get(i).getFalsePaths().size(); j++) {
 				output += lstCondition.get(i).getFalsePaths().get(j) + "\n";
 			}

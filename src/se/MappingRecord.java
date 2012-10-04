@@ -14,6 +14,10 @@ public class MappingRecord {
 	// Return type of expression
 	String returnType;
 	
+	// Min value
+	
+	// Max value
+	
 	public MappingRecord(String condition, String expression, String symbol, String returnType) {
 		super();
 		this.condition = condition;
