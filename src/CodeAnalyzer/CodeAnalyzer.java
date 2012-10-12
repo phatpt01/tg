@@ -179,12 +179,8 @@ public class CodeAnalyzer {
 				check = true;
 				break;
 			}
-			// Mỗi testcase sẽ sinh một file smt2SE khác nhau
-			/*
-			 * Tạo blank file Ghi các biến mới Copy nội dung file
-			 * Z3Formular.smt2 vào file Z3FormulaSEx.smt2
-			 */
-			String fileSEName = "Z3FormulaSE"
+			// Each testcase has a difference smt2 file, for true path
+			String fileSEName = absolutePathOfSmt2 + "Z3FormulaSE"
 					+ (SymbolicExecutionFile
 							.countNumberOfFiles(absolutePathOfSmt2) - 1)
 					+ ".smt2";
@@ -193,7 +189,7 @@ public class CodeAnalyzer {
 			SymbolicExecutionFile.appendAtBeginning(fileSEName,
 					new SymbolicExecution().getListNewVariable());
 			SymbolicExecutionFile.copyfile(absolutePathOfSmt2
-					+ "Z3Formula.smt2", absolutePathOfSmt2 + fileSEName, false);
+					+ "Z3Formula.smt2", fileSEName, false);
 		}
 
 		for (int k = 0; k < lstCondition.get(i).getFalsePaths().size(); k++) {
@@ -206,7 +202,7 @@ public class CodeAnalyzer {
 				check = true;
 				break;
 			}
-			// Mỗi testcase sẽ sinh một file smt2SE khác nhau
+			// Each testcase has a difference smt2 file, for false path
 			SymbolicExecutionFile
 					.copyfile(
 							absolutePathOfSmt2 + "Z3Formula.smt2",
@@ -240,10 +236,7 @@ public class CodeAnalyzer {
 						+ condition.hasFalseTestCase + "\n";
 			}
 		}
-		output = "Number of solvable condition: " + count + "\n\n" + output;
-
-		// printAllUnsolvableTestCase();
-
+		output = count + "\n\n" + output;
 		return output;
 	}
 
@@ -416,6 +409,12 @@ public class CodeAnalyzer {
 	}
 
 	public ArrayList<Variable> getLstVariable() {
+		// Delete duplicate variable
+		for (int i=0; i<lstVariable.size()-1; i++)
+			for (int j=i+1; j<lstVariable.size(); j++)
+				if (lstVariable.get(i).getName().equals(lstVariable.get(j).getName()))
+					lstVariable.remove(j);
+		
 		return lstVariable;
 	}
 
@@ -511,7 +510,7 @@ public class CodeAnalyzer {
 	}
 
 	public ArrayList<String> getNewTestcaseAfterSE(String z3FormulaPath) {
-		ArrayList<String> testcase = new ArrayList<String>();
+//		ArrayList<String> testcase = new ArrayList<String>();
 		ArrayList<String> z3result = new ArrayList<String>();
 		Runtime run = Runtime.getRuntime();
 		try {
@@ -540,65 +539,15 @@ public class CodeAnalyzer {
 						sc.close();
 					}
 				}
-				// process z3result
-				for (int i = 0; i < lstVariable.size(); i++) {
-					for (int j = 0; j < z3result.size(); j += 2) {
-						if (z3result.get(j)
-								.equals(lstVariable.get(i).getName())) {
-							testcase.add(z3result.get(j + 1)); // add new value
-																// to testcase
-							break;
-						}
-					}
-					// if (testcase.size() < i) {
-					// Object result = 0;
-					// Random ran1 = new Random();
-					// double n = ran1.nextDouble() * 100;
-					// switch (lstParameter.get(i).getType()) {
-					// case "Int":
-					// result = (int) n;
-					// break;
-					// case "Double":
-					// result = (double) n;
-					// break;
-					// case "Float":
-					// result = (float) n;
-					// break;
-					// }
-					// testcase.add(result.toString());
-					// }
-				}
-
-				// if (testcase.size() < lstParameter.size()) {
-				// int num = lstParameter.size() - testcase.size();
-				// Random ran1 = new Random();
-				// for (int i = 0; i < num; i++) {
-				// Object result = 0;
-				// double n = ran1.nextDouble() * 100;
-				// switch (lstParameter.get(i).getType()) {
-				// case "Int":
-				// result = (int) n;
-				// break;
-				// case "Double":
-				// result = (double) n;
-				// break;
-				// case "Float":
-				// result = (float) n;
-				// break;
-				// }
-				// testcase.add(result.toString());
-				// }
-				// }
 			} else {
-				return null;
+				// unsat
+				z3result.add("u");
+				z3result.add("u");
 			}
-			// if Z3 doesn't generate all values then randomly generate value
-			// for the rest
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return testcase;
+		return z3result;
 	}
 
 	public ArrayList<Integer> getNextTestCase() {
@@ -746,7 +695,7 @@ public class CodeAnalyzer {
 		lstBranch = transform.getListBranch();
 	}
 
-	private void printAllUnsolvableTestCase() {
+//	private void printAllUnsolvableTestCase() {
 		// System.out.println("\n Print all unsolvable condition");
 		//
 		// for (int i = 0; i < this.lstCondition.size(); i++) {
@@ -779,7 +728,7 @@ public class CodeAnalyzer {
 		// }
 		// }
 		//
-	}
+//	}
 
 	private void printAllData() {
 		// printAllParameter();
@@ -787,30 +736,30 @@ public class CodeAnalyzer {
 		// printAllCondition();
 	}
 
-	private void printAllVariable() {
-		for (Variable variable : this.lstVariable) {
-			System.out.println("Variable: " + " name: " + variable.getName()
-					+ " type: " + variable.getType());
-		}
-	}
-
-	private void printAllParameter() {
-		for (Parameter parameter : this.lstParameter) {
-			System.out.println("Parameter: " + " name: " + parameter.getName()
-					+ " type: " + parameter.getType());
-		}
-		System.out.println();
-	}
-
-	private void printAllCondition() {
-		for (Condition condition : lstCondition) {
-			System.out.println("Condition: " + " name: "
-					+ condition.getCondition() + ", " + "True testcase: "
-					+ condition.getTrueTestCase() + ", " + "False testcase: "
-					+ condition.getFalseTestCase() + ", " + "Has testcase: "
-					+ condition.hasTestcase());
-		}
-	}
+//	private void printAllVariable() {
+//		for (Variable variable : this.lstVariable) {
+//			System.out.println("Variable: " + " name: " + variable.getName()
+//					+ " type: " + variable.getType());
+//		}
+//	}
+//
+//	private void printAllParameter() {
+//		for (Parameter parameter : this.lstParameter) {
+//			System.out.println("Parameter: " + " name: " + parameter.getName()
+//					+ " type: " + parameter.getType());
+//		}
+//		System.out.println();
+//	}
+//
+//	private void printAllCondition() {
+//		for (Condition condition : lstCondition) {
+//			System.out.println("Condition: " + " name: "
+//					+ condition.getCondition() + ", " + "True testcase: "
+//					+ condition.getTrueTestCase() + ", " + "False testcase: "
+//					+ condition.getFalseTestCase() + ", " + "Has testcase: "
+//					+ condition.hasTestcase());
+//		}
+//	}
 
 	private void removeNullCondition() {
 		int sizeOfListCodition = lstCondition.size();

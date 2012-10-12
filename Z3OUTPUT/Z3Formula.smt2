@@ -1,0 +1,6 @@
+(declare-const n Int)
+(declare-const x Int)
+(assert (< (mod (f n) 2) 5))
+(assert (not (> (g n) 3)))
+(check-sat)
+(model)

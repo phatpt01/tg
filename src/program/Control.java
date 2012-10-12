@@ -28,12 +28,16 @@ public class Control {
 		se = new SymbolicExecution();
 	}
 
+	public void addMinMaxAssert() {
+		se.addMinMaxAssert();
+	}
+	
 	public String generateSolvable() {
 		return codeAnalyzer.generateSolvable();
 	}
-	
-	public ArrayList<String> generateTestCaseWithSE() {
-		return se.generateTestCaseWithSE();
+
+	public String generateTestCaseAfterSE() {
+		return se.generateTestCaseAfterSE();
 	}
 
 	public ArrayList<String> getConditionList() throws CompilationException {
@@ -85,11 +89,14 @@ public class Control {
 		ga.run(codeAnalyzer);
 		ga.reset();
 		return codeAnalyzer.update(ga.getRes());
-
 	}
 
 	public String scanCondition() {
 		return codeAnalyzer.scanCondition();
+	}
+
+	public void setRangeOfSymbol() {
+		se.setRangeOfSymbol();		
 	}
 
 	public String showAllTestCase() {

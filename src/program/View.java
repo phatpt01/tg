@@ -53,6 +53,8 @@ public class View {
 	private TableColumn colExpression;
 	private TableColumn colSymbol;
 	private TableColumn colReturnType;
+	private TableColumn colMinValue;
+	private TableColumn colMaxValue;
 
 	private Table tblVariable;
 	private TableColumn colVarName;
@@ -63,6 +65,7 @@ public class View {
 	private Button btnScanCondition;
 	private Button btnGenerateSolvableBeforeSE;
 	private Button btnSymbolicExecution;
+	private Button btnSetRangeOfSymbol;
 
 	private Button btnGenerateSolvableAfterSE;
 	private Button btnGenerateUnsolvableByGA;
@@ -152,7 +155,8 @@ public class View {
 										.getAbsolutePathOfSmt2());
 
 						oldText = txtLog.getText();
-						newText = control.generateSolvable() + "\n"
+						newText = "Number of solvable condition: "
+								+ control.generateSolvable() + "\n"
 								+ "Number of unsolvable by Z3: "
 								+ control.getNumUnSolvableCondition() + "\n";
 
@@ -163,7 +167,6 @@ public class View {
 						}
 						btnGenerateSolvableBeforeSE.setEnabled(false);
 					}
-
 				});
 
 		btnSymbolicExecution.addSelectionListener(new SelectionAdapter() {
@@ -171,10 +174,22 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 
 				control.symbolicExecution();
+				if (control.getNumUnSolvableCondition() > 0) {
+					btnSetRangeOfSymbol.setEnabled(true);
+				}
+
 				printMappingTable();
 				printVariableTable();
+			}
+		});
 
-				btnSymbolicExecution.setEnabled(false);
+		btnSetRangeOfSymbol.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+
+				control.setRangeOfSymbol();
+				printMappingTable();
+
 				btnGenerateSolvableAfterSE.setEnabled(true);
 			}
 		});
@@ -183,11 +198,9 @@ public class View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 
-				ArrayList<String> testcaseAfterSE = control
-						.generateTestCaseWithSE();
-
 				oldText = txtLog.getText();
-				newText = testcaseAfterSE.toString();
+				newText = control
+						.generateTestCaseAfterSE();
 
 				txtLog.setText(newText + "\n" + oldText + "\n");
 
@@ -297,7 +310,7 @@ public class View {
 
 		createTableParameter(font, 500, 10, 300, 90);
 		createTableCondition(font, 500, 110, 300, 90);
-		createTableMapping(font, 500, 210, 300, 90);
+		createTableMapping(font, 500, 210, 400, 90);
 		createTableVariable(font, 500, 310, 300, 90);
 
 		createButtons();
@@ -316,6 +329,8 @@ public class View {
 				980, 115, BUTTON_WIDTH, BUTTON_HEIGHT);
 		btnSymbolicExecution = createButton("Symbolic execution", false, 980,
 				150, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnSetRangeOfSymbol = createButton("Set range of symbol", true, 980,
+				180, BUTTON_WIDTH, BUTTON_HEIGHT);
 
 		btnGenerateSolvableAfterSE = createButton("Generate TC after SE",
 				false, 1110, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -371,8 +386,16 @@ public class View {
 		colSymbol.setText("Symbol");
 
 		colReturnType = new TableColumn(tblMappingTable, SWT.LEFT);
-		colReturnType.setWidth(90);
-		colReturnType.setText("Return type");
+		colReturnType.setWidth(50);
+		colReturnType.setText("Type");
+
+		colMinValue = new TableColumn(tblMappingTable, SWT.LEFT);
+		colMinValue.setWidth(40);
+		colMinValue.setText("Min");
+
+		colMaxValue = new TableColumn(tblMappingTable, SWT.LEFT);
+		colMaxValue.setWidth(40);
+		colMaxValue.setText("Max");
 	}
 
 	private void createTableCondition(Font font, int x, int y, int width,
@@ -441,7 +464,7 @@ public class View {
 	}
 
 	protected void printMappingTable() {
-		tblMappingTable.clearAll();
+		tblMappingTable.removeAll();
 
 		ArrayList<MappingRecord> lstMappingRecord = control
 				.getMappingRecordList();
@@ -453,6 +476,10 @@ public class View {
 			tblItem.setText(0, lstMappingRecord.get(i).getExpression());
 			tblItem.setText(1, lstMappingRecord.get(i).getSymbol());
 			tblItem.setText(2, lstMappingRecord.get(i).getReturnType());
+			tblItem.setText(3,
+					String.valueOf(lstMappingRecord.get(i).getMinValue()));
+			tblItem.setText(4,
+					String.valueOf(lstMappingRecord.get(i).getMaxValue()));
 		}
 	}
 

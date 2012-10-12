@@ -4,7 +4,7 @@ public class MappingRecord {
 
 	// Condition
 	String condition;
-	
+
 	// Expression which is symbolic
 	String expression;
 
@@ -13,17 +13,23 @@ public class MappingRecord {
 
 	// Return type of expression
 	String returnType;
-	
+
 	// Min value
+	int minValue;
 	
 	// Max value
-	
-	public MappingRecord(String condition, String expression, String symbol, String returnType) {
+	int maxValue;
+
+	public MappingRecord(String condition, String expression, String symbol,
+			String returnType) {
 		super();
 		this.condition = condition;
 		this.expression = expression;
 		this.symbol = symbol;
 		this.returnType = returnType;
+
+		this.minValue = 0;
+		this.maxValue = 0;
 	}
 
 	public String getCondition() {
@@ -32,6 +38,14 @@ public class MappingRecord {
 
 	public String getExpression() {
 		return expression;
+	}
+
+	public int getMaxValue() {
+		return maxValue;
+	}
+
+	public int getMinValue() {
+		return minValue;
 	}
 
 	public String getReturnType() {
@@ -48,6 +62,14 @@ public class MappingRecord {
 
 	public void setExpression(String expression) {
 		this.expression = expression;
+	}
+
+	public void setMaxValue(int maxValue) {
+		this.maxValue = maxValue;
+	}
+
+	public void setMinValue(int minValue) {
+		this.minValue = minValue;
 	}
 
 	public void setReturnType(String returnType) {
