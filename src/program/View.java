@@ -115,7 +115,8 @@ public class View {
 				String standardSource = control.standardSource(sourceFile);
 				changeSourceText(standardSource);
 
-				printParameterList();
+				printParameterTable();
+				printVariableTable();
 
 				try {
 					printConditionsList();
@@ -164,8 +165,14 @@ public class View {
 
 						if (control.getNumUnSolvableCondition() > 0) {
 							btnSymbolicExecution.setEnabled(true);
+						} else {
+							btnSymbolicExecution.setEnabled(false);
+							btnSetRangeOfSymbol.setEnabled(false);
+							btnGenerateSolvableAfterSE.setEnabled(false);
 						}
+						
 						btnGenerateSolvableBeforeSE.setEnabled(false);
+						btnShowAllTC.setEnabled(true);
 					}
 				});
 
@@ -190,6 +197,7 @@ public class View {
 				control.setRangeOfSymbol();
 				printMappingTable();
 
+				btnSetRangeOfSymbol.setEnabled(false);
 				btnGenerateSolvableAfterSE.setEnabled(true);
 			}
 		});
@@ -205,6 +213,7 @@ public class View {
 
 				btnGenerateSolvableAfterSE.setEnabled(false);
 				btnGenerateUnsolvableByGA.setEnabled(true);
+				btnShowAllTC.setEnabled(true);
 			}
 
 		});
@@ -258,20 +267,6 @@ public class View {
 
 	}
 
-	protected void printVariableTable() {
-		tblVariable.removeAll();
-
-		ArrayList<Variable> lstVariable = control.getVariableList();
-
-		TableItem tblItem;
-		for (int i = 0; i < lstVariable.size(); i++) {
-			tblItem = new TableItem(tblVariable, SWT.CENTER);
-
-			tblItem.setText(0, lstVariable.get(i).getName());
-			tblItem.setText(1, lstVariable.get(i).getType());
-		}
-	}
-
 	private void changeSourceText(String source) {
 		txtSourceCode.setText(source);
 	}
@@ -284,6 +279,38 @@ public class View {
 		btnTemp.setEnabled(initEnable);
 
 		return btnTemp;
+	}
+
+	private void createButtons() {
+		btnOpen = createButton("Open Source", true, 980, 10, BUTTON_WIDTH,
+				BUTTON_HEIGHT);
+		btnStandardized = createButton("Standard Source", false, 980, 45,
+				BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnScanCondition = createButton("Scan Condition", false, 980, 80,
+				BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnGenerateSolvableBeforeSE = createButton("Generate Solvable", false,
+				980, 115, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnSymbolicExecution = createButton("Symbolic execution", false, 980,
+				150, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnSetRangeOfSymbol = createButton("Set range of symbol", false, 980,
+				185, BUTTON_WIDTH, BUTTON_HEIGHT);
+
+		btnGenerateSolvableAfterSE = createButton("Generate TC after SE",
+				false, 1110, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnGenerateUnsolvableByGA = createButton("Generate Unsolvable", false,
+				1110, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
+		btnShowAllTC = createButton("Show all test case", false, 1110, 80,
+				BUTTON_WIDTH, BUTTON_HEIGHT);
+
+		btnPrev = createButton("Prev", false, 1110, 115, BUTTON_WIDTH / 2,
+				BUTTON_HEIGHT);
+		btnNext = createButton("Next", false, 1170, 115, BUTTON_WIDTH / 2,
+				BUTTON_HEIGHT);
+
+		btnExit = createButton("Exit", true, 1110, 150, BUTTON_WIDTH,
+				BUTTON_HEIGHT);
+
+		btnOpen.setToolTipText("Open source file");
 	}
 
 	protected void createContents() {
@@ -317,54 +344,26 @@ public class View {
 		addSelectionListener();
 	}
 
-	private void createButtons() {
-		btnOpen = createButton("Open Source", true, 980, 10, BUTTON_WIDTH,
-				BUTTON_HEIGHT);
-		btnStandardized = createButton("Standard Source", false, 980, 45,
-				BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnScanCondition = createButton("Scan Condition", false, 980, 80,
-				BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnGenerateSolvableBeforeSE = createButton("Generate Solvable", false,
-				980, 115, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnSymbolicExecution = createButton("Symbolic execution", false, 980,
-				150, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnSetRangeOfSymbol = createButton("Set range of symbol", true, 980,
-				180, BUTTON_WIDTH, BUTTON_HEIGHT);
-
-		btnGenerateSolvableAfterSE = createButton("Generate TC after SE",
-				false, 1110, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnGenerateUnsolvableByGA = createButton("Generate Unsolvable", false,
-				1110, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnShowAllTC = createButton("Show all test case", false, 1110, 80,
-				BUTTON_WIDTH, BUTTON_HEIGHT);
-
-		btnPrev = createButton("Prev", false, 1110, 115, BUTTON_WIDTH / 2,
-				BUTTON_HEIGHT);
-		btnNext = createButton("Next", false, 1170, 115, BUTTON_WIDTH / 2,
-				BUTTON_HEIGHT);
-
-		btnExit = createButton("Exit", true, 1110, 150, BUTTON_WIDTH,
-				BUTTON_HEIGHT);
-
-		btnOpen.setToolTipText("Open source file");
-	}
-
-	private void createTableVariable(Font font, int x, int y, int width,
+	private void createTableCondition(Font font, int x, int y, int width,
 			int height) {
-		tblVariable = new Table(shell, SWT.MULTI | SWT.BORDER
+		tblCondition = new Table(shell, SWT.MULTI | SWT.BORDER
 				| SWT.FULL_SELECTION);
-		tblVariable.setFont(font);
-		tblVariable.setBounds(x, y, width, height);
-		tblVariable.setHeaderVisible(true);
-		tblVariable.setLinesVisible(true);
+		tblCondition.setFont(font);
+		tblCondition.setBounds(x, y, width, height);
+		tblCondition.setHeaderVisible(true);
+		tblCondition.setLinesVisible(true);
 
-		colVarName = new TableColumn(tblVariable, SWT.LEFT);
-		colVarName.setWidth(150);
-		colVarName.setText("Variable name");
+		colCondition = new TableColumn(tblCondition, SWT.RIGHT);
+		colCondition.setWidth(150);
+		colCondition.setText("Conditions");
 
-		colVarType = new TableColumn(tblVariable, SWT.LEFT);
-		colVarType.setWidth(110);
-		colVarType.setText("Variable type");
+		colTrue = new TableColumn(tblCondition, SWT.LEFT);
+		colTrue.setWidth(70);
+		colTrue.setText("True");
+
+		colFalse = new TableColumn(tblCondition, SWT.LEFT);
+		colFalse.setWidth(70);
+		colFalse.setText("False");
 	}
 
 	private void createTableMapping(Font font, int x, int y, int width,
@@ -397,28 +396,6 @@ public class View {
 		colMaxValue.setText("Max");
 	}
 
-	private void createTableCondition(Font font, int x, int y, int width,
-			int height) {
-		tblCondition = new Table(shell, SWT.MULTI | SWT.BORDER
-				| SWT.FULL_SELECTION);
-		tblCondition.setFont(font);
-		tblCondition.setBounds(x, y, width, height);
-		tblCondition.setHeaderVisible(true);
-		tblCondition.setLinesVisible(true);
-
-		colCondition = new TableColumn(tblCondition, SWT.RIGHT);
-		colCondition.setWidth(150);
-		colCondition.setText("Conditions");
-
-		colTrue = new TableColumn(tblCondition, SWT.LEFT);
-		colTrue.setWidth(70);
-		colTrue.setText("True");
-
-		colFalse = new TableColumn(tblCondition, SWT.LEFT);
-		colFalse.setWidth(70);
-		colFalse.setText("False");
-	}
-
 	private void createTableParameter(Font font, int x, int y, int width,
 			int height) {
 		tblParameter = new Table(shell, SWT.MULTI | SWT.BORDER
@@ -435,6 +412,24 @@ public class View {
 		colValue = new TableColumn(tblParameter, SWT.LEFT);
 		colValue.setWidth(60);
 		colValue.setText("Value");
+	}
+
+	private void createTableVariable(Font font, int x, int y, int width,
+			int height) {
+		tblVariable = new Table(shell, SWT.MULTI | SWT.BORDER
+				| SWT.FULL_SELECTION);
+		tblVariable.setFont(font);
+		tblVariable.setBounds(x, y, width, height);
+		tblVariable.setHeaderVisible(true);
+		tblVariable.setLinesVisible(true);
+
+		colVarName = new TableColumn(tblVariable, SWT.LEFT);
+		colVarName.setWidth(150);
+		colVarName.setText("Variable name");
+
+		colVarType = new TableColumn(tblVariable, SWT.LEFT);
+		colVarType.setWidth(110);
+		colVarType.setText("Variable type");
 	}
 
 	public void open() {
@@ -482,7 +477,7 @@ public class View {
 		}
 	}
 
-	protected void printParameterList() {
+	protected void printParameterTable() {
 		tblParameter.removeAll();
 
 		ArrayList<String> lstParameter = control.getParameterList();
@@ -491,6 +486,20 @@ public class View {
 		for (int i = 0; i < lstParameter.size(); i++) {
 			tblItem = new TableItem(tblParameter, SWT.CENTER);
 			tblItem.setText(lstParameter.get(i));
+		}
+	}
+
+	protected void printVariableTable() {
+		tblVariable.removeAll();
+
+		ArrayList<Variable> lstVariable = control.getVariableList();
+
+		TableItem tblItem;
+		for (int i = 0; i < lstVariable.size(); i++) {
+			tblItem = new TableItem(tblVariable, SWT.CENTER);
+
+			tblItem.setText(0, lstVariable.get(i).getName());
+			tblItem.setText(1, lstVariable.get(i).getType());
 		}
 	}
 

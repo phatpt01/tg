@@ -180,7 +180,8 @@ public class CodeAnalyzer {
 				break;
 			}
 			// Each testcase has a difference smt2 file, for true path
-			String fileSEName = absolutePathOfSmt2 + "Z3FormulaSE"
+			String fileSEName = absolutePathOfSmt2
+					+ "Z3FormulaSE"
 					+ (SymbolicExecutionFile
 							.countNumberOfFiles(absolutePathOfSmt2) - 1)
 					+ ".smt2";
@@ -410,11 +411,12 @@ public class CodeAnalyzer {
 
 	public ArrayList<Variable> getLstVariable() {
 		// Delete duplicate variable
-		for (int i=0; i<lstVariable.size()-1; i++)
-			for (int j=i+1; j<lstVariable.size(); j++)
-				if (lstVariable.get(i).getName().equals(lstVariable.get(j).getName()))
+		for (int i = 0; i < lstVariable.size() - 1; i++)
+			for (int j = i + 1; j < lstVariable.size(); j++)
+				if (lstVariable.get(i).getName()
+						.equals(lstVariable.get(j).getName()))
 					lstVariable.remove(j);
-		
+
 		return lstVariable;
 	}
 
@@ -458,45 +460,45 @@ public class CodeAnalyzer {
 							break;
 						}
 					}
-					if (testcase.size() < i) {
-						Object result = 0;
-						Random ran1 = new Random();
-						double n = ran1.nextDouble() * 100;
-						switch (lstParameter.get(i).getType()) {
-						case "Int":
-							result = (int) n;
-							break;
-						case "Double":
-							result = (double) n;
-							break;
-						case "Float":
-							result = (float) n;
-							break;
-						}
-						testcase.add(result.toString());
-					}
+//					if (testcase.size() < i) {
+//						Object result = 0;
+//						Random ran1 = new Random();
+//						double n = ran1.nextDouble() * 100;
+//						switch (lstParameter.get(i).getType()) {
+//						case "Int":
+//							result = (int) n;
+//							break;
+//						case "Double":
+//							result = (double) n;
+//							break;
+//						case "Float":
+//							result = (float) n;
+//							break;
+//						}
+//						testcase.add(result.toString());
+//					}
 				}
 
-				if (testcase.size() < lstParameter.size()) {
-					int num = lstParameter.size() - testcase.size();
-					Random ran1 = new Random();
-					for (int i = 0; i < num; i++) {
-						Object result = 0;
-						double n = ran1.nextDouble() * 100;
-						switch (lstParameter.get(i).getType()) {
-						case "Int":
-							result = (int) n;
-							break;
-						case "Double":
-							result = (double) n;
-							break;
-						case "Float":
-							result = (float) n;
-							break;
-						}
-						testcase.add(result.toString());
-					}
-				}
+//				if (testcase.size() < lstParameter.size()) {
+//					int num = lstParameter.size() - testcase.size();
+//					Random ran1 = new Random();
+//					for (int i = 0; i < num; i++) {
+//						Object result = 0;
+//						double n = ran1.nextDouble() * 100;
+//						switch (lstParameter.get(i).getType()) {
+//						case "Int":
+//							result = (int) n;
+//							break;
+//						case "Double":
+//							result = (double) n;
+//							break;
+//						case "Float":
+//							result = (float) n;
+//							break;
+//						}
+//						testcase.add(result.toString());
+//					}
+//				}
 			} else {
 				return null;
 			}
@@ -510,7 +512,6 @@ public class CodeAnalyzer {
 	}
 
 	public ArrayList<String> getNewTestcaseAfterSE(String z3FormulaPath) {
-//		ArrayList<String> testcase = new ArrayList<String>();
 		ArrayList<String> z3result = new ArrayList<String>();
 		Runtime run = Runtime.getRuntime();
 		try {
@@ -695,40 +696,40 @@ public class CodeAnalyzer {
 		lstBranch = transform.getListBranch();
 	}
 
-//	private void printAllUnsolvableTestCase() {
-		// System.out.println("\n Print all unsolvable condition");
-		//
-		// for (int i = 0; i < this.lstCondition.size(); i++) {
-		// Condition condition = this.lstCondition.get(i);
-		// if (!condition.hasTestcase()) {
-		// System.out.print("Condition: " + condition.getCondition());
-		//
-		// BinExprAST binExprAST = (BinExprAST) condition.getAst();
-		// String expression1 = "";
-		// String operation = "";
-		// String expression2 = "";
-		//
-		// try {
-		// expression1 = (String) binExprAST.exprAST1.visit(
-		// new Temp1Visitor(lstParameter, lstVariable,
-		// lstCondition), "c");
-		// operation = (String) binExprAST.op.getText();
-		// expression2 = (String) binExprAST.exprAST2.visit(
-		// new Temp1Visitor(lstParameter, lstVariable,
-		// lstCondition), "c");
-		// } catch (CompilationException e1) {
-		// e1.printStackTrace();
-		// }
-		//
-		// System.out.print(". Expr1: " + expression1 + ", " + "op: "
-		// + operation + ", " + "Expr2: " + expression2);
-		// System.out.print(", convert to AST: ");
-		// System.out.println(operation + " " + expression1 + " "
-		// + expression2);
-		// }
-		// }
-		//
-//	}
+	// private void printAllUnsolvableTestCase() {
+	// System.out.println("\n Print all unsolvable condition");
+	//
+	// for (int i = 0; i < this.lstCondition.size(); i++) {
+	// Condition condition = this.lstCondition.get(i);
+	// if (!condition.hasTestcase()) {
+	// System.out.print("Condition: " + condition.getCondition());
+	//
+	// BinExprAST binExprAST = (BinExprAST) condition.getAst();
+	// String expression1 = "";
+	// String operation = "";
+	// String expression2 = "";
+	//
+	// try {
+	// expression1 = (String) binExprAST.exprAST1.visit(
+	// new Temp1Visitor(lstParameter, lstVariable,
+	// lstCondition), "c");
+	// operation = (String) binExprAST.op.getText();
+	// expression2 = (String) binExprAST.exprAST2.visit(
+	// new Temp1Visitor(lstParameter, lstVariable,
+	// lstCondition), "c");
+	// } catch (CompilationException e1) {
+	// e1.printStackTrace();
+	// }
+	//
+	// System.out.print(". Expr1: " + expression1 + ", " + "op: "
+	// + operation + ", " + "Expr2: " + expression2);
+	// System.out.print(", convert to AST: ");
+	// System.out.println(operation + " " + expression1 + " "
+	// + expression2);
+	// }
+	// }
+	//
+	// }
 
 	private void printAllData() {
 		// printAllParameter();
@@ -736,30 +737,30 @@ public class CodeAnalyzer {
 		// printAllCondition();
 	}
 
-//	private void printAllVariable() {
-//		for (Variable variable : this.lstVariable) {
-//			System.out.println("Variable: " + " name: " + variable.getName()
-//					+ " type: " + variable.getType());
-//		}
-//	}
-//
-//	private void printAllParameter() {
-//		for (Parameter parameter : this.lstParameter) {
-//			System.out.println("Parameter: " + " name: " + parameter.getName()
-//					+ " type: " + parameter.getType());
-//		}
-//		System.out.println();
-//	}
-//
-//	private void printAllCondition() {
-//		for (Condition condition : lstCondition) {
-//			System.out.println("Condition: " + " name: "
-//					+ condition.getCondition() + ", " + "True testcase: "
-//					+ condition.getTrueTestCase() + ", " + "False testcase: "
-//					+ condition.getFalseTestCase() + ", " + "Has testcase: "
-//					+ condition.hasTestcase());
-//		}
-//	}
+	// private void printAllVariable() {
+	// for (Variable variable : this.lstVariable) {
+	// System.out.println("Variable: " + " name: " + variable.getName()
+	// + " type: " + variable.getType());
+	// }
+	// }
+	//
+	// private void printAllParameter() {
+	// for (Parameter parameter : this.lstParameter) {
+	// System.out.println("Parameter: " + " name: " + parameter.getName()
+	// + " type: " + parameter.getType());
+	// }
+	// System.out.println();
+	// }
+	//
+	// private void printAllCondition() {
+	// for (Condition condition : lstCondition) {
+	// System.out.println("Condition: " + " name: "
+	// + condition.getCondition() + ", " + "True testcase: "
+	// + condition.getTrueTestCase() + ", " + "False testcase: "
+	// + condition.getFalseTestCase() + ", " + "Has testcase: "
+	// + condition.hasTestcase());
+	// }
+	// }
 
 	private void removeNullCondition() {
 		int sizeOfListCodition = lstCondition.size();

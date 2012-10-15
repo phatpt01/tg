@@ -9,8 +9,10 @@ import javax.swing.JOptionPane;
 
 import system.Condition;
 import system.Variable;
+import transform.AST.AST;
 import transform.AST.BinExprAST;
 import transform.AST.CompilationException;
+import transform.AST.UnaryExprAST;
 import transform.CodeGeneration.Temp1Visitor;
 
 import CodeAnalyzer.CodeAnalyzer;
@@ -147,100 +149,139 @@ public class SymbolicExecution {
 		int numOfSymbol;
 		String returnString = "";
 
-		for (int i = 0; i < SymbolicExecutionFile
+		int numberOfFiles = SymbolicExecutionFile
 				.countNumberOfFiles(SymbolicExecutionFile
-						.getAbsolutePathOfSmt2()) - 1; i++) {
-			String z3FormulaSEFile = "Z3FormulaSE" + i + ".smt2";
+						.getAbsolutePathOfSmt2());
 
-			numOfSymbol = 0;
-			returnString += "Symbol: ";
+		if (numberOfFiles > 0) {
+			for (int i = 0; i < numberOfFiles - 1; i++) {
+				String z3FormulaSEFile = "Z3FormulaSE" + i + ".smt2";
 
-			ArrayList<String> lstTestCase = null;
-			try {
-				lstTestCase = new ArrayList<String>();
-				lstTestCase.addAll(codeAnalyzer
-						.getNewTestcaseAfterSE(SymbolicExecutionFile
-								.getAbsolutePathOfSmt2() + z3FormulaSEFile));
-			} catch (NullPointerException e) {
-				// In case doesnot have testcase after SE
-			}
+				numOfSymbol = 0;
+				returnString += "Symbol: ";
 
-			String smt2SEDetails = SymbolicExecutionFile
-					.readFile(SymbolicExecutionFile.getAbsolutePathOfSmt2()
-							+ z3FormulaSEFile);
-
-			smt2SEDetails = smt2SEDetails.substring(0,
-					smt2SEDetails.indexOf("(check-sat)"));
-
-			for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
-				String regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
-						+ mappingRecord.getSymbol() + " \\w\\)\\).*";
-
-				String regexFalse = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(not \\(\\D "
-						+ mappingRecord.getSymbol() + " \\w\\)\\)\\).*";
-
-				Pattern pattern = Pattern.compile(regexFalse);
-				Matcher matcher = pattern.matcher(smt2SEDetails);
-				if (matcher.find()) {
-					numOfSymbol++;
-					returnString += mappingRecord.getSymbol() + "\t";
-					break;
+				ArrayList<String> lstTestCase = null;
+				try {
+					lstTestCase = new ArrayList<String>();
+					lstTestCase
+							.addAll(codeAnalyzer
+									.getNewTestcaseAfterSE(SymbolicExecutionFile
+											.getAbsolutePathOfSmt2()
+											+ z3FormulaSEFile));
+				} catch (NullPointerException e) {
+					// In case doesnot have testcase after SE
 				}
 
-				pattern = Pattern.compile(regexTrue);
-				matcher = pattern.matcher(smt2SEDetails);
-				if (matcher.find()) {
-					numOfSymbol++;
-					returnString += mappingRecord.getSymbol() + "\t";
+				String smt2SEDetails = SymbolicExecutionFile
+						.readFile(SymbolicExecutionFile.getAbsolutePathOfSmt2()
+								+ z3FormulaSEFile);
+
+				smt2SEDetails = smt2SEDetails.substring(0,
+						smt2SEDetails.indexOf("(check-sat)"));
+
+				for (MappingRecord mappingRecord : mappingTable
+						.getMappingRecords()) {
+					String regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
+							+ mappingRecord.getSymbol() + " \\w\\)\\).*";
+
+					String regexFalse = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(not \\(\\D "
+							+ mappingRecord.getSymbol() + " \\w\\)\\)\\).*";
+
+					Pattern pattern = Pattern.compile(regexFalse);
+					Matcher matcher = pattern.matcher(smt2SEDetails);
+					if (matcher.find()) {
+						numOfSymbol++;
+						returnString += mappingRecord.getSymbol() + "\t";
+						break;
+					}
+
+					pattern = Pattern.compile(regexTrue);
+					matcher = pattern.matcher(smt2SEDetails);
+					if (matcher.find()) {
+						numOfSymbol++;
+						returnString += mappingRecord.getSymbol() + "\t";
+					}
 				}
-			}
-			returnString += "\n";
+				returnString += "\n";
 
-			int assertPosition = smt2SEDetails.indexOf("(assert");
-			smt2SEDetails.replace("(assert", "\n(assert");
-			returnString += smt2SEDetails.substring(assertPosition) + "\n";
+				int assertPosition = smt2SEDetails.indexOf("(assert");
+				smt2SEDetails.replace("(assert", "\n(assert");
+				returnString += smt2SEDetails.substring(assertPosition) + "\n";
 
-			String testcase = lstTestCase.toString().substring(1,
-					lstTestCase.toString().length() - 1);
-			Scanner scanner = new Scanner(testcase);
-			scanner.useDelimiter(" ");
-			returnString += "Value: ";
-			for (int j = 0; j < numOfSymbol; j++) {
-				scanner.next();
-				returnString += scanner.next();
+				String testcase = lstTestCase.toString().substring(1,
+						lstTestCase.toString().length() - 1);
+				Scanner scanner = new Scanner(testcase);
+				scanner.useDelimiter(" ");
+				returnString += "Value: ";
+				for (int j = 0; j < numOfSymbol; j++) {
+					scanner.next();
+					returnString += scanner.next();
+				}
+				returnString += "\n\n";
 			}
-			returnString += "\n\n";
+		} else {
+			// Khong co file SE nao, tao cac file SE theo mapping table
+			return "";
 		}
 		return returnString;
 	}
 
+	// public String getExpression1(Condition condition) {
+	// String expression1 = "";
+	//
+	// BinExprAST binExprAST = (BinExprAST) condition.getAst();
+	// try {
+	// expression1 = (String) binExprAST.exprAST1.visit(
+	// new Temp1Visitor(codeAnalyzer.getLstParameter(),
+	// codeAnalyzer.getLstVariable(), codeAnalyzer
+	// .getLstCondition()), "c");
+	// } catch (CompilationException e1) {
+	// e1.printStackTrace();
+	// }
+	// return expression1;
+	// }
+
 	public String getExpression1(Condition condition) {
 		String expression1 = "";
 
-		BinExprAST binExprAST = (BinExprAST) condition.getAst();
-		try {
-			expression1 = (String) binExprAST.exprAST1.visit(
-					new Temp1Visitor(codeAnalyzer.getLstParameter(),
-							codeAnalyzer.getLstVariable(), codeAnalyzer
-									.getLstCondition()), "c");
-		} catch (CompilationException e1) {
-			e1.printStackTrace();
+		AST ast = condition.getAst();
+
+		if (ast instanceof BinExprAST) {
+			BinExprAST binExprAST = (BinExprAST) ast;
+			try {
+				expression1 = (String) binExprAST.exprAST1.visit(
+						new Temp1Visitor(codeAnalyzer.getLstParameter(),
+								codeAnalyzer.getLstVariable(), codeAnalyzer
+										.getLstCondition()), "c");
+			} catch (CompilationException e1) {
+				e1.printStackTrace();
+			}
 		}
+
+		// Chua xu ly cho UnaryExprAST
+
 		return expression1;
 	}
 
 	public String getExpression2(Condition condition) {
 		String expression2 = "";
 
-		BinExprAST binExprAST = (BinExprAST) condition.getAst();
-		try {
-			expression2 = (String) binExprAST.exprAST2.visit(
-					new Temp1Visitor(codeAnalyzer.getLstParameter(),
-							codeAnalyzer.getLstVariable(), codeAnalyzer
-									.getLstCondition()), "c");
-		} catch (CompilationException e1) {
-			e1.printStackTrace();
+		AST ast = condition.getAst();
+
+		if (ast instanceof BinExprAST) {
+			BinExprAST binExprAST = (BinExprAST) ast;
+			try {
+				expression2 = (String) binExprAST.exprAST2.visit(
+						new Temp1Visitor(codeAnalyzer.getLstParameter(),
+								codeAnalyzer.getLstVariable(), codeAnalyzer
+										.getLstCondition()), "c");
+			} catch (CompilationException e1) {
+				e1.printStackTrace();
+			}
 		}
+		
+		// Chua xu ly cho UnaryExprAST
+		
 		return expression2;
 	}
 
@@ -285,8 +326,8 @@ public class SymbolicExecution {
 
 		if (mappingTableSize > 0) {
 			for (int i = 0; i < mappingTableSize; i++) {
-				if ((mappingTable.getMappingRecord(i)
-						.getExpression()).equals(expression)) {
+				if ((mappingTable.getMappingRecord(i).getExpression())
+						.equals(expression)) {
 					return true;
 				}
 			}

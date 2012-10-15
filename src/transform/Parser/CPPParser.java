@@ -9175,7 +9175,6 @@ public class CPPParser
                 if (this.state.backtracking == 0) {
                     this.out = new VarDeclAST(id, (TypeAST) ast1, (InitializerAST) ast3);
                 }
-                
             }
             
         }
