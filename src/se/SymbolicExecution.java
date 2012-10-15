@@ -85,7 +85,6 @@ public class SymbolicExecution {
 				}
 
 			}
-			// System.out.println(smt2SEDetails);
 			smt2SEDetails += "(check-sat) \n (model)";
 
 			// Update file smt2SE
@@ -102,11 +101,6 @@ public class SymbolicExecution {
 			String symbol1, symbol2;
 			MappingRecord mappingRecord;
 
-			/*
-			 * Check if expression1 is exists in mappingTable or not If exists,
-			 * get existsing symbol, doesnot create new symbol If not exists,
-			 * create new symbol
-			 */
 			if (!isExistsInMappingTable(expression1) && !isNumber(expression1)) {
 				symbol1 = getNewSymbol();
 				mappingRecord = new MappingRecord(
@@ -126,7 +120,6 @@ public class SymbolicExecution {
 
 	}
 
-	// Returns true if the string contains "(assert (" + str + ))"
 	public boolean containsAssertOfStr(String str) {
 		return str.matches(".*(assert (" + str + ".*))");
 	}
@@ -141,36 +134,13 @@ public class SymbolicExecution {
 	}
 
 	public void createMappingTable() {
-		if (this.mappingTable == null) {
-			this.mappingTable = new SE_MappingTable();
-		}
+		// if (this.mappingTable == null) {
+		// this.mappingTable = new SE_MappingTable();
+		// }
+		this.mappingTable = new SE_MappingTable();
 	}
 
-	// public ArrayList<String> generateTestCaseAfterSE() {
-	// ArrayList<String> result = new ArrayList<String>();
-	//
-	// replaceExpressionBySymbol();
-	// addMinMaxAssert();
-	//
-	// for (int i = 0; i < SymbolicExecutionFile
-	// .countNumberOfFiles(SymbolicExecutionFile
-	// .getAbsolutePathOfSmt2()) - 1; i++) {
-	// String z3FormulaSEFile = "Z3FormulaSE" + i + ".smt2";
-	//
-	// try {
-	// result.addAll(codeAnalyzer
-	// .getNewTestcaseAfterSE(SymbolicExecutionFile
-	// .getAbsolutePathOfSmt2() + z3FormulaSEFile));
-	// } catch (NullPointerException e) {
-	// // In case doesnot have testcase after SE
-	// }
-	// }
-	// return result;
-	// }
-
 	public String generateTestCaseAfterSE() {
-		// ArrayList<String> lstTestCase = new ArrayList<String>();
-
 		replaceExpressionBySymbol();
 		addMinMaxAssert();
 
@@ -201,7 +171,7 @@ public class SymbolicExecution {
 
 			smt2SEDetails = smt2SEDetails.substring(0,
 					smt2SEDetails.indexOf("(check-sat)"));
-			
+
 			for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
 				String regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
 						+ mappingRecord.getSymbol() + " \\w\\)\\).*";
@@ -214,7 +184,7 @@ public class SymbolicExecution {
 				if (matcher.find()) {
 					numOfSymbol++;
 					returnString += mappingRecord.getSymbol() + "\t";
-					break; // Khong co file nao assert va assert not
+					break;
 				}
 
 				pattern = Pattern.compile(regexTrue);
@@ -258,16 +228,6 @@ public class SymbolicExecution {
 		}
 		return expression1;
 	}
-
-	// private String getSymbolOfExpression(String expression1) {
-	// // for (MappingRecord mappingRecord : mappingTable.getMappingRecords())
-	// // {
-	// // if (expression1.equals(mappingRecord.getExpression())) {
-	// // return mappingRecord.getSymbol();
-	// // }
-	// // }
-	// return "";
-	// }
 
 	public String getExpression2(Condition condition) {
 		String expression2 = "";
@@ -325,8 +285,8 @@ public class SymbolicExecution {
 
 		if (mappingTableSize > 0) {
 			for (int i = 0; i < mappingTableSize; i++) {
-				if (expression.equals(mappingTable.getMappingRecord(i)
-						.getExpression())) {
+				if ((mappingTable.getMappingRecord(i)
+						.getExpression()).equals(expression)) {
 					return true;
 				}
 			}
@@ -388,6 +348,7 @@ public class SymbolicExecution {
 					"What is a less than or equals value of " + symbol
 							+ "? (Should be an integer number)",
 					"Semi-automation for symbol");
+
 			String strMaxValue = JOptionPane.showInputDialog(null,
 					"What is a greater than or equals value of " + symbol
 							+ "? (Should be an integer number)",
@@ -405,7 +366,7 @@ public class SymbolicExecution {
 			} catch (NumberFormatException e) {
 				JOptionPane
 						.showMessageDialog(null,
-								"Min value/ max value does not match with double type)");
+								"Min value/ max value does not match with integer type)");
 			}
 		}
 	}

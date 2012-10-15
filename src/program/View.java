@@ -199,8 +199,7 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 
 				oldText = txtLog.getText();
-				newText = control
-						.generateTestCaseAfterSE();
+				newText = control.generateTestCaseAfterSE();
 
 				txtLog.setText(newText + "\n" + oldText + "\n");
 
