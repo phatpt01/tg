@@ -4,8 +4,7 @@ import java.io.*;
 
 public class InOut {
 	
-	public InOut() {
-	
+	public InOut() {	
 	}
 
 	public String readFile(String filename) {

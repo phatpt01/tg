@@ -1,8 +1,0 @@
-(declare-const n Int)
-(declare-const i Int)
-(declare-const current Int)
-(declare-const next Int)
-(declare-const twoaway Int)
-(assert (not (= (isNegative n) 0)))
-(check-sat)
-(model)

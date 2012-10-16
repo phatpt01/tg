@@ -1,6 +1,7 @@
 package se;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +13,6 @@ import system.Variable;
 import transform.AST.AST;
 import transform.AST.BinExprAST;
 import transform.AST.CompilationException;
-import transform.AST.UnaryExprAST;
 import transform.CodeGeneration.Temp1Visitor;
 
 import CodeAnalyzer.CodeAnalyzer;
@@ -136,9 +136,6 @@ public class SymbolicExecution {
 	}
 
 	public void createMappingTable() {
-		// if (this.mappingTable == null) {
-		// this.mappingTable = new SE_MappingTable();
-		// }
 		this.mappingTable = new SE_MappingTable();
 	}
 
@@ -169,7 +166,7 @@ public class SymbolicExecution {
 											.getAbsolutePathOfSmt2()
 											+ z3FormulaSEFile));
 				} catch (NullPointerException e) {
-					// In case doesnot have testcase after SE
+					// In case does not have test case after SE
 				}
 
 				String smt2SEDetails = SymbolicExecutionFile
@@ -179,6 +176,7 @@ public class SymbolicExecution {
 				smt2SEDetails = smt2SEDetails.substring(0,
 						smt2SEDetails.indexOf("(check-sat)"));
 
+				String condition = "Condition: ";
 				for (MappingRecord mappingRecord : mappingTable
 						.getMappingRecords()) {
 					String regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
@@ -192,6 +190,7 @@ public class SymbolicExecution {
 					if (matcher.find()) {
 						numOfSymbol++;
 						returnString += mappingRecord.getSymbol() + "\t";
+						condition += mappingRecord.getCondition();
 						break;
 					}
 
@@ -200,22 +199,33 @@ public class SymbolicExecution {
 					if (matcher.find()) {
 						numOfSymbol++;
 						returnString += mappingRecord.getSymbol() + "\t";
+						condition += mappingRecord.getCondition();
 					}
 				}
-				returnString += "\n";
 
+				// In condition
+				returnString += "\n" + condition + "\n";
+
+				// In cau lenh assert
 				int assertPosition = smt2SEDetails.indexOf("(assert");
 				smt2SEDetails.replace("(assert", "\n(assert");
-				returnString += smt2SEDetails.substring(assertPosition) + "\n";
+				returnString += "Assert: "
+						+ smt2SEDetails.substring(assertPosition) + "\n";
 
+				// In value sau khi chay Z3 voi symbol
 				String testcase = lstTestCase.toString().substring(1,
 						lstTestCase.toString().length() - 1);
 				Scanner scanner = new Scanner(testcase);
-				scanner.useDelimiter(" ");
+				scanner.useDelimiter(", ");
 				returnString += "Value: ";
 				for (int j = 0; j < numOfSymbol; j++) {
-					scanner.next();
-					returnString += scanner.next();
+					try {
+						scanner.next();
+						returnString += scanner.next() + "\t";
+					} catch (NoSuchElementException noSuchElementException) {
+						noSuchElementException.printStackTrace();
+					}
+
 				}
 				returnString += "\n\n";
 			}
@@ -279,9 +289,9 @@ public class SymbolicExecution {
 				e1.printStackTrace();
 			}
 		}
-		
+
 		// Chua xu ly cho UnaryExprAST
-		
+
 		return expression2;
 	}
 

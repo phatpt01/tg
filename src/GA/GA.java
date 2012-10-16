@@ -9,7 +9,6 @@ public class GA implements Cons {
 	public static final int MAX_RUN_TIMES = 1000;
 	
 	public ArrayList<Testcase> lstPopulation;
-
 	public ArrayList<Testcase> lstChildPopulation;
 
 	public Testcase m_AllTimeBestTestcase;
@@ -33,7 +32,7 @@ public class GA implements Cons {
 		return bestTestCase;
 	}
 
-	public int[][] getRes() {
+	public int[][] getResult() {
 		if (m_AllTimeBestTestcase != null) {
 			int[][] res = new int[m_AllTimeBestTestcase.m_iBranchNum][m_AllTimeBestTestcase.m_iParamNum + 1];
 			for (int i = 0; i < m_AllTimeBestTestcase.m_iBranchNum; i++) {
@@ -96,7 +95,6 @@ public class GA implements Cons {
 			generateRandomPopulation(codeAnalyzer);
 
 			lstChildPopulation = new ArrayList<Testcase>();
-
 			m_AllTimeBestTestcase = getBestTestCase();
 
 			int count = 0;
@@ -113,9 +111,9 @@ public class GA implements Cons {
 					Testcase t = lstPopulation.get(i);
 					if (t != bestTestCase) {
 						Testcase child = bestTestCase.Clone();
-						int res = child.hybrid(t);
-						if (res != 0) {
-							child.mutate(codeAnalyzer, res);
+						int result = child.hybrid(t);
+						if (result != 0) {
+							child.mutate(codeAnalyzer, result);
 						}
 						lstChildPopulation.add(child);
 					}

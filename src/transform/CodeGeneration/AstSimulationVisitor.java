@@ -11,50 +11,43 @@ import transform.DependenceGraph.*;
  * Visitor duyet qua cay AST de thuc hien simulation tim ra Execution History
  ***********************************************************************************/
 public class AstSimulationVisitor extends DoNothingVisitor {
-	/**
-     * 
-     */
 	static final String GET_VARIABLE_NAME = "GetVariableName";
 	/**
 	 * bien tra ve cua 1 function
 	 */
 	static final String RET_VAR_NAME = "retvar";
 
-	SimulationMemory simulation;
-	ExecutionHistory execHistory;
+	SimulationMemory simulationMemory;
+	ExecutionHistory executionHistory;
 	ArrayList<String> listInput;
 	protected PDG pdg;
 
 	// protected PointerTable pointerTable;
 
 	public AstSimulationVisitor() {
-		this.simulation = new SimulationMemory();
-		this.execHistory = new ExecutionHistory();
+		this.simulationMemory = new SimulationMemory();
+		this.executionHistory = new ExecutionHistory();
 		// this.pointerTable = new PointerTable();
 	}
 
 	public AstSimulationVisitor(ArrayList<String> list) {
-		this.simulation = new SimulationMemory();
-		this.execHistory = new ExecutionHistory();
+		this.simulationMemory = new SimulationMemory();
+		this.executionHistory = new ExecutionHistory();
 		// this.pointerTable = new PointerTable();
 		this.listInput = list;
 	}
 
 	public AstSimulationVisitor(PDG pdg, ArrayList<String> list) {
 		this.pdg = pdg;
-		this.simulation = new SimulationMemory();
-		this.execHistory = new ExecutionHistory();
+		this.simulationMemory = new SimulationMemory();
+		this.executionHistory = new ExecutionHistory();
 		// this.pointerTable = new PointerTable();
 		this.listInput = list;
 	}
 
 	public ExecutionHistory getExecutionHistory() {
-		return this.execHistory;
+		return this.executionHistory;
 	}
-
-	/*
-	 * public PointerTable getPointerTable() { return this.pointerTable; }
-	 */
 
 	@SuppressWarnings("rawtypes")
 	public void printArrayList(ArrayList list) {
@@ -158,7 +151,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			int scope;
 			if (ast.opType == BinExprAST.ASSIGN) {
 				// phep gan =
-				scope = this.simulation.updateValueOfVariable(varName, val2);
+				scope = this.simulationMemory.updateValueOfVariable(varName, val2);
 				// set scope
 				Node node = this.pdg.findNodeAtLine(ast.line);
 				node.getDefinedVar().setScope(scope);
@@ -166,10 +159,10 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 				// phep gan +=, -=, *=, /=, %=
 				// opType cua phep gan: 1, 2, 3, 4, 5
 				// opType cua phep toan tuong ung: 24, 25, 26, 27, 28
-				ExprAST binExpr = new BinExprAST(ast.exprAST1, ast.opType + 23, null,
-						ast.exprAST2);
+				ExprAST binExpr = new BinExprAST(ast.exprAST1, ast.opType + 23,
+						null, ast.exprAST2);
 				Object val = binExpr.visit(this, o);
-				scope = this.simulation.updateValueOfVariable(varName, val);
+				scope = this.simulationMemory.updateValueOfVariable(varName, val);
 				// set scope
 				Node node = this.pdg.findNodeAtLine(ast.line);
 				node.getDefinedVar().setScope(scope);
@@ -542,15 +535,15 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		boolean value;
 		do {
-			this.simulation.enterScope();
+			this.simulationMemory.enterScope();
 			wAst.oneStmtAST.visit(this, o);
-			this.simulation.exitScope();
+			this.simulationMemory.exitScope();
 
 			value = ((Boolean) wAst.exprAST.visit(this, o)).booleanValue();
 			if (value) {
-				this.execHistory.addExecNode(new ExecNode(wAst.line, 'T'));
+				this.executionHistory.addExecNode(new ExecNode(wAst.line, 'T'));
 			} else {
-				this.execHistory.addExecNode(new ExecNode(wAst.line, 'F'));
+				this.executionHistory.addExecNode(new ExecNode(wAst.line, 'F'));
 			}
 		} while (value);
 		return null;
@@ -581,7 +574,7 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	public Object visitExprStmtAST(ExprStmtAST ast, Object o)
 			throws CompilationException {
 		ast.exprAST.visit(this, o);
-		this.execHistory.addExecNode(new ExecNode(ast.line, 'N'));
+		this.executionHistory.addExecNode(new ExecNode(ast.line, 'N'));
 
 		return null;
 	}
@@ -636,17 +629,17 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	@Override
 	public Object visitFuncDeclAST(FuncDeclAST fAst, Object o)
 			throws CompilationException {
-		this.simulation.enterScope();
+		this.simulationMemory.enterScope();
 		fAst.paraListAST.visit(this, o);
 		fAst.typeAST.visit(this, o);
 
 		TypeAST retType = ((TypeListAST) fAst.typeAST).typeAST;
-		int scope = this.simulation.currentScope;
-		this.simulation.addNewVariable(retType, RET_VAR_NAME, scope);
+		int scope = this.simulationMemory.currentScope;
+		this.simulationMemory.addNewVariable(retType, RET_VAR_NAME, scope);
 
 		fAst.compStmtAST.visit(this, o);
 
-		this.simulation.exitScope();
+		this.simulationMemory.exitScope();
 		return null;
 	}
 
@@ -656,15 +649,15 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		boolean value = ((Boolean) iAst.exprAST.visit(this, o)).booleanValue();
 		if (value) {
-			this.execHistory.addExecNode(new ExecNode(iAst.line, 'T'));
-			this.simulation.enterScope();
+			this.executionHistory.addExecNode(new ExecNode(iAst.line, 'T'));
+			this.simulationMemory.enterScope();
 			iAst.oneStmtAST1.visit(this, o);
-			this.simulation.exitScope();
+			this.simulationMemory.exitScope();
 		} else {
-			this.execHistory.addExecNode(new ExecNode(iAst.line, 'F'));
-			this.simulation.enterScope();
+			this.executionHistory.addExecNode(new ExecNode(iAst.line, 'F'));
+			this.simulationMemory.enterScope();
 			iAst.oneStmtAST2.visit(this, o);
-			this.simulation.exitScope();
+			this.simulationMemory.exitScope();
 		}
 		return null;
 	}
@@ -675,12 +668,12 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			throws CompilationException {
 		boolean value = ((Boolean) iAst.exprAST.visit(this, o)).booleanValue();
 		if (value) {
-			this.execHistory.addExecNode(new ExecNode(iAst.line, 'T'));
-			this.simulation.enterScope();
+			this.executionHistory.addExecNode(new ExecNode(iAst.line, 'T'));
+			this.simulationMemory.enterScope();
 			iAst.oneStmtAST.visit(this, o);
-			this.simulation.exitScope();
+			this.simulationMemory.exitScope();
 		} else {
-			this.execHistory.addExecNode(new ExecNode(iAst.line, 'F'));
+			this.executionHistory.addExecNode(new ExecNode(iAst.line, 'F'));
 		}
 		return null;
 	}
@@ -709,8 +702,8 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			} else {
 				value = Integer.parseInt(input);
 			}
-			int scope = this.simulation.currentScope;
-			this.simulation.addNewVariable(type, pAst.op.getText(), value,
+			int scope = this.simulationMemory.currentScope;
+			this.simulationMemory.addNewVariable(type, pAst.op.getText(), value,
 					scope);
 		} else {
 			// System.out.println("Error input");
@@ -748,10 +741,10 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 	public Object visitRetStmtAST(RetStmtAST ast, Object o)
 			throws CompilationException {
 		if (ast.exprAST != null) {
-			this.execHistory.addExecNode(new ExecNode(ast.line, 'N'));
+			this.executionHistory.addExecNode(new ExecNode(ast.line, 'N'));
 			Object value = ast.exprAST.visit(this, "get_pointer_value");
 			// Object value = ast.e.visit(this, o);
-			this.simulation.updateValueOfVariable(RET_VAR_NAME, value);
+			this.simulationMemory.updateValueOfVariable(RET_VAR_NAME, value);
 		}
 		return null;
 	}
@@ -858,10 +851,10 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 				opType = BinExprAST.MINUS;
 				pre_increment = false;
 			}
-			ExprAST addingOneBinExpr = new BinExprAST(ast.exprAST, opType, null,
-					new NullExprAST());
+			ExprAST addingOneBinExpr = new BinExprAST(ast.exprAST, opType,
+					null, new NullExprAST());
 			Object new_value = addingOneBinExpr.visit(this, "increment");
-			this.simulation.updateValueOfVariable(varName, new_value);
+			this.simulationMemory.updateValueOfVariable(varName, new_value);
 			if (pre_increment) {
 				// increment first then return the new value
 				return new_value;
@@ -897,9 +890,9 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			type = ast.typeAST;
 		}
 
-		int scope = this.simulation.currentScope;
+		int scope = this.simulationMemory.currentScope;
 		if (ast.init != null) {
-			this.simulation.addNewVariable(type, ast.op.getText(),
+			this.simulationMemory.addNewVariable(type, ast.op.getText(),
 					ast.init.visit(this, o), scope);
 			// change in pdg
 			int line = ast.line;
@@ -907,9 +900,9 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			node.getDefinedVar().setScope(scope);
 
 			// add executed node
-			this.execHistory.addExecNode(new ExecNode(ast.line, 'N'));
+			this.executionHistory.addExecNode(new ExecNode(ast.line, 'N'));
 		} else {
-			this.simulation.addNewVariable(type, ast.op.getText(), scope);
+			this.simulationMemory.addNewVariable(type, ast.op.getText(), scope);
 		}
 
 		return null;
@@ -935,18 +928,18 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			if (node != null) {
 				VariableUsed usedVar = node.findUsedVar(name);
 				if (usedVar != null) {
-					int scope = this.simulation.getScopeOfVariable(name);
+					int scope = this.simulationMemory.getScopeOfVariable(name);
 					usedVar.setScope(scope);
 				}
 			}
-			Variable record = this.simulation.getAddressOf(name);
+			Variable record = this.simulationMemory.getAddressOf(name);
 			return record;
 		} else if (o.equals("get_pointed_address")) {
 			/*
 			 * return the varName pointed by pointer. if the pointer was not
 			 * point to any record, this is a free pointer.
 			 */
-			Object value = this.simulation.getValueOfVariable(name);
+			Object value = this.simulationMemory.getValueOfVariable(name);
 			if (value instanceof Variable) {
 				return ((Variable) value).varName;
 			} else {
@@ -957,11 +950,11 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			if (node != null) {
 				VariableUsed usedVar = node.findUsedVar(name);
 				if (usedVar != null) {
-					int scope = this.simulation.getScopeOfVariable(name);
+					int scope = this.simulationMemory.getScopeOfVariable(name);
 					usedVar.setScope(scope);
 				}
 			}
-			Object value = this.simulation.getValueOfVariable(name);
+			Object value = this.simulationMemory.getValueOfVariable(name);
 			if (value instanceof Variable) {
 				return ((Variable) value).value;
 			} else {
@@ -972,11 +965,11 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 			if (node != null) {
 				VariableUsed usedVar = node.findUsedVar(name);
 				if (usedVar != null) {
-					int scope = this.simulation.getScopeOfVariable(name);
+					int scope = this.simulationMemory.getScopeOfVariable(name);
 					usedVar.setScope(scope);
 				}
 			}
-			return this.simulation.getValueOfVariable(name);
+			return this.simulationMemory.getValueOfVariable(name);
 		}
 	}
 
@@ -1004,14 +997,14 @@ public class AstSimulationVisitor extends DoNothingVisitor {
 		boolean value = ((Boolean) wAst.exprAST.visit(this, o)).booleanValue();
 		while (value) {
 			count++;
-			this.execHistory.addExecNode(new ExecNode(wAst.line, 'T'));
-			this.simulation.enterScope();
+			this.executionHistory.addExecNode(new ExecNode(wAst.line, 'T'));
+			this.simulationMemory.enterScope();
 			wAst.oneStmtAST.visit(this, o);
 			value = ((Boolean) wAst.exprAST.visit(this, o)).booleanValue();
-			this.simulation.exitScope();
+			this.simulationMemory.exitScope();
 		}
 		if (count == 0)
-			this.execHistory.addExecNode(new ExecNode(wAst.line, 'F'));
+			this.executionHistory.addExecNode(new ExecNode(wAst.line, 'F'));
 		return null;
 	}
 

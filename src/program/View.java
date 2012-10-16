@@ -55,6 +55,7 @@ public class View {
 	private TableColumn colReturnType;
 	private TableColumn colMinValue;
 	private TableColumn colMaxValue;
+	private TableColumn colConditionMapping;
 
 	private Table tblVariable;
 	private TableColumn colVarName;
@@ -170,7 +171,7 @@ public class View {
 							btnSetRangeOfSymbol.setEnabled(false);
 							btnGenerateSolvableAfterSE.setEnabled(false);
 						}
-						
+
 						btnGenerateSolvableBeforeSE.setEnabled(false);
 						btnShowAllTC.setEnabled(true);
 					}
@@ -187,6 +188,8 @@ public class View {
 
 				printMappingTable();
 				printVariableTable();
+
+				btnSymbolicExecution.setEnabled(false);
 			}
 		});
 
@@ -235,7 +238,10 @@ public class View {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				txtLog.setText(control.showAllTestCase());
-				updateConditionList();
+				updateConditionTable();
+
+				btnPrev.setEnabled(true);
+				btnNext.setEnabled(true);
 			}
 		});
 
@@ -254,6 +260,7 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 				ArrayList<Integer> testcase = control.getPrevTestCase();
 				updateTestCase(testcase);
+				updateSlide();
 			}
 		});
 
@@ -262,6 +269,7 @@ public class View {
 			public void widgetSelected(SelectionEvent arg0) {
 				ArrayList<Integer> testcase = control.getNextTestCase();
 				updateTestCase(testcase);
+				updateSlide();
 			}
 		});
 
@@ -375,6 +383,10 @@ public class View {
 		tblMappingTable.setHeaderVisible(true);
 		tblMappingTable.setLinesVisible(true);
 
+		colConditionMapping = new TableColumn(tblMappingTable, SWT.LEFT);
+		colConditionMapping.setWidth(80);
+		colConditionMapping.setText("Condition");
+
 		colExpression = new TableColumn(tblMappingTable, SWT.LEFT);
 		colExpression.setWidth(120);
 		colExpression.setText("Expression");
@@ -467,12 +479,14 @@ public class View {
 		for (int i = 0; i < lstMappingRecord.size(); i++) {
 			tblItem = new TableItem(tblMappingTable, SWT.CENTER);
 
-			tblItem.setText(0, lstMappingRecord.get(i).getExpression());
-			tblItem.setText(1, lstMappingRecord.get(i).getSymbol());
-			tblItem.setText(2, lstMappingRecord.get(i).getReturnType());
-			tblItem.setText(3,
-					String.valueOf(lstMappingRecord.get(i).getMinValue()));
+			tblItem.setText(0,
+					String.valueOf(lstMappingRecord.get(i).getCondition()));
+			tblItem.setText(1, lstMappingRecord.get(i).getExpression());
+			tblItem.setText(2, lstMappingRecord.get(i).getSymbol());
+			tblItem.setText(3, lstMappingRecord.get(i).getReturnType());
 			tblItem.setText(4,
+					String.valueOf(lstMappingRecord.get(i).getMinValue()));
+			tblItem.setText(5,
 					String.valueOf(lstMappingRecord.get(i).getMaxValue()));
 		}
 	}
@@ -503,35 +517,36 @@ public class View {
 		}
 	}
 
-	protected void updateConditionList() {
+	protected void updateConditionTable() {
 		ArrayList<Boolean> trueList = control.getTrueList();
 		ArrayList<Boolean> falseList = control.getFalseList();
-		int c = 1;
+
 		TableItem[] items = tblCondition.getItems();
 		for (int i = 0; i < trueList.size(); i++) {
 			if (trueList.get(i) == true)
-				items[i].setText(c, "X");
+				items[i].setText(1, "X");
 			else
-				items[i].setText(c, "O");
+				items[i].setText(1, "O");
 		}
-		c = 2;
+
 		for (int i = 0; i < falseList.size(); i++) {
 			if (falseList.get(i) == true)
-				items[i].setText(c, "X");
+				items[i].setText(2, "X");
 			else
-				items[i].setText(c, "O");
+				items[i].setText(2, "O");
 		}
 	}
 
 	protected void updateSlide() {
-		// Color criteriaColor = new Color(Display.getCurrent(), 255, 166, 107);
 		Color highlightColor = Display.getCurrent().getSystemColor(
 				SWT.COLOR_CYAN);
 
 		ArrayList<Integer> slide = control.getSlide();
+
 		if (slide != null) {
 			int size = slide.size();
 			StyleRange[] ranges = new StyleRange[size];
+
 			for (int i = 0; i < size; i++) {
 				int line = slide.get(i) - 1;
 				// find the offset of the beginning of the line
@@ -541,7 +556,7 @@ public class View {
 								.equals(" ")) {
 					offsetLine++;
 				}
-				// the lenght of text need to be highlight
+				// the length of text need to be highlight
 				int length = this.txtSourceCode.getOffsetAtLine(line + 1)
 						- offsetLine;
 

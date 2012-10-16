@@ -25,7 +25,6 @@ public class Control {
 		io = new InOut();
 		codeAnalyzer = new CodeAnalyzer();
 		ga = new GA();
-		se = new SymbolicExecution();
 	}
 
 	public void addMinMaxAssert() {
@@ -88,7 +87,7 @@ public class Control {
 	public String runGA() {
 		ga.run(codeAnalyzer);
 		ga.reset();
-		return codeAnalyzer.update(ga.getRes());
+		return codeAnalyzer.update(ga.getResult());
 	}
 
 	public String scanCondition() {
@@ -110,6 +109,7 @@ public class Control {
 	}
 
 	public void symbolicExecution() {
+		se = new SymbolicExecution();
 		se.symbolicExecution(codeAnalyzer);
 	}
 }
