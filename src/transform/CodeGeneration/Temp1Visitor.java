@@ -121,7 +121,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 			String temp = "";
 
 			int i = 0;
-			
+
 			i = findVariable(var);
 			if (i >= 0) {
 				temp = (String) binExprAST.exprAST2.visit(this, "c");
@@ -194,58 +194,61 @@ public class Temp1Visitor extends DoNothingVisitor {
 						output += binExprAST.op.getText();
 				}
 
-				// Phat them ngay 3/10 de xu ly viec parameter hoac variable la so thuc
-				// TH1: them gia tri .0 vao val1, de duoc vi du: > 1.0 x, voi x la so Real
-				for (Parameter parameter : lstParameter){
-					if (val2.equals(parameter.getName())){
+				// Phat them ngay 3/10 de xu ly viec parameter hoac variable la
+				// so thuc
+				// TH1: them gia tri .0 vao val1, de duoc vi du: > 1.0 x, voi x
+				// la so Real
+				for (Parameter parameter : lstParameter) {
+					if (val2.equals(parameter.getName())) {
 						String parameterType = parameter.getType();
-						if ("Real".equals(parameterType) || "Float".equals(parameterType) || "Double".equals(parameterType)){
+						if ("Real".equals(parameterType)
+								|| "Float".equals(parameterType)
+								|| "Double".equals(parameterType)) {
 							val1 += ".0";
 						}
 					}
 				}
-				
-				for (Variable variable : lstVariable){
-					if (val2.equals(variable.getName())){
+
+				for (Variable variable : lstVariable) {
+					if (val2.equals(variable.getName())) {
 						String variableType = variable.getType();
-						if ("Real".equals(variableType) || "Float".equals(variableType) || "Double".equals(variableType)){
+						if ("Real".equals(variableType)
+								|| "Float".equals(variableType)
+								|| "Double".equals(variableType)) {
 							val1 += ".0";
 						}
 					}
 				}
-				
+
 				// TH2: xu ly tuong tu voi val2
-				for (Parameter parameter : lstParameter){
-					if (val1.equals(parameter.getName())){
+				for (Parameter parameter : lstParameter) {
+					if (val1.equals(parameter.getName())) {
 						String parameterType = parameter.getType();
-						if ("Real".equals(parameterType) || "Float".equals(parameterType) || "Double".equals(parameterType)){
+						if ("Real".equals(parameterType)
+								|| "Float".equals(parameterType)
+								|| "Double".equals(parameterType)) {
 							val2 += ".0";
 						}
 					}
 				}
-				
-				for (Variable variable : lstVariable){
-					if (val1.equals(variable.getName())){
+
+				for (Variable variable : lstVariable) {
+					if (val1.equals(variable.getName())) {
 						String variableType = variable.getType();
-						if ("Real".equals(variableType) || "Float".equals(variableType) || "Double".equals(variableType)){
+						if ("Real".equals(variableType)
+								|| "Float".equals(variableType)
+								|| "Double".equals(variableType)) {
 							val2 += ".0";
 						}
 					}
 				}
-				
+
 				output += " " + val1 + " ";
 				output += val2 + ")";
-				
+
 				if (check == true) {
 					output = "(not " + output + ")";
 				}
-				
-//				output += " " + val1 + " ";
-//				output += val2 + ")";
-//				if (check == true) {
-//					output = "(not " + output + ")";
-//				}
-				// End Phat 3/10
 			}
 			if (o == "c") {
 				return output;
@@ -258,7 +261,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 					boolean check = true;
 
 					if (branch == 0) { // BRANCH TRUE
-						result += "(assert " + output + ")\n";
+						result += "(assert " + output + ")";
 						ArrayList<String> temp = lstCondition
 								.get(conditionStmt).getTruePaths();
 
@@ -275,7 +278,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 					}
 
 					if (branch == 1) { // BRANCH FALSE
-						result += "(assert (not " + output + "))\n";
+						result += "(assert (not " + output + "))";
 						ArrayList<String> temp = lstCondition
 								.get(conditionStmt).getFalsePaths();
 
@@ -404,7 +407,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 				int branch = obj.branch;
 				if (branch == 0) {
 					result += "(assert (not " + ast.exprAST.visit(this, "c")
-							+ "))\n";
+							+ "))";
 					ArrayList<String> temp = lstCondition.get(constmt)
 							.getTruePaths();
 					for (int i = 0; i < temp.size(); i++)
@@ -416,7 +419,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 								.add(obj.con);
 					}
 				} else {
-					result += "(assert " + ast.exprAST.visit(this, "c") + ")\n";
+					result += "(assert " + ast.exprAST.visit(this, "c") + ")";
 					ArrayList<String> temp = lstCondition.get(constmt)
 							.getFalsePaths();
 					for (int i = 0; i < temp.size(); i++)

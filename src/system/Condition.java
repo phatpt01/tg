@@ -85,10 +85,6 @@ public class Condition {
 		this.lstFalseCondition = falseConditions;
 	}
 
-//	public void setFalsePaths(ArrayList<String> falsepaths) {
-//		this.lstFalsePath = falsepaths;
-//	}
-
 	public void setFalseTestcase(String falseTestcase) {
 		this.falseTestCase = falseTestcase;
 	}
@@ -104,12 +100,24 @@ public class Condition {
 	public void setTrueConditions(ArrayList<Integer> trueConditions) {
 		this.lstTrueCondition = trueConditions;
 	}
-
-//	public void setTruePaths(ArrayList<String> truePaths) {
-//		this.lstTruePath = truePaths;
-//	}
+	
+	public void addFalsePaths(String falsePath){
+		this.lstFalsePath.add(falsePath);
+	}
 
 	public void setTrueTestcase(String trueTestcase) {
 		this.trueTestCase = trueTestcase;
+	}
+
+	public void clearFalsePaths() {
+		this.lstFalsePath.clear();		
+	}
+
+	public void clearTruePaths() {
+		this.lstTruePath.clear();
+	}
+
+	public void addTruePaths(String truePath) {
+		this.lstTruePath.add(truePath);		
 	}
 }

@@ -1,11 +1,6 @@
 package se;
 
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.swing.JOptionPane;
 
 import system.Condition;
@@ -32,68 +27,68 @@ public class SymbolicExecution {
 		lstUnSolvalbecondition = new ArrayList<Condition>();
 	}
 
-	public void addMinMaxAssert() {
-		String smt2SEDetails = "";
-		String z3FileNameSE = "";
-
-		for (int i = 0; i < SymbolicExecutionFile
-				.countNumberOfFiles(SymbolicExecutionFile
-						.getAbsolutePathOfSmt2()) - 1; i++) {
-
-			z3FileNameSE = SymbolicExecutionFile.getAbsolutePathOfSmt2()
-					+ "Z3FormulaSE" + i + ".smt2";
-
-			smt2SEDetails = SymbolicExecutionFile.readFile(z3FileNameSE);
-
-			smt2SEDetails = smt2SEDetails.substring(0,
-					smt2SEDetails.indexOf("(check-sat)"));
-
-			String newAssert;
-			String regexTrue;
-			String regexFalse;
-
-			for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
-
-				regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
-						+ mappingRecord.getSymbol() + " \\w\\)\\).*";
-
-				regexFalse = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(not \\(\\D "
-						+ mappingRecord.getSymbol() + " \\w\\)\\)\\).*";
-
-				Pattern pattern = Pattern.compile(regexFalse);
-				Matcher matcher = pattern.matcher(smt2SEDetails);
-				if (matcher.find()) {
-					newAssert = "(assert (> " + mappingRecord.getSymbol() + " "
-							+ mappingRecord.getMinValue() + "))";
-					smt2SEDetails += newAssert;
-
-					newAssert = "(assert (< " + mappingRecord.getSymbol() + " "
-							+ mappingRecord.getMaxValue() + "))";
-					smt2SEDetails += newAssert;
-
-					break; // Khong co file nao assert va assert not
-				}
-
-				pattern = Pattern.compile(regexTrue);
-				matcher = pattern.matcher(smt2SEDetails);
-				if (matcher.find()) {
-					newAssert = "(assert (> " + mappingRecord.getSymbol() + " "
-							+ mappingRecord.getMinValue() + "))";
-					smt2SEDetails += newAssert;
-
-					newAssert = "(assert (< " + mappingRecord.getSymbol() + " "
-							+ mappingRecord.getMaxValue() + "))";
-					smt2SEDetails += newAssert;
-				}
-
-			}
-			smt2SEDetails += "(check-sat) \n (model)";
-
-			// Update file smt2SE
-			SymbolicExecutionFile.writeFile(z3FileNameSE, smt2SEDetails);
-		}
-
-	}
+	// public void addMinMaxAssert() {
+	// String smt2SEDetails = "";
+	// String z3FileNameSE = "";
+	//
+	// for (int i = 0; i < SymbolicExecutionFile
+	// .countNumberOfFiles(SymbolicExecutionFile
+	// .getAbsolutePathOfSmt2()) - 1; i++) {
+	//
+	// z3FileNameSE = SymbolicExecutionFile.getAbsolutePathOfSmt2()
+	// + "Z3FormulaSE" + i + ".smt2";
+	//
+	// smt2SEDetails = SymbolicExecutionFile.readFile(z3FileNameSE);
+	//
+	// smt2SEDetails = smt2SEDetails.substring(0,
+	// smt2SEDetails.indexOf("(check-sat)"));
+	//
+	// String newAssert;
+	// String regexTrue;
+	// String regexFalse;
+	//
+	// for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
+	//
+	// regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
+	// + mappingRecord.getSymbol() + " \\w\\)\\).*";
+	//
+	// regexFalse = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(not \\(\\D "
+	// + mappingRecord.getSymbol() + " \\w\\)\\)\\).*";
+	//
+	// Pattern pattern = Pattern.compile(regexFalse);
+	// Matcher matcher = pattern.matcher(smt2SEDetails);
+	// if (matcher.find()) {
+	// newAssert = "(assert (> " + mappingRecord.getSymbol() + " "
+	// + mappingRecord.getMinValue() + "))";
+	// smt2SEDetails += newAssert;
+	//
+	// newAssert = "(assert (< " + mappingRecord.getSymbol() + " "
+	// + mappingRecord.getMaxValue() + "))";
+	// smt2SEDetails += newAssert;
+	//
+	// break; // Khong co file nao assert va assert not
+	// }
+	//
+	// pattern = Pattern.compile(regexTrue);
+	// matcher = pattern.matcher(smt2SEDetails);
+	// if (matcher.find()) {
+	// newAssert = "(assert (> " + mappingRecord.getSymbol() + " "
+	// + mappingRecord.getMinValue() + "))";
+	// smt2SEDetails += newAssert;
+	//
+	// newAssert = "(assert (< " + mappingRecord.getSymbol() + " "
+	// + mappingRecord.getMaxValue() + "))";
+	// smt2SEDetails += newAssert;
+	// }
+	//
+	// }
+	// smt2SEDetails += "(check-sat) \n (model)";
+	//
+	// // Update file smt2SE
+	// SymbolicExecutionFile.writeFile(z3FileNameSE, smt2SEDetails);
+	// }
+	//
+	// }
 
 	private void addUnsolvableConditionToMappingTable() {
 		for (Condition unsolvableCondition : lstUnSolvalbecondition) {
@@ -122,10 +117,6 @@ public class SymbolicExecution {
 
 	}
 
-	public boolean containsAssertOfStr(String str) {
-		return str.matches(".*(assert (" + str + ".*))");
-	}
-
 	private void createListOfUnsolvableCondition() {
 		for (int i = 0; i < codeAnalyzer.getLstCondition().size(); i++) {
 			Condition condition = codeAnalyzer.getLstCondition().get(i);
@@ -139,117 +130,166 @@ public class SymbolicExecution {
 		this.mappingTable = new SE_MappingTable();
 	}
 
-	public String generateTestCaseAfterSE() {
-		replaceExpressionBySymbol();
-		addMinMaxAssert();
+	// public void generateNextTestCaseAfterSE(int i) {
+	// boolean check = false;
+	// boolean matchFalse = false;
+	//
+	// int numberOfFiles = SymbolicExecutionFile
+	// .countNumberOfFiles(SymbolicExecutionFile
+	// .getAbsolutePathOfSmt2());
+	//
+	// // Xoa nhung path chua duoc symbolic
+	// codeAnalyzer.getLstCondition().get(i).clearFalsePaths();
+	// codeAnalyzer.getLstCondition().get(i).clearTruePaths();
+	//
+	// if (numberOfFiles > 0) {
+	// // Each condition will read only 2 SE files
+	// for (int j = fileNumber; j < fileNumber + 2; j++) {
+	// String z3FormulaSEFile = "Z3FormulaSE" + j + ".smt2";
+	// String smt2SEDetails = SymbolicExecutionFile
+	// .readFile(SymbolicExecutionFile.getAbsolutePathOfSmt2()
+	// + z3FormulaSEFile);
+	//
+	// smt2SEDetails = smt2SEDetails.substring(0,
+	// smt2SEDetails.indexOf("(check-sat)"));
+	//
+	// for (MappingRecord mappingRecord : mappingTable
+	// .getMappingRecords()) {
+	//
+	// matchFalse = false;
+	// String result = "";
+	//
+	// String regexFalse = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(not \\(\\D "
+	// + mappingRecord.getSymbol() + " \\w\\)\\)\\).*";
+	// Pattern pattern = Pattern.compile(regexFalse);
+	// Matcher matcher = pattern.matcher(smt2SEDetails);
+	//
+	// if (matcher.find()) {
+	// matchFalse = true;
+	// // codeAnalyzer.getLstCondition().get(i).clearFalsePaths();
+	// String falsePath = smt2SEDetails
+	// .substring(smt2SEDetails.indexOf("(assert ("));
+	//
+	// codeAnalyzer.getLstCondition().get(i)
+	// .addFalsePaths(falsePath);
+	//
+	// for (int k = 0; k < codeAnalyzer.getLstCondition()
+	// .get(i).getFalsePaths().size(); k++) {
+	// result = codeAnalyzer
+	// .generateTestCaseAfterSE(codeAnalyzer
+	// .getLstCondition().get(i)
+	// .getFalsePaths().get(k));
+	// if (!result.equals("")) {
+	// codeAnalyzer.getLstCondition().get(i)
+	// .setFalseTestcase(result);
+	// codeAnalyzer.getLstCondition().get(i).hasFalseTestCase = true;
+	// check = true;
+	// }
+	// }
+	// }
+	//
+	// String regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
+	// + mappingRecord.getSymbol() + " \\w\\)\\).*";
+	// pattern = Pattern.compile(regexTrue);
+	// matcher = pattern.matcher(smt2SEDetails);
+	//
+	// if (matcher.find() && !matchFalse) {
+	// // codeAnalyzer.getLstCondition().get(i).clearTruePaths();
+	// String truePath = smt2SEDetails.substring(smt2SEDetails
+	// .indexOf("(assert ("));
+	// codeAnalyzer.getLstCondition().get(i)
+	// .addTruePaths(truePath);
+	//
+	// for (int k = 0; k < codeAnalyzer.getLstCondition()
+	// .get(i).getTruePaths().size(); k++) {
+	// result = codeAnalyzer
+	// .generateTestCaseAfterSE(codeAnalyzer
+	// .getLstCondition().get(i)
+	// .getTruePaths().get(k));
+	// if (!result.equals("")) {
+	// codeAnalyzer.getLstCondition().get(i)
+	// .setTrueTestcase(result);
+	// codeAnalyzer.getLstCondition().get(i).hasTrueTestCase = true;
+	// check = true;
+	// }
+	// }
+	// }
+	//
+	// codeAnalyzer.getLstCondition().get(i).setHasTestcase(check);
+	// }
+	// }
+	// }
+	// fileNumber += 2;
+	// }
 
-		int numOfSymbol;
-		String returnString = "";
+	public void generateNextTestCaseAfterSE(int i) {
 
-		int numberOfFiles = SymbolicExecutionFile
-				.countNumberOfFiles(SymbolicExecutionFile
-						.getAbsolutePathOfSmt2());
+		boolean check = false;
+		String conditionString = "";
+		String result = "";
+		for (int j = 0; j < codeAnalyzer.getLstCondition().get(i)
+				.getTruePaths().size(); j++) {
+			conditionString = codeAnalyzer.getLstCondition().get(i)
+					.getTruePaths().get(j);
+			result = codeAnalyzer.generateTestCaseAfterSE(conditionString);
 
-		if (numberOfFiles > 0) {
-			for (int i = 0; i < numberOfFiles - 1; i++) {
-				String z3FormulaSEFile = "Z3FormulaSE" + i + ".smt2";
-
-				numOfSymbol = 0;
-				returnString += "Symbol: ";
-
-				ArrayList<String> lstTestCase = null;
-				try {
-					lstTestCase = new ArrayList<String>();
-					lstTestCase
-							.addAll(codeAnalyzer
-									.getNewTestcaseAfterSE(SymbolicExecutionFile
-											.getAbsolutePathOfSmt2()
-											+ z3FormulaSEFile));
-				} catch (NullPointerException e) {
-					// In case does not have test case after SE
-				}
-
-				String smt2SEDetails = SymbolicExecutionFile
-						.readFile(SymbolicExecutionFile.getAbsolutePathOfSmt2()
-								+ z3FormulaSEFile);
-
-				smt2SEDetails = smt2SEDetails.substring(0,
-						smt2SEDetails.indexOf("(check-sat)"));
-
-				String condition = "Condition: ";
-				for (MappingRecord mappingRecord : mappingTable
-						.getMappingRecords()) {
-					String regexTrue = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(\\D "
-							+ mappingRecord.getSymbol() + " \\w\\)\\).*";
-
-					String regexFalse = "[a-zA-Z0-9\\(\\)\\s\\-]*\\)\\(assert \\(not \\(\\D "
-							+ mappingRecord.getSymbol() + " \\w\\)\\)\\).*";
-
-					Pattern pattern = Pattern.compile(regexFalse);
-					Matcher matcher = pattern.matcher(smt2SEDetails);
-					if (matcher.find()) {
-						numOfSymbol++;
-						returnString += mappingRecord.getSymbol() + "\t";
-						condition += mappingRecord.getCondition();
-						break;
-					}
-
-					pattern = Pattern.compile(regexTrue);
-					matcher = pattern.matcher(smt2SEDetails);
-					if (matcher.find()) {
-						numOfSymbol++;
-						returnString += mappingRecord.getSymbol() + "\t";
-						condition += mappingRecord.getCondition();
-					}
-				}
-
-				// In condition
-				returnString += "\n" + condition + "\n";
-
-				// In cau lenh assert
-				int assertPosition = smt2SEDetails.indexOf("(assert");
-				smt2SEDetails.replace("(assert", "\n(assert");
-				returnString += "Assert: "
-						+ smt2SEDetails.substring(assertPosition) + "\n";
-
-				// In value sau khi chay Z3 voi symbol
-				String testcase = lstTestCase.toString().substring(1,
-						lstTestCase.toString().length() - 1);
-				Scanner scanner = new Scanner(testcase);
-				scanner.useDelimiter(", ");
-				returnString += "Value: ";
-				for (int j = 0; j < numOfSymbol; j++) {
-					try {
-						scanner.next();
-						returnString += scanner.next() + "\t";
-					} catch (NoSuchElementException noSuchElementException) {
-						noSuchElementException.printStackTrace();
-					}
-
-				}
-				returnString += "\n\n";
+			if (!result.equals("")) {
+				codeAnalyzer.getLstCondition().get(i).setTrueTestcase(result);
+				codeAnalyzer.getLstCondition().get(i).hasTrueTestCase = true;
+				check = true;
+				break;
 			}
-		} else {
-			// Khong co file SE nao, tao cac file SE theo mapping table
-			return "";
 		}
-		return returnString;
+
+		for (int k = 0; k < codeAnalyzer.getLstCondition().get(i)
+				.getFalsePaths().size(); k++) {
+			conditionString = (codeAnalyzer.getLstCondition().get(i)
+					.getFalsePaths().get(k));
+			result = codeAnalyzer.generateTestCaseAfterSE(conditionString);
+			if (!result.equals("")) {
+
+				codeAnalyzer.getLstCondition().get(i).setFalseTestcase(result);
+				codeAnalyzer.getLstCondition().get(i).hasFalseTestCase = true;
+				check = true;
+				break;
+			}
+		}
+		codeAnalyzer.getLstCondition().get(i).setHasTestcase(check);
 	}
 
-	// public String getExpression1(Condition condition) {
-	// String expression1 = "";
-	//
-	// BinExprAST binExprAST = (BinExprAST) condition.getAst();
-	// try {
-	// expression1 = (String) binExprAST.exprAST1.visit(
-	// new Temp1Visitor(codeAnalyzer.getLstParameter(),
-	// codeAnalyzer.getLstVariable(), codeAnalyzer
-	// .getLstCondition()), "c");
-	// } catch (CompilationException e1) {
-	// e1.printStackTrace();
-	// }
-	// return expression1;
-	// }
+	public String generateSolvableAfterSE() {
+		int count = 0;
+		String output = "";
+
+		// Generate testcase by Z3 for all condition in list
+		for (int i = 0; i < codeAnalyzer.getLstCondition().size(); i++) {
+			if (codeAnalyzer.getLstCondition().get(i).hasTestcase() == false)
+				generateNextTestCaseAfterSE(i);
+		}
+
+		for (int i = 0; i < codeAnalyzer.getLstCondition().size(); i++) {
+			Condition condition = codeAnalyzer.getLstCondition().get(i);
+			// If Z3 can solve this condition
+			if (condition.hasTestcase()) {
+				count++;
+
+				output += "\n\nCondition: " + condition.getCondition();
+				output += "\n\tTrue path(s): ";
+				for (String truePath : condition.getTruePaths())
+					output += "\n\t\t" + truePath;
+				output += "\n\tTrue condition: " + condition.getTrueTestCase();
+				output += "\n\tFalse path(s): ";
+				for (String falsePath : condition.getFalsePaths())
+					output += "\n\t\t" + falsePath;
+				output += "\n\tFalse condition: " + condition.getFalseTestCase();
+
+			}
+
+		}
+		output = "After symbolic execution, solve " + count + " condition(s)"
+				+ output + "\n";
+		return output;
+	}
 
 	public String getExpression1(Condition condition) {
 		String expression1 = "";
@@ -352,38 +392,83 @@ public class SymbolicExecution {
 			return false;
 	}
 
-	private void replaceExpressionBySymbol() {
-		String smt2SEDetails = "";
-		String z3FileNameSE = "";
+	// public void replaceExpressionBySymbol() {
+	// String smt2SEDetails = "";
+	// String z3FileNameSE = "";
+	//
+	// for (int i = 0; i < SymbolicExecutionFile
+	// .countNumberOfFiles(SymbolicExecutionFile
+	// .getAbsolutePathOfSmt2()) - 1; i++) {
+	//
+	// z3FileNameSE = SymbolicExecutionFile.getAbsolutePathOfSmt2()
+	// + "Z3FormulaSE" + i + ".smt2";
+	//
+	// smt2SEDetails = SymbolicExecutionFile.readFile(z3FileNameSE);
+	//
+	// // Add new variable
+	// String newSmt2SEDetails = "";
+	// for (Variable variable : getListNewVariable()) {
+	// newSmt2SEDetails += ("(declare-const " + variable.getName()
+	// + " " + variable.getType() + ") \n");
+	// }
+	//
+	// // Update smt2SEDetails from beginning
+	// newSmt2SEDetails += smt2SEDetails;
+	//
+	// // Replace unsolvable condition by get item from mapping table
+	// for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
+	// newSmt2SEDetails = newSmt2SEDetails.replace(
+	// mappingRecord.getExpression(),
+	// mappingRecord.getSymbol());
+	// }
+	//
+	// // Update file smt2SE
+	// SymbolicExecutionFile.writeFile(z3FileNameSE, newSmt2SEDetails);
+	// }
+	// }
 
-		for (int i = 0; i < SymbolicExecutionFile
-				.countNumberOfFiles(SymbolicExecutionFile
-						.getAbsolutePathOfSmt2()) - 1; i++) {
+	public void replaceExpressionBySymbol() {
+		for (Condition condition : codeAnalyzer.getLstCondition()) {
+			if (condition.hasTestcase() == false) {
+				for (int i = 0; i < condition.getTruePaths().size(); i++) {
+					String truePath = condition.getTruePaths().get(i);
+					for (MappingRecord mappingRecord : mappingTable
+							.getMappingRecords()) {
+						if (truePath.contains(mappingRecord.getExpression())) {
+							truePath = truePath.replace(
+									mappingRecord.expression,
+									mappingRecord.getSymbol());
+							truePath += ("(assert (> "
+									+ mappingRecord.getSymbol() + " "
+									+ mappingRecord.getMinValue() + "))");
+							truePath += ("(assert (< "
+									+ mappingRecord.getSymbol() + " "
+									+ mappingRecord.getMaxValue() + "))");
+						}
 
-			z3FileNameSE = SymbolicExecutionFile.getAbsolutePathOfSmt2()
-					+ "Z3FormulaSE" + i + ".smt2";
+					}
+					condition.getTruePaths().set(i, truePath);
+				}
 
-			smt2SEDetails = SymbolicExecutionFile.readFile(z3FileNameSE);
-
-			// Add new variable
-			String newSmt2SEDetails = "";
-			for (Variable variable : getListNewVariable()) {
-				newSmt2SEDetails += ("(declare-const " + variable.getName()
-						+ " " + variable.getType() + ") \n");
+				for (int i = 0; i < condition.getFalsePaths().size(); i++) {
+					String falsePath = condition.getFalsePaths().get(i);
+					for (MappingRecord mappingRecord : mappingTable
+							.getMappingRecords()) {
+						if (falsePath.contains(mappingRecord.getExpression())) {
+							falsePath = falsePath.replace(
+									mappingRecord.expression,
+									mappingRecord.getSymbol());
+							falsePath += ("(assert (> "
+									+ mappingRecord.getSymbol() + " "
+									+ mappingRecord.getMinValue() + "))");
+							falsePath += ("(assert (< "
+									+ mappingRecord.getSymbol() + " "
+									+ mappingRecord.getMaxValue() + "))");
+						}
+					}
+					condition.getFalsePaths().set(i, falsePath);
+				}
 			}
-
-			// Update smt2SEDetails from beginning
-			newSmt2SEDetails += smt2SEDetails;
-
-			// Replace unsolvable condition by get item from mapping table
-			for (MappingRecord mappingRecord : mappingTable.getMappingRecords()) {
-				newSmt2SEDetails = newSmt2SEDetails.replace(
-						mappingRecord.getExpression(),
-						mappingRecord.getSymbol());
-			}
-
-			// Update file smt2SE
-			SymbolicExecutionFile.writeFile(z3FileNameSE, newSmt2SEDetails);
 		}
 	}
 

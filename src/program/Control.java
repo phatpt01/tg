@@ -27,16 +27,12 @@ public class Control {
 		ga = new GA();
 	}
 
-	public void addMinMaxAssert() {
-		se.addMinMaxAssert();
-	}
+//	public void addMinMaxAssert() {
+//		se.addMinMaxAssert();
+//	}
 	
 	public String generateSolvable() {
 		return codeAnalyzer.generateSolvable();
-	}
-
-	public String generateTestCaseAfterSE() {
-		return se.generateTestCaseAfterSE();
 	}
 
 	public ArrayList<String> getConditionList() throws CompilationException {
@@ -111,5 +107,11 @@ public class Control {
 	public void symbolicExecution() {
 		se = new SymbolicExecution();
 		se.symbolicExecution(codeAnalyzer);
+	}
+
+	public String generateSolvableAfterSE() {
+		se.replaceExpressionBySymbol();
+		//se.addMinMaxAssert();
+		return se.generateSolvableAfterSE();
 	}
 }

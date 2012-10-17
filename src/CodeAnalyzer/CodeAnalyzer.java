@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-import se.SymbolicExecution;
 import se.SymbolicExecutionFile;
 import system.*;
 import system.Variable;
@@ -36,7 +35,7 @@ public class CodeAnalyzer {
 	private String testcase = "";
 	private int numUnSolvableCondition;
 
-	//int temp1 = 1;
+	// int temp1 = 1;
 
 	public CodeAnalyzer() {
 	}
@@ -164,8 +163,8 @@ public class CodeAnalyzer {
 	private void generateNextTestCase(int i) {
 		boolean check = false;
 
-		String absolutePathOfSmt2 = SymbolicExecutionFile
-				.getAbsolutePathOfSmt2();
+//		String absolutePathOfSmt2 = SymbolicExecutionFile
+//				.getAbsolutePathOfSmt2();
 		String conditionString = "";
 
 		for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
@@ -178,18 +177,18 @@ public class CodeAnalyzer {
 				check = true;
 				break;
 			}
-			// Each test case has a difference smt2 file, for true path
-			String fileSEName = absolutePathOfSmt2
-					+ "Z3FormulaSE"
-					+ (SymbolicExecutionFile
-							.countNumberOfFiles(absolutePathOfSmt2) - 1)
-					+ ".smt2";
-
-			SymbolicExecutionFile.createBlankFile(fileSEName);
-			SymbolicExecutionFile.appendAtBeginning(fileSEName,
-					new SymbolicExecution().getListNewVariable());
-			SymbolicExecutionFile.copyfile(absolutePathOfSmt2
-					+ "Z3Formula.smt2", fileSEName, false);
+//			// Each test case has a difference smt2 file, for true path
+//			String fileSEName = absolutePathOfSmt2
+//					+ "Z3FormulaSE"
+//					+ (SymbolicExecutionFile
+//							.countNumberOfFiles(absolutePathOfSmt2) - 1)
+//					+ ".smt2";
+//
+//			SymbolicExecutionFile.createBlankFile(fileSEName);
+//			SymbolicExecutionFile.appendAtBeginning(fileSEName,
+//					new SymbolicExecution().getListNewVariable());
+//			SymbolicExecutionFile.copyfile(absolutePathOfSmt2
+//					+ "Z3Formula.smt2", fileSEName, false);
 		}
 
 		for (int k = 0; k < lstCondition.get(i).getFalsePaths().size(); k++) {
@@ -202,15 +201,15 @@ public class CodeAnalyzer {
 				check = true;
 				break;
 			}
-			// Each testcase has a difference smt2 file, for false path
-			SymbolicExecutionFile
-					.copyfile(
-							absolutePathOfSmt2 + "Z3Formula.smt2",
-							absolutePathOfSmt2
-									+ "Z3FormulaSE"
-									+ (SymbolicExecutionFile
-											.countNumberOfFiles(absolutePathOfSmt2) - 1)
-									+ ".smt2", false);
+//			// Each testcase has a difference smt2 file, for false path
+//			SymbolicExecutionFile
+//					.copyfile(
+//							absolutePathOfSmt2 + "Z3Formula.smt2",
+//							absolutePathOfSmt2
+//									+ "Z3FormulaSE"
+//									+ (SymbolicExecutionFile
+//											.countNumberOfFiles(absolutePathOfSmt2) - 1)
+//									+ ".smt2", false);
 		}
 		lstCondition.get(i).setHasTestcase(check);
 	}
@@ -320,6 +319,88 @@ public class CodeAnalyzer {
 			return "";
 	}
 
+	public String generateTestCaseAfterSE(String conditionString) {
+
+		String z3FilePath = SymbolicExecutionFile.getAbsolutePathOfSmt2()
+				+ "Z3Formula.smt2";
+
+		try {
+			FileWriter fw = new FileWriter(z3FilePath);
+			BufferedWriter out = new BufferedWriter(fw);
+
+			// Print the parameters of program
+			for (int i = 0; i < lstParameter.size(); i++) {
+				Parameter parameter = lstParameter.get(i);
+				out.write("(declare-const ");
+				out.write(parameter.getName() + " ");
+
+				switch (parameter.getType()) {
+				case "Int":
+					out.write(parameter.getType() + ")");
+					break;
+				case "Real":
+					out.write("Real)");
+					break;
+				case "Float":
+					out.write("Real)");
+					break;
+				case "Double":
+					out.write("Real)");
+					break;
+
+				}
+				out.write("\n");
+			}
+
+			// Print variables of program
+			for (int i = 0; i < lstVariable.size(); i++) {
+				Variable v = lstVariable.get(i);
+				out.write("(declare-const ");
+				out.write(v.getName() + " ");
+
+				switch (v.getType()) {
+				case "Int":
+					out.write(v.getType() + ")");
+					break;
+				case "Real":
+					out.write("Real)");
+					break;
+				case "Float":
+					out.write("Real)");
+					break;
+				case "Double":
+					out.write("Real)");
+					break;
+				}
+				out.write("\n");
+			}
+
+			out.write(conditionString);
+			out.write("(check-sat)\n");
+			out.write("(model)\n");
+
+			out.close();
+			fw.close();
+		} catch (IOException | NullPointerException exception) {
+			exception.printStackTrace();
+		}
+
+		ArrayList<String> testcase = getNewTestcaseAfterSE(z3FilePath);
+		if (testcase != null) {
+			ArrayList<String> temp = new ArrayList<String>();
+			StringBuffer strTestcase = new StringBuffer();
+
+			for (int i = 0; i < testcase.size(); i++) {
+				strTestcase.append(testcase.get(i));
+				strTestcase.append("\n");
+				temp.add(testcase.get(i));
+			}
+
+			return temp.toString();
+		} else
+			return "";
+	}
+	
 	public ArrayList<String> getConditionList() throws CompilationException {
 
 		ConditionPrintVisitor visitor = new ConditionPrintVisitor(null, true);
@@ -359,19 +440,19 @@ public class CodeAnalyzer {
 	private String getConditions() {
 		String output = "";
 		for (int i = 0; i < lstCondition.size(); i++) {
-			output += "Condition " + (i + 1) + ":"
+			output += "\nCondition " + (i + 1) + ":"
 					+ lstCondition.get(i).getCondition() + "\n";
 
-			output += "\t True:\n";
+			output += "\t True:";
 
 			for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
-				output += lstCondition.get(i).getTruePaths().get(j) + "\n";
+				output += "\n" + lstCondition.get(i).getTruePaths().get(j);
 			}
 
-			output += "\t False:\n";
+			output += "\t False:";
 
 			for (int j = 0; j < lstCondition.get(i).getFalsePaths().size(); j++) {
-				output += lstCondition.get(i).getFalsePaths().get(j) + "\n";
+				output += "\n" + lstCondition.get(i).getFalsePaths().get(j) ;
 			}
 		}
 		return output;
@@ -451,49 +532,49 @@ public class CodeAnalyzer {
 						if (z3result.get(j).equals(
 								lstParameter.get(i).getName())) {
 							testcase.add(z3result.get(j + 1)); // add new value
-																// to testcase
+							// to testcase
 							break;
 						}
 					}
-					// if (testcase.size() < i) {
-					// Object result = 0;
-					// Random ran1 = new Random();
-					// double n = ran1.nextDouble() * 100;
-					// switch (lstParameter.get(i).getType()) {
-					// case "Int":
-					// result = (int) n;
-					// break;
-					// case "Double":
-					// result = (double) n;
-					// break;
-					// case "Float":
-					// result = (float) n;
-					// break;
-					// }
-					// testcase.add(result.toString());
-					// }
+//					if (testcase.size() < i) {
+//						Object result = 0;
+//						Random ran1 = new Random();
+//						double n = ran1.nextDouble() * 100;
+//						switch (lstParameter.get(i).getType()) {
+//						case "Int":
+//							result = (int) n;
+//							break;
+//						case "Double":
+//							result = (double) n;
+//							break;
+//						case "Float":
+//							result = (float) n;
+//							break;
+//						}
+//						testcase.add(result.toString());
+//					}
 				}
 
-				// if (testcase.size() < lstParameter.size()) {
-				// int num = lstParameter.size() - testcase.size();
-				// Random ran1 = new Random();
-				// for (int i = 0; i < num; i++) {
-				// Object result = 0;
-				// double n = ran1.nextDouble() * 100;
-				// switch (lstParameter.get(i).getType()) {
-				// case "Int":
-				// result = (int) n;
-				// break;
-				// case "Double":
-				// result = (double) n;
-				// break;
-				// case "Float":
-				// result = (float) n;
-				// break;
-				// }
-				// testcase.add(result.toString());
-				// }
-				// }
+//				if (testcase.size() < lstParameter.size()) {
+//					int num = lstParameter.size() - testcase.size();
+//					Random ran1 = new Random();
+//					for (int i = 0; i < num; i++) {
+//						Object result = 0;
+//						double n = ran1.nextDouble() * 100;
+//						switch (lstParameter.get(i).getType()) {
+//						case "Int":
+//							result = (int) n;
+//							break;
+//						case "Double":
+//							result = (double) n;
+//							break;
+//						case "Float":
+//							result = (float) n;
+//							break;
+//						}
+//						testcase.add(result.toString());
+//					}
+//				}
 			} else {
 				return null;
 			}
@@ -744,6 +825,7 @@ public class CodeAnalyzer {
 			output += "\tFalse: " + condition.getFalseTestCase() + "\n";
 		}
 		return output;
+		
 	}
 
 	public String update(int[][] res) {
