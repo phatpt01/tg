@@ -35,15 +35,13 @@ public class CodeAnalyzer {
 	private String testcase = "";
 	private int numUnSolvableCondition;
 
-	// int temp1 = 1;
-
 	public CodeAnalyzer() {
 	}
 
 	public CodeAnalyzer(String strSourceFile) {
 
 		transform = new Transform(strSourceFile);
-
+		
 		lstCondition = new ArrayList<Condition>();
 		mapTable = transform.getMapTable();
 		pdg = transform.getPdg();
@@ -162,9 +160,6 @@ public class CodeAnalyzer {
 
 	private void generateNextTestCase(int i) {
 		boolean check = false;
-
-//		String absolutePathOfSmt2 = SymbolicExecutionFile
-//				.getAbsolutePathOfSmt2();
 		String conditionString = "";
 
 		for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
@@ -177,18 +172,6 @@ public class CodeAnalyzer {
 				check = true;
 				break;
 			}
-//			// Each test case has a difference smt2 file, for true path
-//			String fileSEName = absolutePathOfSmt2
-//					+ "Z3FormulaSE"
-//					+ (SymbolicExecutionFile
-//							.countNumberOfFiles(absolutePathOfSmt2) - 1)
-//					+ ".smt2";
-//
-//			SymbolicExecutionFile.createBlankFile(fileSEName);
-//			SymbolicExecutionFile.appendAtBeginning(fileSEName,
-//					new SymbolicExecution().getListNewVariable());
-//			SymbolicExecutionFile.copyfile(absolutePathOfSmt2
-//					+ "Z3Formula.smt2", fileSEName, false);
 		}
 
 		for (int k = 0; k < lstCondition.get(i).getFalsePaths().size(); k++) {
@@ -201,15 +184,6 @@ public class CodeAnalyzer {
 				check = true;
 				break;
 			}
-//			// Each testcase has a difference smt2 file, for false path
-//			SymbolicExecutionFile
-//					.copyfile(
-//							absolutePathOfSmt2 + "Z3Formula.smt2",
-//							absolutePathOfSmt2
-//									+ "Z3FormulaSE"
-//									+ (SymbolicExecutionFile
-//											.countNumberOfFiles(absolutePathOfSmt2) - 1)
-//									+ ".smt2", false);
 		}
 		lstCondition.get(i).setHasTestcase(check);
 	}
@@ -233,7 +207,7 @@ public class CodeAnalyzer {
 				output += "\t False: " + condition.getFalseTestCase() + "\n";
 			}
 		}
-		output = count + "\n" + output;
+		output = count + "\n\n" + output;
 		return output;
 	}
 
@@ -400,7 +374,7 @@ public class CodeAnalyzer {
 		} else
 			return "";
 	}
-	
+
 	public ArrayList<String> getConditionList() throws CompilationException {
 
 		ConditionPrintVisitor visitor = new ConditionPrintVisitor(null, true);
@@ -449,10 +423,10 @@ public class CodeAnalyzer {
 				output += "\n" + lstCondition.get(i).getTruePaths().get(j);
 			}
 
-			output += "\t False:";
+			output += "\n \t False:";
 
 			for (int j = 0; j < lstCondition.get(i).getFalsePaths().size(); j++) {
-				output += "\n" + lstCondition.get(i).getFalsePaths().get(j) ;
+				output += "\n" + lstCondition.get(i).getFalsePaths().get(j);
 			}
 		}
 		return output;
@@ -497,6 +471,8 @@ public class CodeAnalyzer {
 	}
 
 	public ArrayList<String> getNewTestcase(String z3FormulaPath) {
+		ArrayList<String> testcaseFull = new ArrayList<String>();
+		
 		ArrayList<String> testcase = new ArrayList<String>();
 		ArrayList<String> z3result = new ArrayList<String>();
 		Runtime run = Runtime.getRuntime();
@@ -531,50 +507,15 @@ public class CodeAnalyzer {
 					for (int j = 0; j < z3result.size(); j += 2) {
 						if (z3result.get(j).equals(
 								lstParameter.get(i).getName())) {
-							testcase.add(z3result.get(j + 1)); // add new value
-							// to testcase
+							testcase.add(z3result.get(j + 1)); 
+							
+							// add new value to testcase, sua ngay 20121213 de hien thi ro hon ket qua test case sinh ra
+							testcaseFull.add(z3result.get(j) + " = "
+									+ z3result.get(j + 1));
 							break;
 						}
 					}
-//					if (testcase.size() < i) {
-//						Object result = 0;
-//						Random ran1 = new Random();
-//						double n = ran1.nextDouble() * 100;
-//						switch (lstParameter.get(i).getType()) {
-//						case "Int":
-//							result = (int) n;
-//							break;
-//						case "Double":
-//							result = (double) n;
-//							break;
-//						case "Float":
-//							result = (float) n;
-//							break;
-//						}
-//						testcase.add(result.toString());
-//					}
 				}
-
-//				if (testcase.size() < lstParameter.size()) {
-//					int num = lstParameter.size() - testcase.size();
-//					Random ran1 = new Random();
-//					for (int i = 0; i < num; i++) {
-//						Object result = 0;
-//						double n = ran1.nextDouble() * 100;
-//						switch (lstParameter.get(i).getType()) {
-//						case "Int":
-//							result = (int) n;
-//							break;
-//						case "Double":
-//							result = (double) n;
-//							break;
-//						case "Float":
-//							result = (float) n;
-//							break;
-//						}
-//						testcase.add(result.toString());
-//					}
-//				}
 			} else {
 				return null;
 			}
@@ -678,31 +619,48 @@ public class CodeAnalyzer {
 		return result;
 	}
 
-	/*
-	 * private void printSMT2(String z3FormulaFilename, Path pathCondition)
-	 * throws CompilationException { // Print the parameters, variables, and
-	 * reindexed variables try { FileWriter fw = new
-	 * FileWriter(z3FormulaFilename); BufferedWriter out = new
-	 * BufferedWriter(fw);
-	 * 
-	 * // Print the parameters of program for (int i = 0; i <
-	 * this.listPara.size(); i++) { Parameter p = this.listPara.get(i);
-	 * out.write("(declare-const "); out.write(p.getName() + " ");
-	 * out.write(p.getType() + ")"); out.write("\n"); } // Print variables of
-	 * program for (int i = 0; i < this.listVar.size(); i++) { Variable v =
-	 * this.listVar.get(i); out.write("(declare-const "); out.write(v.getName()
-	 * + " "); out.write(v.getType() + ")"); out.write("\n"); } // Print
-	 * variables after reindexing for (int i = 0; i <
-	 * pathCondition.getListVariableReIndexed().size(); i++) { Variable v =
-	 * pathCondition.getListVariableReIndexed().get(i);
-	 * out.write("(declare-const "); out.write(v.getName() + " ");
-	 * out.write(v.getType() + ")"); out.write("\n"); } out.close(); } catch
-	 * (IOException e) { e.printStackTrace(); }
-	 * 
-	 * // Print the negated path condition in the SMT2 form Z3PathPrintVisitor
-	 * z3Visitor = new Z3PathPrintVisitor(z3FormulaFilename, false);
-	 * z3Visitor.printSMT2(pathCondition); }
-	 */
+	// private void printSMT2(String z3FormulaFilename, Path pathCondition)
+	// throws CompilationException {
+	// // Print the parameters, variables, and reindexed variables
+	// try {
+	// FileWriter fw = new FileWriter(z3FormulaFilename);
+	// BufferedWriter out = new BufferedWriter(fw);
+	//
+	// // Print the parameters of program
+	// for (int i = 0; i < this.lstParameter.size(); i++) {
+	// Parameter p = this.lstParameter.get(i);
+	// out.write("(declare-const ");
+	// out.write(p.getName() + " ");
+	// out.write(p.getType() + ")");
+	// out.write("\n");
+	// }
+	// // Print variables of program
+	// for (int i = 0; i < this.lstVariable.size(); i++) {
+	// Variable v = this.lstVariable.get(i);
+	// out.write("(declare-const ");
+	// out.write(v.getName() + " ");
+	// out.write(v.getType() + ")");
+	// out.write("\n");
+	// }
+	// // Print variables after reindexing
+	// for (int i = 0; i < pathCondition.getListVariableReIndexed().size(); i++)
+	// {
+	// Variable v = pathCondition.getListVariableReIndexed().get(i);
+	// out.write("(declare-const ");
+	// out.write(v.getName() + " ");
+	// out.write(v.getType() + ")");
+	// out.write("\n");
+	// }
+	// out.close();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// // Print the negated path condition in the SMT2 form Z3PathPrintVisitor
+	// Z3PathPrintVisitor z3Visitor = new Z3PathPrintVisitor(
+	// z3FormulaFilename, false);
+	// z3Visitor.printSMT2(pathCondition);
+	// }
 
 	public ArrayList<Integer> getSlide() {
 		ArrayList<String> input = new ArrayList<String>();
@@ -710,7 +668,6 @@ public class CodeAnalyzer {
 		while (st.hasMoreTokens()) {
 			input.add(st.nextToken());
 		}
-		// System.out.println("ABC:" + input);
 		AstSimulationVisitor simulationAST = new AstSimulationVisitor(this.pdg,
 				input);
 		try {
@@ -825,7 +782,7 @@ public class CodeAnalyzer {
 			output += "\tFalse: " + condition.getFalseTestCase() + "\n";
 		}
 		return output;
-		
+
 	}
 
 	public String update(int[][] res) {
