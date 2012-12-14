@@ -19,6 +19,26 @@ public class Condition {
 	String trueTestCase;
 	String falseTestCase;
 	
+	//20121213
+	String trueTestCaseFull;
+	public String getTrueTestcaseFull() {
+		return trueTestCaseFull;
+	}
+
+	public void setTrueTestcaseFull(String trueTestCaseFull) {
+		this.trueTestCaseFull = trueTestCaseFull;
+	}
+
+	String falseTestCaseFull;
+	
+	public String getFalseTestcaseFull() {
+		return falseTestCaseFull;
+	}
+
+	public void setFalseTestcaseFull(String falseTestCaseFull) {
+		this.falseTestCaseFull = falseTestCaseFull;
+	}
+
 	public boolean hasTrueTestCase;
 	public boolean hasFalseTestCase;
 

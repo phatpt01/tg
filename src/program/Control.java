@@ -35,6 +35,11 @@ public class Control {
 		return codeAnalyzer.generateSolvable();
 	}
 
+	public String generateSolvableAfterSE() {
+		se.replaceExpressionBySymbol();
+		return se.generateSolvableAfterSE();
+	}
+
 	public ArrayList<String> getConditionList() throws CompilationException {
 		return codeAnalyzer.getConditionList();
 	}
@@ -107,11 +112,5 @@ public class Control {
 	public void symbolicExecution() {
 		se = new SymbolicExecution();
 		se.symbolicExecution(codeAnalyzer);
-	}
-
-	public String generateSolvableAfterSE() {
-		se.replaceExpressionBySymbol();
-		//se.addMinMaxAssert();
-		return se.generateSolvableAfterSE();
 	}
 }

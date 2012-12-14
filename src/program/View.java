@@ -69,7 +69,7 @@ public class View {
 	private Button btnSetRangeOfSymbol;
 
 	private Button btnGenerateSolvableAfterSE;
-	private Button btnGenerateUnsolvableByGA;
+	// private Button btnGenerateUnsolvableByGA;
 	private Button btnShowAllTC;
 
 	private Button btnPrev;
@@ -215,24 +215,25 @@ public class View {
 				txtLog.setText(newText + "\n" + oldText + "\n");
 
 				btnGenerateSolvableAfterSE.setEnabled(false);
-				btnGenerateUnsolvableByGA.setEnabled(true);
+				// btnGenerateUnsolvableByGA.setEnabled(true);
 				btnShowAllTC.setEnabled(true);
 			}
 
 		});
 
-		btnGenerateUnsolvableByGA.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-
-				oldText = txtLog.getText();
-				newText = control.runGA();
-				txtLog.setText(newText + "\n" + oldText + "\n");
-
-				btnGenerateUnsolvableByGA.setEnabled(false);
-			}
-
-		});
+		// btnGenerateUnsolvableByGA.addSelectionListener(new SelectionAdapter()
+		// {
+		// @Override
+		// public void widgetSelected(SelectionEvent arg0) {
+		//
+		// oldText = txtLog.getText();
+		// newText = control.runGA();
+		// txtLog.setText(newText + "\n" + oldText + "\n");
+		//
+		// btnGenerateUnsolvableByGA.setEnabled(false);
+		// }
+		//
+		// });
 
 		btnShowAllTC.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -305,17 +306,28 @@ public class View {
 
 		btnGenerateSolvableAfterSE = createButton("Generate TC after SE",
 				false, 1110, 10, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnGenerateUnsolvableByGA = createButton("Generate Unsolvable", false,
-				1110, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
-		btnShowAllTC = createButton("Show all test case", false, 1110, 80,
+
+		// btnGenerateUnsolvableByGA = createButton("Generate Unsolvable",
+		// false,
+		// 1110, 45, BUTTON_WIDTH, BUTTON_HEIGHT);
+		// btnShowAllTC = createButton("Show all test case", false, 1110, 80,
+		// BUTTON_WIDTH, BUTTON_HEIGHT);
+		//
+		// btnPrev = createButton("Prev", false, 1110, 115, BUTTON_WIDTH / 2,
+		// BUTTON_HEIGHT);
+		// btnNext = createButton("Next", false, 1170, 115, BUTTON_WIDTH / 2,
+		// BUTTON_HEIGHT);
+		//
+		// btnExit = createButton("Exit", true, 1110, 150, BUTTON_WIDTH,
+		// BUTTON_HEIGHT);
+		btnShowAllTC = createButton("Show all test case", false, 1110, 45,
 				BUTTON_WIDTH, BUTTON_HEIGHT);
 
-		btnPrev = createButton("Prev", false, 1110, 115, BUTTON_WIDTH / 2,
+		btnPrev = createButton("Prev", false, 1110, 80, BUTTON_WIDTH / 2,
 				BUTTON_HEIGHT);
-		btnNext = createButton("Next", false, 1170, 115, BUTTON_WIDTH / 2,
+		btnNext = createButton("Next", false, 1170, 80, BUTTON_WIDTH / 2,
 				BUTTON_HEIGHT);
-
-		btnExit = createButton("Exit", true, 1110, 150, BUTTON_WIDTH,
+		btnExit = createButton("Exit", true, 1110, 115, BUTTON_WIDTH,
 				BUTTON_HEIGHT);
 
 		btnOpen.setToolTipText("Open source file");

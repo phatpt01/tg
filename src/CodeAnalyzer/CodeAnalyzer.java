@@ -41,7 +41,7 @@ public class CodeAnalyzer {
 	public CodeAnalyzer(String strSourceFile) {
 
 		transform = new Transform(strSourceFile);
-		
+
 		lstCondition = new ArrayList<Condition>();
 		mapTable = transform.getMapTable();
 		pdg = transform.getPdg();
@@ -164,25 +164,34 @@ public class CodeAnalyzer {
 
 		for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
 			conditionString = lstCondition.get(i).getTruePaths().get(j);
-			String result = generateTestCase(conditionString);
-
-			if (!result.equals("")) {
-				lstCondition.get(i).setTrueTestcase(result);
-				lstCondition.get(i).hasTrueTestCase = true;
-				check = true;
-				break;
+			// String result = generateTestCase(conditionString);
+			ArrayList<String> result = generateTestCase(conditionString);
+			if (result.size() > 0) {
+				if (!result.get(0).equals("")) {
+					lstCondition.get(i).setTrueTestcase(result.get(0));
+					// 20121213
+					lstCondition.get(i).setTrueTestcaseFull(result.get(1));
+					lstCondition.get(i).hasTrueTestCase = true;
+					check = true;
+					break;
+				}
 			}
 		}
 
 		for (int k = 0; k < lstCondition.get(i).getFalsePaths().size(); k++) {
 			conditionString = (lstCondition.get(i).getFalsePaths().get(k));
-			String result = generateTestCase(conditionString);
-			if (!result.equals("")) {
+			// String result = generateTestCase(conditionString);
+			ArrayList<String> result = generateTestCase(conditionString);
+			if (result.size() > 0) {
+				if (!result.get(0).equals("")) {
 
-				lstCondition.get(i).setFalseTestcase(result);
-				lstCondition.get(i).hasFalseTestCase = true;
-				check = true;
-				break;
+					lstCondition.get(i).setFalseTestcase(result.get(0));
+					// 20121213
+					lstCondition.get(i).setFalseTestcaseFull(result.get(1));
+					lstCondition.get(i).hasFalseTestCase = true;
+					check = true;
+					break;
+				}
 			}
 		}
 		lstCondition.get(i).setHasTestcase(check);
@@ -203,16 +212,22 @@ public class CodeAnalyzer {
 			if (condition.hasTestcase()) {
 				count++;
 				output += "Condition: " + condition.getCondition() + "\n";
-				output += "\t True: " + condition.getTrueTestCase() + "\n";
-				output += "\t False: " + condition.getFalseTestCase() + "\n";
+				// output += "\t True: " + condition.getTrueTestCase() + "\n";
+				// 20121213
+				output += "\t True: " + condition.getTrueTestCase() + " ("
+						+ condition.getTrueTestcaseFull() + ")" + "\n";
+				// output += "\t False: " + condition.getFalseTestCase() + "\n";
+				// 20121213
+				output += "\t False: " + condition.getFalseTestCase() + " ("
+						+ condition.getFalseTestcaseFull() + ")" + "\n";
 			}
 		}
 		output = count + "\n\n" + output;
 		return output;
 	}
 
-	public String generateTestCase(String condition) {
-
+	// public String generateTestCase(String condition) { //20121213
+	public ArrayList<String> generateTestCase(String condition) {
 		String z3FilePath = SymbolicExecutionFile.getAbsolutePathOfSmt2()
 				+ "Z3Formula.smt2";
 
@@ -277,7 +292,18 @@ public class CodeAnalyzer {
 			exception.printStackTrace();
 		}
 
-		ArrayList<String> testcase = getNewTestcase(z3FilePath);
+		ArrayList<ArrayList<String>> arr = getNewTestcase(z3FilePath);
+
+		ArrayList<String> result = new ArrayList<String>();
+
+		ArrayList<String> testcase = null;
+		ArrayList<String> testcaseFull = null;
+
+		if (arr != null) {
+			testcase = arr.get(0);
+			testcaseFull = arr.get(1); // 20121213
+		}
+
 		if (testcase != null) {
 			ArrayList<String> temp = new ArrayList<String>();
 			StringBuffer strTestcase = new StringBuffer();
@@ -287,10 +313,23 @@ public class CodeAnalyzer {
 				strTestcase.append("\n");
 				temp.add(testcase.get(i));
 			}
+			result.add(temp.toString());
 
-			return temp.toString();
+			// 20121213
+			temp = new ArrayList<String>();
+			strTestcase = new StringBuffer();
+
+			for (int i = 0; i < testcaseFull.size(); i++) {
+				strTestcase.append(testcaseFull.get(i));
+				strTestcase.append("\n");
+				temp.add(testcaseFull.get(i));
+			}
+			result.add(temp.toString());
+
+			// return temp.toString();
+			return result;
 		} else
-			return "";
+			return result;
 	}
 
 	public String generateTestCaseAfterSE(String conditionString) {
@@ -470,9 +509,10 @@ public class CodeAnalyzer {
 		return lstVariable;
 	}
 
-	public ArrayList<String> getNewTestcase(String z3FormulaPath) {
+	public ArrayList<ArrayList<String>> getNewTestcase(String z3FormulaPath) {
+		// public ArrayList<String> getNewTestcase(String z3FormulaPath) {
 		ArrayList<String> testcaseFull = new ArrayList<String>();
-		
+
 		ArrayList<String> testcase = new ArrayList<String>();
 		ArrayList<String> z3result = new ArrayList<String>();
 		Runtime run = Runtime.getRuntime();
@@ -507,9 +547,10 @@ public class CodeAnalyzer {
 					for (int j = 0; j < z3result.size(); j += 2) {
 						if (z3result.get(j).equals(
 								lstParameter.get(i).getName())) {
-							testcase.add(z3result.get(j + 1)); 
-							
-							// add new value to testcase, sua ngay 20121213 de hien thi ro hon ket qua test case sinh ra
+							testcase.add(z3result.get(j + 1));
+
+							// add new value to testcase, sua ngay 20121213 de
+							// hien thi ro hon ket qua test case sinh ra
 							testcaseFull.add(z3result.get(j) + " = "
 									+ z3result.get(j + 1));
 							break;
@@ -522,7 +563,12 @@ public class CodeAnalyzer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return testcase;
+
+		// return testcase;
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		result.add(testcase);
+		result.add(testcaseFull);
+		return result;
 	}
 
 	public ArrayList<String> getNewTestcaseAfterSE(String z3FormulaPath) {
