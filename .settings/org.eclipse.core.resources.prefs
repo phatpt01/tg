@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
 encoding//src/CodeAnalyzer/CodeAnalyzer.java=UTF-8
 encoding//src/GA/Testcase.java=UTF-8
-encoding//src/transform/CodeGeneration/Temp1Visitor.java=UTF-8
+encoding//src/transform/CodeGeneration/TestcaseGenerationVisitor.java=UTF-8

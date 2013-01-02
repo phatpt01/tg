@@ -459,13 +459,13 @@ public class CodeAnalyzer {
 			output += "\t True:";
 
 			for (int j = 0; j < lstCondition.get(i).getTruePaths().size(); j++) {
-				output += "\n" + lstCondition.get(i).getTruePaths().get(j);
+				output += "\n" + "\t\t" + lstCondition.get(i).getTruePaths().get(j);
 			}
 
 			output += "\n \t False:";
 
 			for (int j = 0; j < lstCondition.get(i).getFalsePaths().size(); j++) {
-				output += "\n" + lstCondition.get(i).getFalsePaths().get(j);
+				output += "\n" + "\t\t" + lstCondition.get(i).getFalsePaths().get(j);
 			}
 		}
 		return output;

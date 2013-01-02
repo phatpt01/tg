@@ -21,27 +21,13 @@ public class Condition {
 	
 	//20121213
 	String trueTestCaseFull;
-	public String getTrueTestcaseFull() {
-		return trueTestCaseFull;
-	}
-
-	public void setTrueTestcaseFull(String trueTestCaseFull) {
-		this.trueTestCaseFull = trueTestCaseFull;
-	}
-
-	String falseTestCaseFull;
 	
-	public String getFalseTestcaseFull() {
-		return falseTestCaseFull;
-	}
-
-	public void setFalseTestcaseFull(String falseTestCaseFull) {
-		this.falseTestCaseFull = falseTestCaseFull;
-	}
+	String falseTestCaseFull;
 
 	public boolean hasTrueTestCase;
-	public boolean hasFalseTestCase;
 
+	public boolean hasFalseTestCase;
+	
 	public Condition() {
 		stmtID = 0;
 		ast = null;
@@ -53,10 +39,13 @@ public class Condition {
 		falseTestCase = "";
 	}
 
+//	public void addFalsePaths(String falsePath){
+//		this.lstFalsePath.add(falsePath);
+//	}
+
 	public AST getAst() {
 		return ast;
 	}
-
 	public String getCondition() {
 		return condition;
 	}
@@ -73,6 +62,10 @@ public class Condition {
 		return falseTestCase;
 	}
 
+	public String getFalseTestcaseFull() {
+		return falseTestCaseFull;
+	}
+
 	public int getStmtID() {
 		return stmtID;
 	}
@@ -87,6 +80,10 @@ public class Condition {
 
 	public String getTrueTestCase() {
 		return trueTestCase;
+	}
+
+	public String getTrueTestcaseFull() {
+		return trueTestCaseFull;
 	}
 
 	public boolean hasTestcase() {
@@ -109,6 +106,10 @@ public class Condition {
 		this.falseTestCase = falseTestcase;
 	}
 
+	public void setFalseTestcaseFull(String falseTestCaseFull) {
+		this.falseTestCaseFull = falseTestCaseFull;
+	}
+
 	public void setHasTestcase(boolean hasTestcase) {
 		this.hasTestCase = hasTestcase;
 	}
@@ -121,23 +122,23 @@ public class Condition {
 		this.lstTrueCondition = trueConditions;
 	}
 	
-	public void addFalsePaths(String falsePath){
-		this.lstFalsePath.add(falsePath);
-	}
-
 	public void setTrueTestcase(String trueTestcase) {
 		this.trueTestCase = trueTestcase;
 	}
 
-	public void clearFalsePaths() {
-		this.lstFalsePath.clear();		
+	public void setTrueTestcaseFull(String trueTestCaseFull) {
+		this.trueTestCaseFull = trueTestCaseFull;
 	}
 
-	public void clearTruePaths() {
-		this.lstTruePath.clear();
-	}
+//	public void clearFalsePaths() {
+//		this.lstFalsePath.clear();		
+//	}
+//
+//	public void clearTruePaths() {
+//		this.lstTruePath.clear();
+//	}
 
-	public void addTruePaths(String truePath) {
-		this.lstTruePath.add(truePath);		
-	}
+//	public void addTruePaths(String truePath) {
+//		this.lstTruePath.add(truePath);		
+//	}
 }

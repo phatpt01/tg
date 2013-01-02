@@ -23,7 +23,7 @@ import transform.AST.VarDeclAST;
 import transform.AST.VarExprAST;
 import transform.AST.VarInitializerAST;
 
-public class Temp1Visitor extends DoNothingVisitor {
+public class TestcaseGenerationVisitor extends DoNothingVisitor {
 
 	boolean hasReal;
 
@@ -38,7 +38,7 @@ public class Temp1Visitor extends DoNothingVisitor {
 	ArrayList<Integer> arrBranch;
 	String result;
 
-	public Temp1Visitor(ArrayList<Parameter> lstParameter,
+	public TestcaseGenerationVisitor(ArrayList<Parameter> lstParameter,
 			ArrayList<Variable> lstVariable, ArrayList<Condition> lstCondition) {
 
 		this.lstVariable = lstVariable;
@@ -194,10 +194,6 @@ public class Temp1Visitor extends DoNothingVisitor {
 						output += binExprAST.op.getText();
 				}
 
-				// Phat them ngay 3/10 de xu ly viec parameter hoac variable la
-				// so thuc
-				// TH1: them gia tri .0 vao val1, de duoc vi du: > 1.0 x, voi x
-				// la so Real
 				for (Parameter parameter : lstParameter) {
 					if (val2.equals(parameter.getName())) {
 						String parameterType = parameter.getType();
@@ -220,7 +216,6 @@ public class Temp1Visitor extends DoNothingVisitor {
 					}
 				}
 
-				// TH2: xu ly tuong tu voi val2
 				for (Parameter parameter : lstParameter) {
 					if (val1.equals(parameter.getName())) {
 						String parameterType = parameter.getType();

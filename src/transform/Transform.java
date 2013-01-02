@@ -14,7 +14,7 @@ import transform.CodeGeneration.Ast2GraphVisitor;
 import transform.CodeGeneration.Ast2MappingTableVisitor;
 import transform.CodeGeneration.ControlFlowGraphVisitor;
 import transform.CodeGeneration.PrettyOutputVisitor;
-import transform.CodeGeneration.Temp1Visitor;
+import transform.CodeGeneration.TestcaseGenerationVisitor;
 import transform.CodeGeneration.VariableVisitor;
 import transform.CodeGeneration.Visitor;
 import transform.DependenceGraph.*;
@@ -158,7 +158,7 @@ public class Transform {
 	public ArrayList<Condition> updateConditionList(
 			ArrayList<Condition> lstCondition) {
 
-		Temp1Visitor tmp1Visitor = new Temp1Visitor(lstParameters,
+		TestcaseGenerationVisitor testcaseGenerationVisitor = new TestcaseGenerationVisitor(lstParameters,
 				lstVariables, lstCondition);
 		
 		Temp obj = new Temp();
@@ -169,13 +169,13 @@ public class Transform {
 					obj.con = i;
 					obj.pos = j;
 					obj.branch = lstBranch.get(i).get(j);
-					lstPath.get(i).get(j).visit(tmp1Visitor, obj);
+					lstPath.get(i).get(j).visit(testcaseGenerationVisitor, obj);
 				}
-				tmp1Visitor.clear();
+				testcaseGenerationVisitor.clear();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return tmp1Visitor.getListCondition();
+		return testcaseGenerationVisitor.getListCondition();
 	}
 }

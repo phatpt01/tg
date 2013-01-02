@@ -113,22 +113,30 @@ public class View {
 		btnStandardized.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String standardSource = control.standardSource(sourceFile);
-				changeSourceText(standardSource);
-
-				printParameterTable();
-				printVariableTable();
-
 				try {
-					printConditionsList();
-				} catch (CompilationException e) {
-					e.printStackTrace();
+					String standardSource = control.standardSource(sourceFile);
+
+					changeSourceText(standardSource);
+
+					printParameterTable();
+					printVariableTable();
+
+					try {
+						printConditionsList();
+					} catch (CompilationException e) {
+						e.printStackTrace();
+					}
+
+					txtLog.setText("Source code is standardized");
+
+					btnStandardized.setEnabled(false);
+					btnScanCondition.setEnabled(true);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null,
+							"Can not standardlize source code");
+					changeSourceText("");
+					btnScanCondition.setEnabled(false);
 				}
-
-				txtLog.setText("Source code is standardized");
-
-				btnStandardized.setEnabled(false);
-				btnScanCondition.setEnabled(true);
 			}
 		});
 

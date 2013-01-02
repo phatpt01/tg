@@ -8,7 +8,7 @@ import system.Variable;
 import transform.AST.AST;
 import transform.AST.BinExprAST;
 import transform.AST.CompilationException;
-import transform.CodeGeneration.Temp1Visitor;
+import transform.CodeGeneration.TestcaseGenerationVisitor;
 
 import CodeAnalyzer.CodeAnalyzer;
 
@@ -146,7 +146,7 @@ public class SymbolicExecution {
 			BinExprAST binExprAST = (BinExprAST) ast;
 			try {
 				expression1 = (String) binExprAST.exprAST1.visit(
-						new Temp1Visitor(codeAnalyzer.getLstParameter(),
+						new TestcaseGenerationVisitor(codeAnalyzer.getLstParameter(),
 								codeAnalyzer.getLstVariable(), codeAnalyzer
 										.getLstCondition()), "c");
 			} catch (CompilationException e1) {
@@ -168,7 +168,7 @@ public class SymbolicExecution {
 			BinExprAST binExprAST = (BinExprAST) ast;
 			try {
 				expression2 = (String) binExprAST.exprAST2.visit(
-						new Temp1Visitor(codeAnalyzer.getLstParameter(),
+						new TestcaseGenerationVisitor(codeAnalyzer.getLstParameter(),
 								codeAnalyzer.getLstVariable(), codeAnalyzer
 										.getLstCondition()), "c");
 			} catch (CompilationException e1) {
@@ -337,10 +337,10 @@ public class SymbolicExecution {
 		createListOfUnsolvableCondition();
 		addUnsolvableConditionToMappingTable();
 
-		updateListVariable();
+		updateVariableList();
 	}
 
-	public void updateListVariable() {
+	public void updateVariableList() {
 		ArrayList<Variable> lstVariable = codeAnalyzer.getLstVariable();
 
 		MappingRecord mappingRecord = null;
